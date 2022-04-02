@@ -1,5 +1,4 @@
 # Severe Weather Database
-![alt text](https://github.com/conner-mcnicholas/SevereWeatherDB/blob/main/arch.png?raw=true)
 
 Severe weather data in USA cloud database
 
