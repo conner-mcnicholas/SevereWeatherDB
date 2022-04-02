@@ -1,0 +1,11 @@
+event_id is unique for each row in detail (53187)
+
+every fatality has an event_id match in detail (799)
+  those have repeated values, so the distinct subset is less (434)
+some fatalities have an event_id match in location (149)
+  those have repeated values, so the distinct subset is less (89)
+
+every location has an event_id match in detail (44760)
+  those have repeated values, so the distinct subset is less (25965)
+some locations have an event_id match in fatality (299)
+  those have repeated values, so the distinct subset is less (89)
