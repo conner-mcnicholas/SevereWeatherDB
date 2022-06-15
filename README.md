@@ -13,4 +13,4 @@ Step 6: Scaling Data Pipeline Prototype (current state):<br>
 &emsp;&emsp;-Process described in Step6/ScalingPrototype.pdf<br>
 &emsp;&emsp;-This repo 'data' dir only holds small subset to keep local drive and repo manageable<br>
 
-![alt text](https://github.com/conner-mcnicholas/SevereWeatherDB/Step6/images/blob/main/results.png?raw=true)
+![alt text](https://github.com/conner-mcnicholas/SevereWeatherDB/blob/main/Step6/images/results.png?raw=true)
