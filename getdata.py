@@ -55,7 +55,7 @@ def unzipFiles():
 if __name__ == "__main__":
     print('***** Start of script *****\n')
     url = 'https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles'
-    sdate = 2017
+    sdate = 2019
     print(f'Getting all files from %s after %s...\n'%(url,sdate))
     writeFiles(listFull(url),sdate)
     print('Decompressing all files.  They will be stored in data/unzipped dir.  Compressed source files to be retained in data dir')

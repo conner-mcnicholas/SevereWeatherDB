@@ -3,7 +3,13 @@
 
 Severe weather data in USA cloud database
 
-Step 5: Prototype Data Pipeline<br>
-&emsp;&emsp;Current State:<br>
-&emsp;&emsp;-Summary of progress reached at Step4 and Step5 found in respective folders Slide Deck (deliverable #2)<br>
-&emsp;&emsp;-Data dir remains empty for the sake of keeping local drive and Github repo manageable<br>
+Step 5: Prototype Data Pipeline (prior state): <br>
+&emsp;&emsp;-Summary of progress reached at Step4 and Step5 found in respective folders Slide Deck<br>
+
+Step 6: Scaling Data Pipeline Prototype (current state):<br>
+&emsp;&emsp;-Migrated infrastrucure to Microsoft Azure cloud.
+&emsp;&emsp;-Updated code from locally deployed Python to Pyspark distributed cluster.<br>
+&emsp;&emsp;-Process described in Step6/ScalingPrototype.pdf<br>
+&emsp;&emsp;-This repo's data dir remains empty to keep local drive and Github repo manageable<br>
+
+![alt text](https://github.com/conner-mcnicholas/SevereWeatherDB/Step6/images/blob/main/results.png?raw=true)
