@@ -4,9 +4,7 @@ Cloud database cataloging records of severe storms in the United States dating b
 
 Slide decks describing process and results of each step is found as odp and pdf files in respective dirs.<br>
 
-Current State: Step 6
-
-Step 6: Scaling Data Pipeline Prototype (current state):<br>
+Current State - Step 6 (Scaling Data Pipeline Prototype):<br>
 &emsp;&emsp;-Migrated infrastrucure to Microsoft Azure cloud. <br>
 &emsp;&emsp;-Updated code from locally deployed Python to Pyspark distributed cluster.<br>
 &emsp;&emsp;-Process described in Step6/ScalingPrototype.pdf<br>
