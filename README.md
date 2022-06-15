@@ -1,11 +1,10 @@
 # Severe Weather Database
 
-![alt text](https://github.com/conner-mcnicholas/SevereWeatherDB/blob/main/arch.png?raw=true)
+Cloud database cataloging records of severe storms in the United States dating back to 1970.<br>
 
-Severe weather data in USA cloud database
+Slide decks describing process and results of each step is found as odp and pdf files in respective dirs.<br>
 
-Step 5: Prototype Data Pipeline (prior state): <br>
-&emsp;&emsp;-Summary of progress reached at Step4 and Step5 found in respective folders Slide Deck<br>
+Current State: Step 6
 
 Step 6: Scaling Data Pipeline Prototype (current state):<br>
 &emsp;&emsp;-Migrated infrastrucure to Microsoft Azure cloud. <br>
