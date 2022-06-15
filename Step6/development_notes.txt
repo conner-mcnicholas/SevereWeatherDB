@@ -1,0 +1,90 @@
+Nearly every step of this process presented technical obstacles beyond the normal
+tweaks required when following slightly outdated instructions.
+
+1) aztk , the  Azure Data Engineering Toolkit cli that was prescribed by the
+project instructions, would not initialize after installing using pip
+for Python 3.10, due to a compatability issue in a dependency:
+`s = pack('>I', n & 0xffffffffL) + s SyntaxError: invalid syntax`
+Based on troubleshooting on the web, it seemed like this
+was a Python2 -> Python3 incompatability issue, but one obscure forum comment
+suggested Python3.6 showed no issues on an earlier release of Ubuntu.
+
+2) pyenv virtualenvwrapper would not run using "mkvirtualenv", complaining
+that virtualenvwrapper could not find /usrbin/virtualenvwrapper in my PATH,
+even after explicitly setting my PATH to point to it.  I had to reinstall
+pyenv and virtualenv using 'sudo pip' instead of 'pip'.
+
+3) Trying to get ANY Python < 3.10 installed using pyenv was a nonstarter,
+attempting installing python pyenv ran into:
+Segmentation fault (core dumped) make: *** [Makefile:1102: install] Error 139
+Installing an obscure patch from a forum, and trying various different subversions
+eventually sorted the downloading issue out.  Setting the pyenv global version
+was not enough to allow a virtual env to be created with mkvirtualenv -p 3.*.*,
+as it would throw:
+RuntimeError: failed to find interpreter for Builtin discover of python_spec='3.*.*'.
+I had to pyenv init python=3.6.8 to force it to create to that python version
+implicitly.
+
+4) Finally, I was able to initialize aztk. The success was shortlived, as
+the command prescribed in the instructions:
+
+wget -q https://raw.githubusercontent.com/Azure/aztk/v0.7.0/account_setup.sh -O account_setup.sh
+&& chmod 755 account_setup.sh
+&& /bin/bash account_setup.sh
+
+Threw the error:
+
+"TypeError: signed_session() takes 1 positional argument but 2 were given"
+
+The official azure account had responded to a thread on this issue by saying
+the script is too outdated, and so the manual process for creating all of the
+necessary resources in Azure, and accurately filling out secrets.yaml was
+required.  Because the Azure portal UI has changed quite dramatically since
+the manual instructions Microsoft linked to was created, this process was
+very difficult to follow.
+
+5) After much clicking, searching, scanning, and cursing, I located all of the API keys, created
+all of the credentials, granted all of the permissions, enabled all of the applications,
+registered for all of the services, etc, etc, until....
+
+At long last....I had finally connected:
+
+(env368) conner@Linuxclevo:~$ aztk spark cluster list
+/home/conner/.virtualenvs/env368/lib/python3.6/site-packages/azure/storage/blob/_encryption.py:13: CryptographyDeprecationWarning: Python 3.6 is no longer supported by the Python core team. Therefore, support for it is deprecated in cryptography and will be removed in a future release.
+  from cryptography.hazmat.primitives.padding import PKCS7
+Cluster                           | State     | VM Size             | Nodes  | Created
+----------------------------------|-----------|---------------------|--------|-----------------
+
+But this was only the beginning of my issues.  Trying to create a new cluster...
+
+Spent 5+ hours figuring out that you can't run "aztk spark cluster create"
+while WITHIN the .aztk folder without throwing python errors,
+Spent another 5+ hours debugging more aztk code.  I had to update 1 line in
+1 file to point my azure batch client to Ubuntu Server 18.04 instead of 16.04.
+BUTT making this same update to another line of code breaks everything.
+I'll never get these 24 hours of my life back.
+
+This joy was shortlived, as it turns out these vms wouldn't initialize with any nodes:
+
+(env368) conner@Linuxclevo:~$ aztk spark cluster get --id spkpipeline
+/home/conner/.virtualenvs/env368/lib/python3.6/site-packages/azure/storage/blob/_encryption.py:13: CryptographyDeprecationWarning: Python 3.6 is no longer supported by the Python core team. Therefore, support for it is deprecated in cryptography and will be removed in a future release.
+  from cryptography.hazmat.primitives.padding import PKCS7
+
+Cluster         spkpipeline
+------------------------------------------
+State:          steady
+Node Size:      standard_d12_v2
+Created:        2022-06-15 05:51:38
+Nodes:          0
+| Dedicated:    0
+| Low priority: 0
+
+|               Nodes                |        State        |        IP:Port       | Dedicated  |  Master  |
+|------------------------------------|---------------------|----------------------|------------|----------|
+
+I'm trying a newer tactic, this entire toolkit is clearly obsolete and worthless.
+
+note: this may be due to having zero quota for vm nodes on my batch account?!
+Azure makes this so difficult.
+
+5) Databricks
