@@ -22,7 +22,7 @@ def get_db_connection():
     try:
         connection = mysql.connector.connect(user='root',password='',host='127.0.0.1',port='3306')
     except Exception as error:
-        print("Error while connecting to database for job tracker", error)
+        raise ConnectionError("Error while connecting to database for job tracker: ") from error
     return connection
 
 def initialize_database():

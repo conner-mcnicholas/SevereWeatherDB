@@ -1,7 +1,7 @@
 """
 Script to pull severe weather event data from ncei.noaa.gov
 File contents are denoted by type (details, fatalities, locations),year, and
-upload date.  At this stage I am only targetting all files >= 2019 to prove out
+upload date.  At this stage I am only targetting all files >= 2017 to prove out
 the functionality, but later all files >= 2010 will be included.
 """
 
@@ -55,7 +55,7 @@ def unzipFiles():
 if __name__ == "__main__":
     print('***** Start of script *****\n')
     url = 'https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles'
-    sdate = 2019
+    sdate = 2017
     print(f'Getting all files from %s after %s...\n'%(url,sdate))
     writeFiles(listFull(url),sdate)
     print('Decompressing all files.  They will be stored in data/unzipped dir.  Compressed source files to be retained in data dir')
