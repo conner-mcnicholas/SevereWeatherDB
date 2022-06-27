@@ -54,7 +54,7 @@ def unzipFiles():
         print('"data/unzipped" directory for storing decompressed csv files already exists')
     else:
         print('Creating "data/unzipped" directory for storing decompressed csv files')
-        os.system('mkdir data/unzipped')
+        os.system('mkdir /home/conner/SevereWeatherDB/data/unzipped')
     os.system('gzip -dk /home/conner/SevereWeatherDB/data/*.gz;mv /home/conner/SevereWeatherDB/data/*.csv /home/conner/SevereWeatherDB/dataz/unzipped')
 
 
