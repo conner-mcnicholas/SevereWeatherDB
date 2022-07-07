@@ -9,4 +9,4 @@ Current State - Step 7 (Scaling Data Pipeline Prototype):<br>
 &emsp;&emsp;&emsp;&emsp;-Decision making process described in Step7/DeploymentArchitecture.pdf<br>
 &emsp;&emsp;-Created pipeline deployment architecture diagram (see Step7/diagram_formats):<br>
 
-![alt text](https://github.com/conner-mcnicholas/SevereWeatherDB/blob/main/Step7/diagram_formats/archdiagramfinal.png?raw=true)
+![alt text](https://github.com/conner-mcnicholas/SevereWeatherDB/blob/main/Step7/diagram_formats/archdiagramfinal_mod.png?raw=true)
