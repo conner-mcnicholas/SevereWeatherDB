@@ -10,7 +10,7 @@ Current State - Step 8 (Deploy Your Code for Testing):<br>
 ![alt text](https://github.com/conner-mcnicholas/SevereWeatherDB/blob/main/Step7/diagram_formats/final_archdiagram_mod.png?raw=true)
 
 &emsp;&emsp;- There were 2 steps in the ETL Processs:<br>
-&emsp;&emsp;- 1) run python script to batch upload all source files from 2000/0/01-Present to Azure Data Lake Gen2 containers: <br>
+&emsp;&emsp;- 1) run python script to batch upload all from 2000-Present to Azure Data Lake containers: <br>
 
 `python uploadtoblob.py 2000`
 
