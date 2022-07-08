@@ -1,0 +1,22 @@
+{
+    "now": "2022-07-08T13:44:48.572Z",
+    "perfNow": 20144136.099999998,
+    "diagnosticCorrelation": "282dd683-27d0-46ef-bf07-637c05583bc3",
+    "source": "DownloadSupportFiles",
+    "environment": {
+        "productName": "adf",
+        "buildVersion": "1.0.070122.18",
+        "environmentType": 3,
+        "resourceName": "datafactoryausins",
+        "resourceRegion": "australiaeast",
+        "resourceGroup": "datafactoryrg",
+        "subscriptionId": "b5f807fa-c5eb-4a4d-8357-76a176efc946",
+        "sessionId": "z7iLU",
+        "operationId": "LvKo9",
+        "gitType": "live"
+    },
+    "additionalInfo": {
+        "selectedResource": "cp fatalities initial batch",
+        "selectedResourceType": "pipeline"
+    }
+}

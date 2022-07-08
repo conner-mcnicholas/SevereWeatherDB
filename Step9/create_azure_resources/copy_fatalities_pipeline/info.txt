@@ -1,0 +1,6 @@
+selected resource name:		cp fatalities initial batch
+selected resource type:		pipeline
+factory name:			datafactoryausins
+factory location:		australiaeast
+subscription id:		b5f807fa-c5eb-4a4d-8357-76a176efc946
+time of download (UTC):		Fri, 08 Jul 2022 13:44:48 GMT
