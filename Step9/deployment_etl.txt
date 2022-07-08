@@ -1,0 +1,37 @@
+Airflow
+
+Initial Load DAG:2 parallel flows: manually triggered
+
+	Task 1 - PythonOperator 1 time batch load details source to blob:
+	Task 2 - PythonOperator 1 time batch load fatalities source to blob
+
+	container:severeweathercontainer
+		details x 23
+		fatalities x 23
+
+	Task 3 - AzureDataFactoryRunPipelineOperator 1 time ADF CP details blob to MySQL
+	Task 4 - AzureDataFactoryRunPipelineOperator 1 time ADF CP fatalities blob to MySQL
+
+	Task 1 >> Task 3 
+	Task 2 >> Task 4
+
+	defaultdb.details + ~1M rows
+	defaultdb.fatalities + ~20K rows
+
+Monthly Scheduled Trigger DAG: scheduled trigger on 17th of each month
+
+	Task 1 - PythonOperator verify new details filename for latest year+month source to blob:
+	Task 2 - PythonOperator verify new fatalities filename for latest year+month source to blob:
+
+	container:newfiles
+		-details x 1
+		-fatalities x 1
+		
+	Task 3 - AzureDataFactoryRunPipelineOperator single new file triggers ADF CP details blob to MySQL
+	Task 4 - AzureDataFactoryRunPipelineOperator single new file triggers ADF CP fatalities blob to MySQL
+
+	Task 1 >> Task 3 
+	Task 2 >> Task 4
+	
+	defaultdb.details + ~5k new rows
+	defaultdb.fatalities + ~50 new rows
