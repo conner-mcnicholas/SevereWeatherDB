@@ -5,7 +5,7 @@
 ### Current State
 
 Step 8 - Deploy Code for Testing:<br>
-&emsp;&emsp;-prior steps outlined as slide-deck PDF in respective folders<br>
+&emsp;&emsp;-Prior steps outlined as slide-deck PDF in respective folders<br>
 &emsp;&emsp;-Changed course on tech stack (see Step7/DeploymentArchitecture.pdf):<br>
 
 ![alt text](https://github.com/conner-mcnicholas/SevereWeatherDB/blob/main/Step7/diagram_formats/final_archdiagram_mod.png?raw=true)

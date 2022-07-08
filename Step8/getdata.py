@@ -19,7 +19,7 @@ def writeFiles(flist, sdate):
     """
     Writes files pertaining to filecounter after sdate to /data folder
     """
-    if Path('/home/conner/SevereWeatherDB/data/unzipped').is_dir() == False:
+    if Path('/home/conner/SevereWeatherDB/filecounter').is_dir() == False:
         os.system('mkdir /home/conner/SevereWeatherDB/filecounter ')
     for file in flist:
         print(f'Processing %s' % file)
