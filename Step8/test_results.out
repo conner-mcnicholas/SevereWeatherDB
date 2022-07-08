@@ -1,0 +1,13 @@
+=================================================================================== test session starts ====================================================================================
+platform linux -- Python 3.10.5, pytest-7.1.2, pluggy-1.0.0 -- /usr/local/bin/python3
+cachedir: .pytest_cache
+rootdir: /home/conner/SevereWeatherDB/Step8
+plugins: anyio-3.6.1
+collected 4 items
+
+runtests.py::test_details_uploaded PASSED                                                                                                                                            [ 25%]
+runtests.py::test_fatalities_uploaded PASSED                                                                                                                                         [ 50%]
+runtests.py::test_details_count PASSED                                                                                                                                               [ 75%]
+runtests.py::test_fatalities_count PASSED                                                                                                                                            [100%]
+
+==================================================================================== 4 passed in 12.16s ====================================================================================

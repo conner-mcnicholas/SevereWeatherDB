@@ -41,11 +41,23 @@ def listtarget(flist, sdate):
     print("number of target files for loading to blob:" + str(len(targeted)))
     return targeted
 
-def sendtoblob(thefiles):
+def sendtoblob(url,thefiles):
     """
     uploads single file to blob
     """
     print("\n\n***** Start of method sendtoblob *****")
+    print("***** Start of script *****\n")
+    try:
+        CONNECTION_STRING = os.environ["AZURE_STORAGE_CONNECTION_STRING"]
+    except KeyError:
+        print("AZURE_STORAGE_CONNECTION_STRING must be set.")
+        sys.exit(1)
+    blob_service_client = BlobServiceClient.from_connection_string(CONNECTION_STRING)
+    container = "severeweathercontainer"
+
+    succeeded = []
+    failed = []
+
     for thefile in thefiles:
         sourcefile = url+'/'+thefile
         print("\nuploading sourcefile:" + thefile)
@@ -76,15 +88,34 @@ def sendtoblob(thefiles):
 
         if status == "success":
             # Copy finished
+            succeeded.append(thefile)
             print("Copy successful!")
         else:
-            # if not finished after 100s, cancel the operation
+            # if not finished after 1 min, cancel the operation
+            failed.append(thefile)
             print("Copy unsuccessful")
             print("Final copy status: " + status + "\nAborting copy...")
             copy_id = props.copy.id
             copied_blob.abort_copy(copy_id)
             props = copied_blob.get_blob_properties()
             print(props.copy.status)
+
+    print("number of files successfully loaded to blob:" + str(len(succeeded)))
+    print("number of files failed to load to blob:" + str(len(failed)))
+
+def listblobfiles(container,table):
+    flist=[]
+    try:
+        CONNECTION_STRING = os.environ["AZURE_STORAGE_CONNECTION_STRING"]
+    except KeyError:
+        print("AZURE_STORAGE_CONNECTION_STRING must be set.")
+        sys.exit(1)
+    blob_service_client = BlobServiceClient.from_connection_string(CONNECTION_STRING)
+    container_client=blob_service_client.get_container_client(container)
+    blob_list = container_client.list_blobs(name_starts_with=table+"/")
+    for blob in blob_list:
+        flist.append(blob)
+    return flist
 
 if __name__ == "__main__":
     print("***** Start of script *****\n")
@@ -93,12 +124,13 @@ if __name__ == "__main__":
     except KeyError:
         print("AZURE_STORAGE_CONNECTION_STRING must be set.")
         sys.exit(1)
+    sdate = int(sys.argv[1])
+    url = "https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles"
+    print(f"Getting all files after {sdate}...\n")
     blob_service_client = BlobServiceClient.from_connection_string(CONNECTION_STRING)
     container = "severeweathercontainer"
-    url = "https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles"
-    sdate = 2019
-    print(f"Getting all files from {url} after {sdate}...\n")
+    container_client=blob_service_client.get_container_client(container)
     allfiles = listall(url)
     targetfiles = listtarget(allfiles, sdate)
-    sendtoblob(targetfiles)
+    sendtoblob(url,targetfiles)
     print("***** End of script *****")

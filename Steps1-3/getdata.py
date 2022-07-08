@@ -38,8 +38,7 @@ def writeFiles(flist, sdate):
             print(f'File is past start date %s, connecting...' % sdate)
             ftype = felements[1].split('-')[0]
             fdateup = felements[-1][1:9]
-            fname = '/home/conner/SevereWeatherDB/data/storm_%s_%s_%s.csv.gz' % (
-                ftype, fyear, fdateup)
+            name = f'/home/conner/SevereWeatherDB/data/storm_{ftype}_{fyear}_{fdateup}.csv.gz'
             r = requests.get(file)
             with open(fname, 'wb') as f:
                 print('Writing locally...')
