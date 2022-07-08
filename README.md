@@ -9,12 +9,12 @@ Current State - Step 8 (Deploy Your Code for Testing):<br>
 
 ![alt text](https://github.com/conner-mcnicholas/SevereWeatherDB/blob/main/Step7/diagram_formats/final_archdiagram_mod.png?raw=true)
 
-&emsp;&emsp;- There were 2 steps in the ETL Processs:<br>
-&emsp;&emsp;- 1) Run python script to batch upload all from 2000-Present to Azure Data Lake containers: <br>
+&emsp;&emsp;-There were 2 steps in the ETL Processs:<br>
+&emsp;&emsp;&emsp;1) Run python script to batch upload all from 2000-Present to Azure Data Lake containers: <br>
 
 `python uploadtoblob.py 2000`
 
-&emsp;&emsp;- 2) Run pipelines in Azure Data Factory to copy data from blob input to MySQL table output:<br>
+&emsp;&emsp;&emsp;2) Run pipelines in Azure Data Factory to copy data from blob input to MySQL table output:<br>
 
 ![alt text](https://github.com/conner-mcnicholas/SevereWeatherDB/blob/main/Step8/imgs/DATASET_input_details_gz_cont.png?raw=true)<br>
 
@@ -23,8 +23,8 @@ Current State - Step 8 (Deploy Your Code for Testing):<br>
 ![alt text](https://github.com/conner-mcnicholas/SevereWeatherDB/blob/main/Step8/imgs/data_factory_successful_cp.png?raw=true)<br>
 
 &emsp;&emsp;-Wrote 4 test cases (2 tests x 2 tables - details + fatalities):<br>
-&emsp;&emsp;&emsp;&emsp;-1 test to verify that all available files from source have been uploaded to blob<br>
-&emsp;&emsp;&emsp;&emsp;-1 test to verify that every line from source files have been copied over to MySQL tables<br>
+&emsp;&emsp;&emsp;1 test to verify that all available files from source have been uploaded to blob<br>
+&emsp;&emsp;&emsp;1 test to verify that every line from source files have been copied over to MySQL tables<br>
 
 &emsp;&emsp;-All tests pass, as captured in Step8/test_results.out:<br>
 
