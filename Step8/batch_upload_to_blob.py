@@ -21,7 +21,7 @@ def listall(url):
             ((not node.get("href").startswith("StormEvents_locations")) and (node.get("href").endswith("csv.gz")))]
 
 
-def listtarget(flist, sdate):
+def listtarget(flist, start_year):
     """
     Create list of files that are past start date and target for upload to blob
     """
@@ -33,11 +33,11 @@ def listtarget(flist, sdate):
         felements = filename.split("_")
         ftype = felements[1].split("-")[0]
         fyear = felements[3][1:5]
-        if int(fyear) >= sdate:
-            print(f"File is past start date({sdate}), adding...\n")
+        if int(fyear) >= start_year:
+            print(f"File is past start date({start_year}), adding...\n")
             targeted.append(filename)
         else:
-            print(f"File is before start date({sdate}), skipping...\n")
+            print(f"File is before start date({start_year}), skipping...\n")
     print("number of target files for loading to blob:" + str(len(targeted)))
     return targeted
 
@@ -117,20 +117,33 @@ def listblobfiles(container,table):
         flist.append(blob)
     return flist
 
-if __name__ == "__main__":
-    print("***** Start of script *****\n")
+def run():
+    """
+    Recreated from main method to call from airflow as PythonOperator python callable
+    """
+    global CONNECTION_STRING
+    global blob_service_client
+    global container
+
     try:
         CONNECTION_STRING = os.environ["AZURE_STORAGE_CONNECTION_STRING"]
     except KeyError:
         print("AZURE_STORAGE_CONNECTION_STRING must be set.")
         sys.exit(1)
-    sdate = int(sys.argv[1])
+    start_year = int(sys.argv[1])
     url = "https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles"
-    print(f"Getting all files after {sdate}...\n")
+    print(f"Getting all files after {start_year}...\n")
     blob_service_client = BlobServiceClient.from_connection_string(CONNECTION_STRING)
     container = "severeweathercontainer"
     container_client=blob_service_client.get_container_client(container)
     allfiles = listall(url)
-    targetfiles = listtarget(allfiles, sdate)
+    targetfiles = listtarget(allfiles, start_year)
     sendtoblob(url,targetfiles)
-    print("***** End of script *****")
+
+if __name__ == "__main__":
+    """
+    Recreated as run method to call from airflow as PythonOperator python callable
+    """
+    print("--------------------- START OF batch_upload_to_blob SCRIPT ---------------------")
+    run()
+    print("\n\n--------------------- END OF batch_upload_to_blob SCRIPT ---------------------")

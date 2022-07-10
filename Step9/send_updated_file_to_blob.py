@@ -1,101 +1,118 @@
-from datetime import date
+"""
+Script runs each month on 17th, after this years file should
+contain new data (recent as of 65 days prior) and have an updated filename
+based on modification date
+"""
+from datetime import datetime,date,timedelta
 from azure.storage.blob import BlobServiceClient
 import os
 import glob
 import sys
+from pathlib import Path
+import requests
+from bs4 import BeautifulSoup
 
 def listblobfiles(tabletype):
     """
     Given table type
     list all files in blob initial batch container
     """
-    print("\n\n***** START: listblobfiles *****\n")
+    print("\n\n\t\t***** START: listblobfiles *****\n")
 
     flist=[]
+    print(f"Connecting to blob for list of {tabletype} files...")
     blob_service_client = BlobServiceClient.from_connection_string(CONNECTION_STRING)
     container_client=blob_service_client.get_container_client(batchcontainer)
     blob_list = container_client.list_blobs(name_starts_with=tabletype+"/")
+    print("Transfer of blob file list complete...")
     for blob in blob_list:
         flist.append(blob)
+    print("\n\t\t***** END: listblobfiles *****\n\n")
     return flist
 
-    print("\n***** END: listblobfiles *****\n\n")
 
-def findblobupdated(flist, tyear):
+def findblobupdated(dictlist, tyear):
     """
     Given file list from blob
     Returns creation date of file from year of interest (usually this year)
     """
-    print("\n\n***** START: findblobupdated *****\n")
-
-    for file in flist:
-        filename = Path(file).parts[-1]
+    print("\n\n\t\t***** START: findblobupdated *****\n")
+    for filedict in dictlist:
+        file = filedict['name']
+        filename = Path(str(file)).parts[-1]
         felements = filename.split("_")
         fyear = int(felements[3][1:5])
         fdateup = felements[-1][1:9]
-        print(f"\n{filename} is year of record = {targetyr} ?")
+        fdateup = datetime.strptime(fdateup, '%Y%m%d')
+        fdateup = fdateup.date()
+        print(f"\nBLOB: {filename} does {fyear} = {tyear} ?")
         if fyear == tyear:
             print(f"YUP! returning target year's last updated date:{fdateup}")
+            print("\n\t\t***** END: findblobupdated *****\n\n")
             return fdateup
         else:
-            print(f"out of scope\n")
+            print(f"no, file year is out of scope\n")
     print('processing complete, no file from target year exists in file list')
 
-    print("\n***** END: findblobupdated *****\n\n")
+    print("\n\t\t***** END: findblobupdated *****\n\n")
 
-def listsourcefiles(url):
+def listsourcefiles(url,tabletype):
     """
     Given source url
     Returns list of all files at the given source URL
     """
-    print("\n\n***** START: listsourcefiles *****\n")
+    print("\n\n\t\t***** START: listsourcefiles *****\n")
 
-    print("Connecting to url...")
+    print(f"Connecting to source url for list of {tabletype} files...")
     page = requests.get(url).text
     soup = BeautifulSoup(page, "html.parser")
     print("\nReturning parsed text....")
+    print("\n\t\t***** END: listsourcefiles *****\n\n")
     return [url + "/" + node.get("href")
             for node in soup.find_all("a") if
-            ((not node.get("href").startswith("StormEvents_locations")) and (node.get("href").endswith("csv.gz")))]
+            ((node.get("href").startswith(f"StormEvents_{tabletype}")) and (node.get("href").endswith("csv.gz")))]
 
-    print("\n***** END: listsourcefiles *****\n\n")
+    print("\n\t\t***** END: listsourcefiles *****\n\n")
 
 def findupdatedfile(sourcefiles, targetyr, bloblatestupdate):
     """
     Given file list from source
     Find if file from target year is more recent than latest bloblatestupdate from blob
     """
-    print("\n\n***** START: findupdatedfile *****\n")
+    print("\n\n\t\t***** START: findupdatedfile *****\n")
 
     for file in sourcefiles:
         filename = Path(file).parts[-1]
         felements = filename.split("_")
         fyear = int(felements[3][1:5])
         fdateup = felements[-1][1:9]
-        print(f"\n{filename} is year of record = {targetyr} ?")
+        fdateup = datetime.strptime(fdateup, '%Y%m%d')
+        fdateup = fdateup.date()
+        #fdateup = fdateup + timedelta(days = 1) #faking for test
+        print(f"\nSOURCE: {filename} does {fyear} = {targetyr} ?")
         if fyear == targetyr:
-            print(f"in scope. is creation date > {bloblatestupdate} ?")
+            print(f"YES, file year in scope. is creation date {fdateup} > {bloblatestupdate} ?")
             if fdateup > bloblatestupdate:
-                print("returning new file!")
+                print("YES, returning new file!")
+                print("\n\t\t***** END: findupdatedfile *****\n\n")
                 return filename
             elif fdateup == bloblatestupdate:
-                print("we already have file.")
+                print("no, target year file creation dates match - we already have file.")
             else:
-                print("file is older than file on record?")
+                print("no, file is older than blob file - how?")
         else:
-            print(f"out of scope\n")
+            print(f"no, file year out of scope\n")
 
-    print('processing has not identified a new file')
+    print('\nprocessing has not identified a new file')
+    print("\n\t\t***** END: findupdatedfile *****\n\n")
     return('NOT FOUND')
-
-    print("\n***** END: findupdatedfile *****\n\n")
 
 def filetoblob(sourceurl, thefile, tabletype):
     """
     Given source url and filename
     uploads single source file to blob
     """
-    print("\n\n***** START: filetoblob *****\n")
+    print("\n\n\t\t***** START: filetoblob *****\n")
 
     sourcefile = sourceurl+'/'+thefile
     print(f"\ningesting {thefile} to {newcontainer}/{tabletype}")
@@ -108,6 +125,7 @@ def filetoblob(sourceurl, thefile, tabletype):
         status = props.copy.status
         print("Copy status: " + status)
         if status == "success":
+            print("\n\t\t***** END: filetoblob *****\n\n")
             break
         else:
             print("Copy not yet successful, waiting 5 seconds...")
@@ -127,11 +145,16 @@ def filetoblob(sourceurl, thefile, tabletype):
         props = copied_blob.get_blob_properties()
         print(props.copy.status)
 
-    print("\n***** END: filetoblob *****\n\n")
+    print("\n\t\t***** END: filetoblob *****\n\n")
 
-
-if __name__ == "__main__":
-    print("--------------------- START OF SCRIPT ---------------------\n\n")
+def run():
+    """
+    Recreated from main method to call from airflow as PythonOperator python callable
+    """
+    global CONNECTION_STRING
+    global blob_service_client
+    global batchcontainer
+    global newcontainer
 
     try:
         CONNECTION_STRING = os.environ["AZURE_STORAGE_CONNECTION_STRING"]
@@ -139,7 +162,7 @@ if __name__ == "__main__":
         print("AZURE_STORAGE_CONNECTION_STRING must be set.")
         sys.exit(1)
 
-    targetyear = str(date.today())[0:4]
+    targetyear = int(str(date.today())[0:4])
 
     sourceurl = "https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles"
 
@@ -148,13 +171,19 @@ if __name__ == "__main__":
     newcontainer = "newfiles"
 
     for tabletype in ['details','fatalities']:
+        print(f"Picking up any updated {tabletype} file for {targetyear}")
         blobfiles = listblobfiles(tabletype)
         bloblatestupdate = findblobupdated(blobfiles,targetyear)
-        sourcefiles = listsourcefiles(sourceurl)
+        sourcefiles = listsourcefiles(sourceurl,tabletype)
         updatedsourcefile = findupdatedfile(sourcefiles, targetyear, bloblatestupdate)
         if updatedsourcefile != 'NOT FOUND':
+            #print(f'updated file identified for {targetyear} - > {updatedsourcefile} (Placeholder for sending file to blob)')
             filetoblob(sourceurl,updatedsourcefile,tabletype)
-        else:
-            print(f'NO UPDATED FILE IDENTIFIED IN SOURCE FOR {targetyear}')
 
-    print("\n\n--------------------- END OF SCRIPT ---------------------")
+if __name__ == "__main__":
+    """
+    Recreate as run method to call from airflow as PythonOperator python callable
+    """
+    print("--------------------- START OF send_updated_file_to_blob SCRIPT ---------------------")
+    run()
+    print("\n\n--------------------- END OF send_updated_file_to_blob SCRIPT ---------------------")
