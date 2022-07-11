@@ -2,6 +2,8 @@ from bs4 import BeautifulSoup
 import requests
 from pathlib import Path
 import os
+import glob
+import gzip
 
 def listFull(url):
     """
@@ -37,3 +39,21 @@ def writeFiles(flist, sdate):
                 print('Write complete!\n')
         else:
             print(f'File is before start date %s, skipping...\n' % sdate)
+
+def countfilerows(tablename):
+    writetopath = r'/home/conner/SevereWeatherDB/filecounter/storm_'
+    if len(glob.glob(writetopath)) == 0:
+        source_url = 'https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles'
+        start_year = 2000
+        flist = listFull(source_url)
+        writeFiles(flist, start_year)
+
+    tabpath = writetopath + tablename + '*'
+    tabfiles = glob.glob(tabpath)
+    rows = 0
+    for myfile in tabfiles:
+        with gzip.open(myfile, 'rb') as f:
+            for i, l in enumerate(f):
+                pass
+        rows+=i
+    return rows
