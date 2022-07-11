@@ -141,8 +141,9 @@ if __name__ == "__main__":
     DB_NAME = 'Capstone'
     cnx = initialize_database()
     engine = create_engine('mysql+pymysql://root@localhost/Capstone')
-    detlist = sorted(glob.glob("/home/conner/SevereWeatherDB/data/unzipped/storm_details_*"))
-    fatlist = sorted(glob.glob("/home/conner/SevereWeatherDB/data/unzipped/storm_fatalities_*"))
+    data_dir = f"{os.environ['HOME']}/SevereWeatherDB/data/unzipped"
+    detlist = sorted(glob.glob(f"{data_dir}/storm_details_*"))
+    fatlist = sorted(glob.glob(f"{data_dir}/storm_fatalities_*"))
     for d in detlist:
         print('Cutting ' + d)
         cut_details(d)

@@ -10,6 +10,7 @@ import requests
 from pathlib import Path
 import os
 
+data_dir = f"{os.environ['HOME']}/SevereWeatherDB/data"
 
 def listFull(url):
     """
@@ -38,7 +39,7 @@ def writeFiles(flist, sdate):
             print(f'File is past start date %s, connecting...' % sdate)
             ftype = felements[1].split('-')[0]
             fdateup = felements[-1][1:9]
-            name = f'/home/conner/SevereWeatherDB/data/storm_{ftype}_{fyear}_{fdateup}.csv.gz'
+            name = f'{data_dir}/storm_{ftype}_{fyear}_{fdateup}.csv.gz'
             r = requests.get(file)
             with open(fname, 'wb') as f:
                 print('Writing locally...')
@@ -49,12 +50,12 @@ def writeFiles(flist, sdate):
 
 
 def unzipFiles():
-    if Path('/home/conner/SevereWeatherDB/data/unzipped').is_dir():
+    if Path(f'{data_dir}/unzipped').is_dir():
         print('"data/unzipped" directory for storing decompressed csv files already exists')
     else:
         print('Creating "data/unzipped" directory for storing decompressed csv files')
-        os.system('mkdir /home/conner/SevereWeatherDB/data/unzipped')
-    os.system('gzip -dk /home/conner/SevereWeatherDB/data/*.gz;mv /home/conner/SevereWeatherDB/data/*.csv /home/conner/SevereWeatherDB/dataz/unzipped')
+        os.system(f'mkdir {data_dir}/unzipped')
+    os.system(f'gzip -dk {data_dir}/*.gz;mv {data_dir}/*.csv {data_dir}/unzipped')
 
 
 if __name__ == "__main__":

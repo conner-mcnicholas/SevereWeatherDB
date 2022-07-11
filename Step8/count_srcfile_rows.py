@@ -5,6 +5,8 @@ import os
 import glob
 import gzip
 
+tmp_write_dir = f"{os.environ['HOME']}/SevereWeatherDB/filecounter"
+
 def listFull(url):
     """
     Returns list of all files at the given URL
@@ -21,8 +23,8 @@ def writeFiles(flist, sdate):
     """
     Writes files pertaining to filecounter after sdate to /data folder
     """
-    if Path('/home/conner/SevereWeatherDB/filecounter').is_dir() == False:
-        os.system('mkdir /home/conner/SevereWeatherDB/filecounter ')
+    if Path(tmp_write_dir).is_dir() == False:
+        os.system(f'mkdir {tmp_write_dir} ')
     for file in flist:
         print(f'Processing %s' % file)
         felements = Path(file).parts[-1].split('_')
@@ -31,7 +33,7 @@ def writeFiles(flist, sdate):
             print(f'File is past start date %s, connecting...' % sdate)
             ftype = felements[1].split('-')[0]
             fdateup = felements[-1][1:9]
-            fname = '/home/conner/SevereWeatherDB/filecounter/'+f'storm_{ftype}_{fyear}_{fdateup}.csv.gz'
+            fname = f'{tmp_write_dir}/storm_{ftype}_{fyear}_{fdateup}.csv.gz'
             r = requests.get(file)
             with open(fname, 'wb') as f:
                 print('Writing locally...')
@@ -41,7 +43,7 @@ def writeFiles(flist, sdate):
             print(f'File is before start date %s, skipping...\n' % sdate)
 
 def countfilerows(tablename):
-    writetopath = r'/home/conner/SevereWeatherDB/filecounter/storm_'
+    writetopath = f'{tmp_write_dir}/storm_'
     if len(glob.glob(writetopath)) == 0:
         source_url = 'https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles'
         start_year = 2000

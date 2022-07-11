@@ -1,7 +1,8 @@
 \c 10 3000
-detfiles:asc hsym each `$' ":/home/conner/SevereWeatherDB/data/unzipped/",/:  system "ls ../data/unzipped | grep storm_details"
+datadir:raze ":",(system"echo $HOME"),("/SevereWeatherDB/data/unzipped")
+detfiles:asc hsym each `$' datadir,/:  system "ls ../data/unzipped | grep storm_details"
 //locfiles:asc hsym each `$'system "ls ../data/unzipped | grep storm_locations"
-fatfiles:asc hsym each `$' ":/home/conner/SevereWeatherDB/data/unzipped/",/:  system "ls ../data/unzipped | grep storm_fatalities"
+fatfiles:asc hsym each `$' datadir,/:  system "ls ../data/unzipped | grep storm_fatalities"
 
 
 detorig: (,/) {(51#"*";enlist ",") 0:x} each detfiles
