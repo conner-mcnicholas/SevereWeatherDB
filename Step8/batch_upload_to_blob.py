@@ -46,14 +46,11 @@ def sendtoblob(url,thefiles):
     uploads single file to blob
     """
     print("\n\n***** Start of method sendtoblob *****")
-    print("***** Start of script *****\n")
-    try:
-        CONNECTION_STRING = os.environ["AZURE_STORAGE_CONNECTION_STRING"]
-    except KeyError:
-        print("AZURE_STORAGE_CONNECTION_STRING must be set.")
-        sys.exit(1)
+
+    CONNECTION_STRING = os.environ["AZURE_STORAGE_CONNECTION_STRING"]
     blob_service_client = BlobServiceClient.from_connection_string(CONNECTION_STRING)
-    container = "severeweathercontainer"
+    container = "testbatch"
+    container_client=blob_service_client.get_container_client(container)
 
     succeeded = []
     failed = []
@@ -63,15 +60,9 @@ def sendtoblob(url,thefiles):
         print("\nuploading sourcefile:" + thefile)
         filename = Path(thefile).parts[-1]
         filetype = filename.split("_")[1].split("-")[0]
-        if filetype == 'fatalities':
-            print("uploading to container fatalities folder")
-            copied_blob = blob_service_client.get_blob_client(container+'/fatalities', thefile)
-        elif filetype == 'details':
-            print("uploading to container fatalities folder")
-            copied_blob = blob_service_client.get_blob_client(container+'/details', thefile)
-        else:
-            print("filetype unknown, exiting!")
-            sys.exit(1)
+
+        print("uploading to container fatalities folder")
+        copied_blob = blob_service_client.get_blob_client(f'{container}/{filetype}', thefile)
 
         copied_blob.start_copy_from_url(sourcefile)
         sleep(5)
@@ -103,39 +94,14 @@ def sendtoblob(url,thefiles):
     print("number of files successfully loaded to blob:" + str(len(succeeded)))
     print("number of files failed to load to blob:" + str(len(failed)))
 
-def listblobfiles(container,table):
-    flist=[]
-    try:
-        CONNECTION_STRING = os.environ["AZURE_STORAGE_CONNECTION_STRING"]
-    except KeyError:
-        print("AZURE_STORAGE_CONNECTION_STRING must be set.")
-        sys.exit(1)
-    blob_service_client = BlobServiceClient.from_connection_string(CONNECTION_STRING)
-    container_client=blob_service_client.get_container_client(container)
-    blob_list = container_client.list_blobs(name_starts_with=table+"/")
-    for blob in blob_list:
-        flist.append(blob)
-    return flist
 
 def run():
     """
     Recreated from main method to call from airflow as PythonOperator python callable
     """
-    global CONNECTION_STRING
-    global blob_service_client
-    global container
-
-    try:
-        CONNECTION_STRING = os.environ["AZURE_STORAGE_CONNECTION_STRING"]
-    except KeyError:
-        print("AZURE_STORAGE_CONNECTION_STRING must be set.")
-        sys.exit(1)
     start_year = int(sys.argv[1])
     url = "https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles"
     print(f"Getting all files after {start_year}...\n")
-    blob_service_client = BlobServiceClient.from_connection_string(CONNECTION_STRING)
-    container = "severeweathercontainer"
-    container_client=blob_service_client.get_container_client(container)
     allfiles = listall(url)
     targetfiles = listtarget(allfiles, start_year)
     sendtoblob(url,targetfiles)

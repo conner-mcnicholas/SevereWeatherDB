@@ -42,11 +42,10 @@ def writeFiles(flist, sdate):
         else:
             print(f'File is before start date %s, skipping...\n' % sdate)
 
-def countfilerows(tablename):
+def countfilerows(tablename,start_year):
     writetopath = f'{tmp_write_dir}/storm_'
     if len(glob.glob(writetopath)) == 0:
         source_url = 'https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles'
-        start_year = 2000
         flist = listFull(source_url)
         writeFiles(flist, start_year)
 

@@ -1,5 +1,5 @@
 todo:
-	install airflow image
+	install airflow image DONE
 	create dags
 	figure out how to strip data to new rows using transform ADF data flow
 		verify how to check tables for latest id and files for newest id
@@ -8,18 +8,16 @@ todo:
 
 1) Initial Load DAG:2 parallel flows: manually triggered
 
-	Task 1 - PythonOperator 1 time batch load details source to blob severeweathercontainer: (batch_upload_to_blob.py)
-	Task 2 - PythonOperator 1 time batch load fatalities source to blob severeweathercontainer  (batch_upload_to_blob.py)
+	Task 1 - PythonOperator 1 time batch load BOTH details and fatalities source to blob severeweathercontainer: (initial_batch.py)
 
 	container:severeweathercontainer
 		details x 23
 		fatalities x 23
 
-	Task 3 - AzureDataFactoryRunPipelineOperator 1 time ADF CP details blob severeweathercontainer to MySQL
-	Task 4 - AzureDataFactoryRunPipelineOperator 1 time ADF CP fatalities blob severeweathercontainer to MySQL
+	Task 2 - AzureDataFactoryRunPipelineOperator 1 time ADF CP details blob severeweathercontainer to MySQL
+	Task 3 - AzureDataFactoryRunPipelineOperator 1 time ADF CP fatalities blob severeweathercontainer to MySQL
 
-	Task 1 >> Task 3
-	Task 2 >> Task 4
+	Task 1 >> [Task2, Task 3] (chain)
 
 	defaultdb.details + ~1M rows
 	defaultdb.fatalities + ~20K rows
@@ -28,8 +26,7 @@ todo:
 
 2) Monthly Scheduled Trigger DAG: scheduled trigger on 17th of each month
 
-	Task 1 - PythonOperator verify new details filename for latest year+month and send from source to blob newfiles container: (send_updated_file_to_blob.py)
-	Task 2 - PythonOperator verify new fatalities filename for latest year+month and send from source to blob newfiles container:  (send_updated_file_to_blob.py)
+	Task 1 - PythonOperator verify new filename for BOTH details and fatalities for latest year+month and send from source to blob newfiles container: (send_updated_file_to_blob.py)
 
 	container:newfiles
 		-details x 1
@@ -37,12 +34,12 @@ todo:
 
 	---------
 
-	Task 3 - AzureDataFactoryRunPipelineOperator single new file triggers ADF CP details blob newfiles container to MySQL (STRIP ROWS FOR ONLY NEW DATA)
-	Task 4 - AzureDataFactoryRunPipelineOperator single new file triggers ADF CP fatalities blob newfiles container to MySQL (STRIP ROWS FOR ONLY NEW DATA)
+	Task 2 - AzureDataFactoryRunPipelineOperator single new file triggers ADF CP details blob newfiles container to MySQL (STRIP ROWS FOR ONLY NEW DATA)
+	Task 3 - AzureDataFactoryRunPipelineOperator single new file triggers ADF CP fatalities blob newfiles container to MySQL (STRIP ROWS FOR ONLY NEW DATA)
 
 	---------
-	Task 5 - AzureDataFactoryRunPipelineOperator trigger ADF CP single details file from newfiles blob container to severeweathercontainer container
-	Task 6 - AzureDataFactoryRunPipelineOperator trigger ADF CP single fatalities file from newfiles blob container to severeweathercontainer container
+	Task 4 - AzureDataFactoryRunPipelineOperator trigger ADF CP single details file from newfiles blob container to severeweathercontainer container
+	Task 5 - AzureDataFactoryRunPipelineOperator trigger ADF CP single fatalities file from newfiles blob container to severeweathercontainer container
 
 	container:newfiles
 		-details EMPTY
@@ -50,8 +47,7 @@ todo:
 
 	----------
 
-	Task 1 >> Task 3 >> Task 5
-	Task 2 >> Task 4 >> Task 6
+	Task 1 >> [Task2, Task 3] >> [Task4, Task 5]
 
 	defaultdb.details + ~5k new rows
 	defaultdb.fatalities + ~50 new rows
@@ -60,8 +56,7 @@ todo:
 
 3) Year Scheduled Trigger DAG: scheduled trigger on March 17th of each year
 
-		Task 1 - PythonOperator verify brand new details source file for latest year and send from source to newfiles blob container: (send_new_file_to_blob.py)
-		Task 2 - PythonOperator verify brand new fatalities source file for latest year and send from source to newfiles blob container:  (send_new_file_to_blob.py)
+		Task 1 - PythonOperator verify brand new source file for BOTH details and fatalities for latest year and send from source to newfiles blob container: (send_new_file_to_blob.py)
 
 		container:newfiles
 			-details x 1
@@ -82,8 +77,7 @@ todo:
 
 		----------
 
-		Task 1 >> Task 3 >> Task 5
-		Task 2 >> Task 4 >> Task 6
+	Task 1 >> [Task2, Task 3] >> [Task4, Task 5]
 
 		defaultdb.details + ~5k new rows
 		defaultdb.fatalities + ~50 new rows

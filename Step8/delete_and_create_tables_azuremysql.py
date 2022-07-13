@@ -1,5 +1,6 @@
 import mysql.connector
 from mysql.connector import errorcode
+import os
 
 config = {
   'host':'sevwethmysqlserv.mysql.database.azure.com',
@@ -7,7 +8,7 @@ config = {
   'password':'Universal124!',
   'database':'defaultdb',
   'client_flags': [mysql.connector.ClientFlag.SSL],
-  'ssl_ca': '/home/conner/.ssh/DigiCertGlobalRootG2.crt.pem'
+  'ssl_ca': f'{os.environ["HOME"]}/.ssh/DigiCertGlobalRootG2.crt.pem'
 }
 
 
