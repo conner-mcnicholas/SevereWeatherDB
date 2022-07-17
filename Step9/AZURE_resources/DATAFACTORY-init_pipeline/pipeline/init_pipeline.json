@@ -1,11 +1,18 @@
 {
-    "name": "cp details initial batch",
+    "name": "init_pipeline",
     "properties": {
         "activities": [
             {
-                "name": "cp details",
+                "name": "init_copy_details",
                 "type": "Copy",
-                "dependsOn": [],
+                "dependsOn": [
+                    {
+                        "activity": "init_python_loader",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
                 "policy": {
                     "timeout": "7.00:00:00",
                     "retry": 0,
@@ -669,8 +676,250 @@
                         "type": "DatasetReference"
                     }
                 ]
+            },
+            {
+                "name": "init_python_loader",
+                "type": "DatabricksSparkPython",
+                "dependsOn": [],
+                "policy": {
+                    "timeout": "0.00:10:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "pythonFile": "dbfs:/FileStore/script_initial_files_to_blob.py",
+                    "parameters": [
+                        "2019"
+                    ],
+                    "libraries": [
+                        {
+                            "pypi": {
+                                "package": "azure-storage-blob==12.12.0"
+                            }
+                        },
+                        {
+                            "pypi": {
+                                "package": "beautifulsoup4==4.10.0"
+                            }
+                        },
+                        {
+                            "pypi": {
+                                "package": "requests==2.26.0"
+                            }
+                        },
+                        {
+                            "pypi": {
+                                "package": "mysql-connector-python==8.0.29"
+                            }
+                        }
+                    ]
+                },
+                "linkedServiceName": {
+                    "referenceName": "PythonInitialLoader",
+                    "type": "LinkedServiceReference"
+                }
+            },
+            {
+                "name": "init_copy_fatalities",
+                "type": "Copy",
+                "dependsOn": [
+                    {
+                        "activity": "init_python_loader",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "7.00:00:00",
+                    "retry": 1,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "source": {
+                        "type": "DelimitedTextSource",
+                        "storeSettings": {
+                            "type": "AzureBlobFSReadSettings",
+                            "recursive": true,
+                            "wildcardFolderPath": "fatalities",
+                            "wildcardFileName": "*.gz",
+                            "enablePartitionDiscovery": false
+                        },
+                        "formatSettings": {
+                            "type": "DelimitedTextReadSettings"
+                        }
+                    },
+                    "sink": {
+                        "type": "AzureMySqlSink",
+                        "writeBatchSize": 10000,
+                        "writeBatchTimeout": "00:00:30"
+                    },
+                    "enableStaging": false,
+                    "translator": {
+                        "type": "TabularTranslator",
+                        "mappings": [
+                            {
+                                "source": {
+                                    "name": "FAT_YEARMONTH",
+                                    "type": "String",
+                                    "physicalType": "String"
+                                },
+                                "sink": {
+                                    "name": "FAT_YEARMONTH",
+                                    "type": "String",
+                                    "physicalType": "varchar"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "FAT_DAY",
+                                    "type": "String",
+                                    "physicalType": "String"
+                                },
+                                "sink": {
+                                    "name": "FAT_DAY",
+                                    "type": "String",
+                                    "physicalType": "varchar"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "FAT_TIME",
+                                    "type": "String",
+                                    "physicalType": "String"
+                                },
+                                "sink": {
+                                    "name": "FAT_TIME",
+                                    "type": "String",
+                                    "physicalType": "varchar"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "FATALITY_ID",
+                                    "type": "String",
+                                    "physicalType": "String"
+                                },
+                                "sink": {
+                                    "name": "FATALITY_ID",
+                                    "type": "Int32",
+                                    "physicalType": "int"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "EVENT_ID",
+                                    "type": "String",
+                                    "physicalType": "String"
+                                },
+                                "sink": {
+                                    "name": "EVENT_ID",
+                                    "type": "Int32",
+                                    "physicalType": "int"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "FATALITY_TYPE",
+                                    "type": "String",
+                                    "physicalType": "String"
+                                },
+                                "sink": {
+                                    "name": "FATALITY_TYPE",
+                                    "type": "String",
+                                    "physicalType": "varchar"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "FATALITY_DATE",
+                                    "type": "String",
+                                    "physicalType": "String"
+                                },
+                                "sink": {
+                                    "name": "FATALITY_DATE",
+                                    "type": "String",
+                                    "physicalType": "varchar"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "FATALITY_AGE",
+                                    "type": "String",
+                                    "physicalType": "String"
+                                },
+                                "sink": {
+                                    "name": "FATALITY_AGE",
+                                    "type": "Int32",
+                                    "physicalType": "int"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "FATALITY_SEX",
+                                    "type": "String",
+                                    "physicalType": "String"
+                                },
+                                "sink": {
+                                    "name": "FATALITY_SEX",
+                                    "type": "String",
+                                    "physicalType": "char"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "FATALITY_LOCATION",
+                                    "type": "String",
+                                    "physicalType": "String"
+                                },
+                                "sink": {
+                                    "name": "FATALITY_LOCATION",
+                                    "type": "String",
+                                    "physicalType": "text"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "EVENT_YEARMONTH",
+                                    "type": "String",
+                                    "physicalType": "String"
+                                },
+                                "sink": {
+                                    "name": "EVENT_YEARMONTH",
+                                    "type": "String",
+                                    "physicalType": "varchar"
+                                }
+                            }
+                        ],
+                        "typeConversion": true,
+                        "typeConversionSettings": {
+                            "allowDataTruncation": true,
+                            "treatBooleanAsNumber": false
+                        }
+                    }
+                },
+                "inputs": [
+                    {
+                        "referenceName": "input_fatalities_gz",
+                        "type": "DatasetReference"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "referenceName": "output_fatalities_mysql",
+                        "type": "DatasetReference"
+                    }
+                ]
             }
         ],
-        "annotations": []
-    }
+        "annotations": [],
+        "lastPublishTime": "2022-07-15T03:57:15Z"
+    },
+    "type": "Microsoft.DataFactory/factories/pipelines"
 }

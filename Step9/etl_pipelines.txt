@@ -1,0 +1,75 @@
+1) Initial Load Pipeline:2 parallel flows, manually triggered (init_pipeline)
+
+			Activity 1 - Databricks Python 1 time batch load BOTH details and fatalities source to blob severeweathercontainer: (script_initial_files_to_blob.py)
+
+			container:severeweathercontainer
+				details x 23
+				fatalities x 23
+
+			Activity 2 - Copy details blob severeweathercontainer to MySQL
+			Activity 3 - Copy fatalities blob severeweathercontainer to MySQL
+
+			Activity 1 >> [Activity2, Activity 3] (chain)
+
+			defaultdb.details + ~1M rows
+			defaultdb.fatalities + ~20K rows
+
+--------------------------------------------------------------------------------------------------------------------
+
+2) Monthly Scheduled Pipeline: trigger on 17th of each month
+
+			Activity 1 -  Databricks Python verify new filename for BOTH details and fatalities for latest year+month and send from source to blob newfiles container: (script_updated_file_to_blob.py)
+
+			container:newfiles
+				-details x 1
+				-fatalities x 1
+
+			---------
+
+			Activity 2 - Copy details blob newfiles container to MySQL (STRIP ROWS FOR ONLY NEW DATA)
+			Activity 3 - Copy fatalities blob newfiles container to MySQL (STRIP ROWS FOR ONLY NEW DATA)
+
+			---------
+			Activity 4 - Copy details file from newfiles blob container to severeweathercontainer container
+			Activity 5 - Copy fatalities file from newfiles blob container to severeweathercontainer container
+
+			container:newfiles
+				-details EMPTY
+				-fatalities EMPTY
+
+			----------
+
+			Activity 1 >> [Activity2, Activity 3] >> [Activity4, Activity 5]
+
+			defaultdb.details + ~5k new rows
+			defaultdb.fatalities + ~50 new rows
+
+--------------------------------------------------------------------------------------------------------------------
+
+3) Yearly Scheduled Pipeline: trigger on March 17th of each year
+
+			Activity 1 - Databricks Python verify brand new source file for BOTH details and fatalities for latest year and send from source to newfiles blob container: (script_new_file_to_blob.py)
+
+			container:newfiles
+				-details x 1
+				-fatalities x 1
+
+			---------
+
+			Activity 3 - Copy details newfiles blob container to MySQL (VERIFY ONLY SEND NEW ROWS)
+			Activity 4 - Copy fatalities newfiles blob container to MySQL (VERIFY ONLY SEND NEW ROWS)
+
+			---------
+			Activity 5 - Copy details file from newfiles blob container to severeweathercontainer container
+			Activity 6 - Copy fatalities file from newfiles blob container to severeweathercontainer container
+
+			container:newfiles
+				-details EMPTY
+				-fatalities EMPTY
+
+			----------
+
+		Activity 1 >> [Activity2, Activity 3] >> [Activity4, Activity 5]
+
+			defaultdb.details + ~5k new rows
+			defaultdb.fatalities + ~50 new rows

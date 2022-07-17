@@ -78,5 +78,6 @@
         "typeProperties": {
             "tableName": "fatalities"
         }
-    }
+    },
+    "type": "Microsoft.DataFactory/factories/datasets"
 }

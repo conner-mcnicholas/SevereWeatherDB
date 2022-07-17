@@ -61,7 +61,6 @@ def sendtoblob(url,thefiles):
         filename = Path(thefile).parts[-1]
         filetype = filename.split("_")[1].split("-")[0]
 
-        print("uploading to container fatalities folder")
         copied_blob = blob_service_client.get_blob_client(f'{container}/{filetype}', thefile)
 
         copied_blob.start_copy_from_url(sourcefile)
@@ -110,7 +109,6 @@ def run():
     elapsed_time = end_time - start_time
     print(f'Number Of Files Loaded: {len(targetfiles)}')
     print(f'Elapsed Time: {elapsed_time}')
-
 if __name__ == "__main__":
     """
     Recreated as run method to call from airflow as PythonOperator python callable

@@ -1,13 +1,11 @@
-#CREATE STORAGE ACCOUNT RESOURCE GROUP
-pushd $(pwd)
-cd "$(dirname "$0")"
-source ../vars/.secrets
+source .secrets
 set -eux
-
 az login
-
 az config set extension.use_dynamic_install=yes_prompt
 
+##  AZURE DATA LAKE GEN2---------------------------------------------------------------------------
+
+#CREATE STORAGE ACCOUNT RESOURCE GROUP
 az account set \
   --subscription ${AZ_SUBSCRIPTION_ID}
 
@@ -23,6 +21,7 @@ az storage account create \
     --sku Standard_RAGRS \
     --kind StorageV2
 
+#MUST UPGRADE FROM BLOB STORAGE TO AZURE DATA LAKE GEN2
 az storage account hns-migration start --type validation -n ${AZ_STORAGE_ACCOUNT_NAME} -g ${AZ_STORAGE_RESOURCE_GROUP}
 az storage account hns-migration start --type upgrade -n ${AZ_STORAGE_ACCOUNT_NAME} -g ${AZ_STORAGE_RESOURCE_GROUP}
 
@@ -91,3 +90,39 @@ az mysql server firewall-rule create \
   --name AllowAzureIP \
   --start-ip-address 0.0.0.0 \
   --end-ip-address 0.0.0.0
+
+## BATCH JOBS---------------------------------------------------------------------------
+
+  #CREATE BATCH ACCOUNT RESOURCE GROUP
+  az group create \
+    --name ${AZ_BATCH_RESOURCE_GROUP} \
+    --location ${AZ_LOCATION}
+
+  #STORAGE BATCH ACCOUNT
+  az storage account create \
+      --name ${AZ_BATCH_STORAGE_ACCOUNT_NAME} \
+      --resource-group ${AZ_BATCH_RESOURCE_GROUP} \
+      --location ${AZ_LOCATION} \
+      --sku Standard_LRS \
+
+  #CREATE BATCH ACCOUNT
+  az batch account create \
+      --name ${AZ_BATCH_ACCOUNT_NAME} \
+      --storage-account ${AZ_BATCH_STORAGE_ACCOUNT_NAME} \
+      --resource-group ${AZ_BATCH_RESOURCE_GROUP} \
+      --location ${AZ_LOCATION} \
+
+  #MUST LOGIN TO BATCH ACCOUNT
+  az batch account login \
+      --name ${AZ_BATCH_ACCOUNT_NAME} \
+      --resource-group ${AZ_BATCH_RESOURCE_GROUP} \
+      --shared-key-auth
+
+  #CREATE BATCH POOL
+  az batch pool create \
+      --id ${AZ_BATCH_POOL_ID} --vm-size Standard_A1_v2 \
+      --target-dedicated-nodes 2 \
+      --image canonical:ubuntuserver:18.04-LTS \
+      --node-agent-sku-id "batch.node.ubuntu 18.04"
+
+  az batch pool show --pool-id ${AZ_BATCH_POOL_ID} --query "allocationState"

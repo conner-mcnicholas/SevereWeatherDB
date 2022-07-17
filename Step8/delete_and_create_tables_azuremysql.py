@@ -11,9 +11,7 @@ config = {
   'ssl_ca': f'{os.environ["HOME"]}/.ssh/DigiCertGlobalRootG2.crt.pem'
 }
 
-
 def delete_and_create_tables():
-    DBNAME = 'defaultdb'
     TABLES = {}
     TABLES['details'] = (
         "DROP TABLE IF EXISTS details;"
@@ -76,7 +74,7 @@ def delete_and_create_tables():
         "  FAT_YEARMONTH VARCHAR(6),"
         "  FAT_DAY VARCHAR(2),"
         "  FAT_TIME VARCHAR(4),"
-        "  FATALITY_ID INT NOT NULL PRIMARY KEY,"
+        "  FATALITY_ID INT NOT NULL,"
         "  EVENT_ID INT,"
         "  FATALITY_TYPE VARCHAR(1),"
         "  FATALITY_DATE VARCHAR(19),"
@@ -84,6 +82,8 @@ def delete_and_create_tables():
         "  FATALITY_SEX CHAR(1),"
         "  FATALITY_LOCATION TEXT,"
         "  EVENT_YEARMONTH VARCHAR(6));")
+
+TABLES
     sure = input('THIS WILL DELETE THE TABLES WHICH MAY HAVE DATA. ARE YOU SURE?! (YES to continue)')
     if sure == 'YES':
         for table_name in TABLES:
