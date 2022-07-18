@@ -1,6 +1,6 @@
-selected resource name:		TEST_update_pipeline
+selected resource name:		TEST_init_pipeline
 selected resource type:		pipeline
 factory name:			datafactoryausins
 factory location:		australiaeast
 subscription id:		b5f807fa-c5eb-4a4d-8357-76a176efc946
-time of download (UTC):		Sun, 17 Jul 2022 17:31:06 GMT
+time of download (UTC):		Mon, 18 Jul 2022 12:04:11 GMT

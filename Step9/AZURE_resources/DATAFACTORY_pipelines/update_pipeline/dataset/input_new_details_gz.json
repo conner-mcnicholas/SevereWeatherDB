@@ -1,5 +1,5 @@
 {
-    "name": "input_fatalities_gz",
+    "name": "input_new_details_gz",
     "properties": {
         "linkedServiceName": {
             "referenceName": "input_blob",
@@ -10,15 +10,16 @@
         "typeProperties": {
             "location": {
                 "type": "AzureBlobFSLocation",
-                "fileSystem": "severeweathercontainer"
+                "fileName": "StormEvents_details-ftp_v1.0_d2022_c20220616.csv.gz",
+                "folderPath": "details",
+                "fileSystem": "newfiles"
             },
             "columnDelimiter": ",",
             "compressionCodec": "gzip",
-            "escapeChar": "\\",
+            "escapeChar": "\"",
             "firstRowAsHeader": true,
             "quoteChar": "\""
         },
         "schema": []
-    },
-    "type": "Microsoft.DataFactory/factories/datasets"
+    }
 }

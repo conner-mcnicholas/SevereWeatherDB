@@ -9,14 +9,14 @@ import mysql.connector
 from mysql.connector import errorcode
 
 def cleanup_containers():
-    connection_string = 'DefaultEndpointsProtocol=https;AccountName=pipelinestorageacctaus;AccountKey=f6fWRdrrX8qYB9a1y2Rlgu7qCuyeHuD59j3UIb0hi3ZanAn8DUmej+uofzFi7irJm954fTa5LtBb+AStzjJHYA==;EndpointSuffix=core.windows.net'
+    CONNECTION_STRING = os.environ["AZURE_STORAGE_CONNECTION_STRING"]
 
-    client = BlobServiceClient.from_connection_string(connection_string)
+    client = BlobServiceClient.from_connection_string(CONNECTION_STRING)
 
     # Create sas token for blob
     sas_token = generate_account_sas(
         account_name = client.account_name,
-        account_key = 'f6fWRdrrX8qYB9a1y2Rlgu7qCuyeHuD59j3UIb0hi3ZanAn8DUmej+uofzFi7irJm954fTa5LtBb+AStzjJHYA==', # The account key for the source container
+        account_key = <account_key>, # The account key for the source container
         resource_types = ResourceTypes(object=True, container=True),
         permission= AccountSasPermissions(read=True,list=True),
         start = datetime.now(),
@@ -63,25 +63,26 @@ def cleanup_containers():
                                     blob_name = new_blob_name,
                                     credential = sas_token
                                 )
-                                print(f'{table} - COPYING new file: {s.name} FROM source:{s.container} TO destination: {d.container}')
+                                print(f'{table} - COPYING new file: {s.name} FROM source: {s.container} TO destination: {d.container}')
                                 new_blob.start_copy_from_url(source_blob.url)
 
                                 print(f'{table} - DELETING new file: {s.name} FROM source: {s.container}')
                                 source_blob_dl = source_container_client.get_blob_client(s)
                                 source_blob_dl.delete_blob()
 
-def create_view_postcounts():
+def create_table_postcounts():
     config = {
       'host':'sevwethmysqlserv.mysql.database.azure.com',
       'user':'conner@sevwethmysqlserv',
-      'password':'Universal124!',
+      'password':'<password>',
       'database':'defaultdb',
       'client_flags': [mysql.connector.ClientFlag.SSL],
-      'ssl_ca': f'{os.environ["HOME"]}/.ssh/DigiCertGlobalRootG2.crt.pem'
+      'ssl_ca': f'{os.environ["HOME"]}/.ssh/DigiCertGlobalRootG2.crt.pem',
+      'autocommit': True
     }
 
-    query = ("DROP VIEW IF EXISTS vPostUpdate;"
-        "CREATE VIEW vPostUpdate AS"
+    query = ("DROP TABLE IF EXISTS vPostUpdate;"
+        "CREATE TABLE vPostUpdate AS"
         "  SELECT d_PostUpdate,f_PostUpdate FROM"
         "	(SELECT COUNT(*) AS  d_PostUpdate  FROM test_details) AS d,"
         "	(SELECT COUNT(*) AS  f_PostUpdate  FROM test_fatalities) AS f;")
@@ -92,4 +93,4 @@ def create_view_postcounts():
 
 cleanup_containers()
 
-create_view_postcounts()
+create_table_postcounts()

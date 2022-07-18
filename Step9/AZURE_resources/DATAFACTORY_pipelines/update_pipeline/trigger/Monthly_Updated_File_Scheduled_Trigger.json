@@ -1,0 +1,25 @@
+{
+    "name": "Monthly_Updated_File_Scheduled_Trigger",
+    "properties": {
+        "description": "Every month the current year file is updated with new rows that were submitted 65 days prior.   This filename modification serves as the trigger for our updated file pipeline.",
+        "annotations": [],
+        "runtimeState": "Started",
+        "pipelines": [
+            {
+                "pipelineReference": {
+                    "referenceName": "TEST_update_pipeline",
+                    "type": "PipelineReference"
+                }
+            }
+        ],
+        "type": "ScheduleTrigger",
+        "typeProperties": {
+            "recurrence": {
+                "frequency": "Month",
+                "interval": 1,
+                "startTime": "2022-07-19T00:00:00Z",
+                "timeZone": "UTC"
+            }
+        }
+    }
+}

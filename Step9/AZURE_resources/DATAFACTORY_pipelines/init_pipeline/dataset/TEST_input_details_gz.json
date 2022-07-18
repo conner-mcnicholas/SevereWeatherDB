@@ -1,8 +1,8 @@
 {
-    "name": "input_details_gz",
+    "name": "TEST_input_details_gz",
     "properties": {
         "linkedServiceName": {
-            "referenceName": "input_blob",
+            "referenceName": "TEST_input_blob",
             "type": "LinkedServiceReference"
         },
         "annotations": [],
@@ -10,7 +10,8 @@
         "typeProperties": {
             "location": {
                 "type": "AzureBlobFSLocation",
-                "fileSystem": "severeweathercontainer"
+                "folderPath": "details",
+                "fileSystem": "testbatch"
             },
             "columnDelimiter": ",",
             "compressionCodec": "gzip",
@@ -19,6 +20,5 @@
             "quoteChar": "\""
         },
         "schema": []
-    },
-    "type": "Microsoft.DataFactory/factories/datasets"
+    }
 }

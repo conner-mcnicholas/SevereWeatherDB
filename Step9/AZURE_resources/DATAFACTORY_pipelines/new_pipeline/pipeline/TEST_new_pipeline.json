@@ -1,9 +1,9 @@
 {
-    "name": "TEST_update_pipeline",
+    "name": "TEST_new_pipeline",
     "properties": {
         "activities": [
             {
-                "name": "update_python_loader",
+                "name": "new_file_loader",
                 "type": "DatabricksSparkPython",
                 "dependsOn": [],
                 "policy": {
@@ -15,7 +15,7 @@
                 },
                 "userProperties": [],
                 "typeProperties": {
-                    "pythonFile": "dbfs:/FileStore/script_updated_file_to_blob.py",
+                    "pythonFile": "dbfs:/FileStore/script_new_file_to_blob.py",
                     "parameters": [
                         "2022"
                     ],
@@ -48,7 +48,7 @@
                 }
             },
             {
-                "name": "update_ details",
+                "name": "upsert_final_details",
                 "type": "ExecuteDataFlow",
                 "dependsOn": [
                     {
@@ -82,7 +82,7 @@
                 }
             },
             {
-                "name": "update_fatalities",
+                "name": "upsert_final_fatalities",
                 "type": "ExecuteDataFlow",
                 "dependsOn": [
                     {
@@ -118,7 +118,7 @@
                 "type": "Copy",
                 "dependsOn": [
                     {
-                        "activity": "update_python_loader",
+                        "activity": "new_file_loader",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -793,7 +793,7 @@
                 "type": "Copy",
                 "dependsOn": [
                     {
-                        "activity": "update_python_loader",
+                        "activity": "new_file_loader",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -982,6 +982,51 @@
                         "type": "DatasetReference"
                     }
                 ]
+            },
+            {
+                "name": "cleanup_containers",
+                "type": "DatabricksSparkPython",
+                "dependsOn": [
+                    {
+                        "activity": "upsert_final_details",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "upsert_final_fatalities",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "7.00:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "pythonFile": "dbfs:/FileStore/clean_newfile_container.py",
+                    "libraries": [
+                        {
+                            "pypi": {
+                                "package": "mysql-connector-python==8.0.29"
+                            }
+                        },
+                        {
+                            "pypi": {
+                                "package": "azure-storage-blob==12.12.0"
+                            }
+                        }
+                    ]
+                },
+                "linkedServiceName": {
+                    "referenceName": "PythonInitialLoader",
+                    "type": "LinkedServiceReference"
+                }
             }
         ],
         "annotations": [],

@@ -1,6 +1,0 @@
-details - DELETING old file: details/StormEvents_details-ftp_v1.0_d2022_c20220516.csv.gz FROM destination: testbatch
-details - COPYING new file: details/StormEvents_details-ftp_v1.0_d2022_c20220616.csv.gz FROM source:newfiles TO destination: testbatch
-details - DELETING new file: details/StormEvents_details-ftp_v1.0_d2022_c20220616.csv.gz FROM source: newfiles
-fatalities - DELETING old file: fatalities/StormEvents_fatalities-ftp_v1.0_d2022_c20220516.csv.gz FROM destination: testbatch
-fatalities - COPYING new file: fatalities/StormEvents_fatalities-ftp_v1.0_d2022_c20220616.csv.gz FROM source:newfiles TO destination: testbatch
-fatalities - DELETING new file: fatalities/StormEvents_fatalities-ftp_v1.0_d2022_c20220616.csv.gz FROM source: newfiles

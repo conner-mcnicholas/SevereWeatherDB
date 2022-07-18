@@ -1,7 +1,7 @@
 {
-    "now": "2022-07-17T06:15:46.011Z",
-    "perfNow": 171363811.1,
-    "diagnosticCorrelation": "5a70517a-e2c5-44f2-807f-97fc5c6443f2",
+    "now": "2022-07-18T12:05:57.558Z",
+    "perfNow": 278775359,
+    "diagnosticCorrelation": "562143b6-8bf9-4620-adba-d2bf3b6ed181",
     "source": "DownloadSupportFiles",
     "environment": {
         "productName": "adf",
@@ -11,12 +11,12 @@
         "resourceRegion": "australiaeast",
         "resourceGroup": "datafactoryrg",
         "subscriptionId": "b5f807fa-c5eb-4a4d-8357-76a176efc946",
-        "sessionId": "ttCN3",
+        "sessionId": "VFWd9",
         "operationId": "KJxw+",
         "gitType": "live"
     },
     "additionalInfo": {
-        "selectedResource": "init_pipeline",
+        "selectedResource": "TEST_update_pipeline",
         "selectedResourceType": "pipeline"
     }
 }

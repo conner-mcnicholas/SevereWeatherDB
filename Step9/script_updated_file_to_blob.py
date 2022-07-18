@@ -18,10 +18,11 @@ from mysql.connector import errorcode
 config = {
   'host':'sevwethmysqlserv.mysql.database.azure.com',
   'user':'conner@sevwethmysqlserv',
-  'password':'Universal124!',
+  'password':'<password>',
   'database':'defaultdb',
   'client_flags': [mysql.connector.ClientFlag.SSL],
-  'ssl_ca': f'{os.environ["HOME"]}/.ssh/DigiCertGlobalRootG2.crt.pem'
+  'ssl_ca': f'{os.environ["HOME"]}/.ssh/DigiCertGlobalRootG2.crt.pem',
+  'autocommit': True
 }
 
 def listblobfiles(tabletype):
@@ -246,16 +247,16 @@ def delete_and_create_staging_tables():
         conn.close()
         print("Done.")
 
-def create_view_precounts():
-    query = ("DROP VIEW IF EXISTS vPreDelete;"
-        "CREATE VIEW vPreDelete AS"
+def create_table_precounts():
+    query = ("DROP TABLE IF EXISTS vPreDelete;"
+        "CREATE TABLE vPreDelete AS"
     	"  SELECT d_PreDelete,f_PreDelete FROM"
     	"	(SELECT COUNT(*) AS  d_PreDelete  FROM test_details) AS d,"
     	"	(SELECT COUNT(*) AS  f_PreDelete  FROM test_fatalities) AS f;"
         "DELETE FROM test_details WHERE BEGIN_YEARMONTH = '202203';"
         "DELETE FROM test_fatalities WHERE FAT_YEARMONTH = '202203';"
-        "DROP VIEW IF EXISTS vPostDelete;"
-        "CREATE VIEW vPostDelete AS"
+        "DROP TABLE IF EXISTS vPostDelete;"
+        "CREATE TABLE vPostDelete AS"
     	"  SELECT d_PostDelete,f_PostDelete FROM"
     	"	(SELECT COUNT(*) AS  d_PostDelete  FROM test_details) AS d,"
     	"	(SELECT COUNT(*) AS  f_PostDelete  FROM test_fatalities) AS f;")
@@ -263,7 +264,7 @@ def create_view_precounts():
     cursor = conn.cursor()
     cursor.execute(query)
 
-create_view_precounts() #for testing,creates view of counts prior to update action, will compare after
+create_table_precounts() #for testing,creates view of counts prior to update action, will compare after
 
 CONNECTION_STRING = os.environ["AZURE_STORAGE_CONNECTION_STRING"]
 targetyear = int(str(date.today())[0:4])

@@ -9,7 +9,7 @@
 			Activity 2 - Copy details blob severeweathercontainer to MySQL
 			Activity 3 - Copy fatalities blob severeweathercontainer to MySQL
 
-			Activity 1 >> [Activity2, Activity 3] (chain)
+			Pipeline Sequence: Activity 1 >> [Activity2, Activity 3] (chain)
 
 			defaultdb.details + ~1M rows
 			defaultdb.fatalities + ~20K rows
@@ -40,7 +40,7 @@
 
 			----------
 
-			Activity 1 >> [Activity2, Activity 3] >> [Activity4, Activity 5] >> Activity 6
+			Pipeline Sequence: Activity 1 >> [Activity2, Activity 3] >> [Activity4, Activity 5] >> Activity 6
 
 			defaultdb.details + ~5k new rows
 			defaultdb.fatalities + ~50 new rows
@@ -71,7 +71,7 @@
 
 			----------
 
-		Activity 1 >> [Activity2, Activity 3] >> [Activity4, Activity 5] >> Activity 6
+		Pipeline Sequence: Activity 1 >> [Activity2, Activity 3] >> [Activity4, Activity 5] >> Activity 6
 
 			defaultdb.details + ~5k new rows
 			defaultdb.fatalities + ~50 new rows

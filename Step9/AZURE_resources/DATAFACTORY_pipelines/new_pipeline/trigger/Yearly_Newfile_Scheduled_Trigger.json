@@ -1,0 +1,25 @@
+{
+    "name": "Yearly_Newfile_Scheduled_Trigger",
+    "properties": {
+        "description": "January data is finally submitted 65 days after creation, and finally hits the source database by May 18, where a new file is created for that year.  This serves as the trigger the new file pipeline.",
+        "annotations": [],
+        "runtimeState": "Started",
+        "pipelines": [
+            {
+                "pipelineReference": {
+                    "referenceName": "TEST_new_pipeline",
+                    "type": "PipelineReference"
+                }
+            }
+        ],
+        "type": "ScheduleTrigger",
+        "typeProperties": {
+            "recurrence": {
+                "frequency": "Month",
+                "interval": 12,
+                "startTime": "2023-05-18T00:00:00Z",
+                "timeZone": "UTC"
+            }
+        }
+    }
+}
