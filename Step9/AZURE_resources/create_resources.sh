@@ -91,38 +91,45 @@ az mysql server firewall-rule create \
   --start-ip-address 0.0.0.0 \
   --end-ip-address 0.0.0.0
 
-## BATCH JOBS---------------------------------------------------------------------------
+## DATABRICKS---------------------------------------------------------------------------
 
-  #CREATE BATCH ACCOUNT RESOURCE GROUP
-  az group create \
-    --name ${AZ_BATCH_RESOURCE_GROUP} \
-    --location ${AZ_LOCATION}
+# Create Resource Group if not exists
+az group create --name $AZ_DATABRICKS_RESOURCE_GROUP --location $AZ_LOCATION
 
-  #STORAGE BATCH ACCOUNT
-  az storage account create \
-      --name ${AZ_BATCH_STORAGE_ACCOUNT_NAME} \
-      --resource-group ${AZ_BATCH_RESOURCE_GROUP} \
-      --location ${AZ_LOCATION} \
-      --sku Standard_LRS \
+# Create databricks workspace
+az databricks workspace create \
+  --location $AZ_LOCATION \
+  --name $AZ_DATABRICKS_WORKSPACE \
+  --sku trial \
+  --resource-group $AZ_DATABRICKS_RESOURCE_GROUP \
+  --enable-no-public-ip \
+  --tags environment=demo level=level3
 
-  #CREATE BATCH ACCOUNT
-  az batch account create \
-      --name ${AZ_BATCH_ACCOUNT_NAME} \
-      --storage-account ${AZ_BATCH_STORAGE_ACCOUNT_NAME} \
-      --resource-group ${AZ_BATCH_RESOURCE_GROUP} \
-      --location ${AZ_LOCATION} \
+## DATA FACTORY---------------------------------------------------------------------------
 
-  #MUST LOGIN TO BATCH ACCOUNT
-  az batch account login \
-      --name ${AZ_BATCH_ACCOUNT_NAME} \
-      --resource-group ${AZ_BATCH_RESOURCE_GROUP} \
-      --shared-key-auth
+#create data factory
+az datafactory create --resource-group $AZ_DATAFACTORY_RESOURCE_GROUP \
+    --factory-name $AZ_DATAFACTORY_NAME
 
-  #CREATE BATCH POOL
-  az batch pool create \
-      --id ${AZ_BATCH_POOL_ID} --vm-size Standard_A1_v2 \
-      --target-dedicated-nodes 2 \
-      --image canonical:ubuntuserver:18.04-LTS \
-      --node-agent-sku-id "batch.node.ubuntu 18.04"
+#create init pipelines
+az datafactory pipeline create --resource-group $AZ_DATAFACTORY_RESOURCE_GROUP \
+    --factory-name $AZ_DATAFACTORY_NAME --name init_pipeline \
+    --pipeline DATAFACTORY_pipelines/init_pipeline/pipeline/init_pipeline.json
 
-  az batch pool show --pool-id ${AZ_BATCH_POOL_ID} --query "allocationState"
+#create update pipelines
+az datafactory pipeline create --resource-group $AZ_DATAFACTORY_RESOURCE_GROUP \
+    --factory-name $AZ_DATAFACTORY_NAME --name update_pipeline \
+    --pipeline DATAFACTORY_pipelines/update_pipeline/pipeline/update_pipeline.json
+
+#create new pipelines
+az datafactory pipeline create --resource-group $AZ_DATAFACTORY_RESOURCE_GROUP \
+    --factory-name $AZ_DATAFACTORY_NAME --name new_pipeline\
+    --pipeline DATAFACTORY_pipelines/new_pipeline/pipeline/new_pipeline.json
+
+#run init pipeline
+az datafactory pipeline create-run --resource-group $AZ_DATAFACTORY_RESOURCE_GROUP \
+    --name $PIPELINE1 --factory-name $AZ_DATAFACTORY_NAME
+
+#verify pipeline run success
+az datafactory pipeline-run show --resource-group $AZ_DATAFACTORY_RESOURCE_GROUP \
+    --factory-name $AZ_DATAFACTORY_NAME --run-id 00000000-0000-0000-0000-000000000000
