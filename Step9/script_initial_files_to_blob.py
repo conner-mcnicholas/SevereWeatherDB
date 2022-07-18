@@ -170,7 +170,8 @@ def delete_and_create_tables():
         "  FATALITY_AGE INT DEFAULT NULL,"
         "  FATALITY_SEX CHAR(1),"
         "  FATALITY_LOCATION TEXT,"
-        "  EVENT_YEARMONTH VARCHAR(6));")
+        "  EVENT_YEARMONTH VARCHAR(6),"
+        "  PRIMARY KEY (FATALITY_ID,EVENT_ID));")
 
     conn = mysql.connector.connect(**config)
     cursor = conn.cursor()

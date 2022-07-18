@@ -1,0 +1,25 @@
+{
+    "name": "input_new_details_gz",
+    "properties": {
+        "linkedServiceName": {
+            "referenceName": "input_blob",
+            "type": "LinkedServiceReference"
+        },
+        "annotations": [],
+        "type": "DelimitedText",
+        "typeProperties": {
+            "location": {
+                "type": "AzureBlobFSLocation",
+                "fileName": "StormEvents_details-ftp_v1.0_d2022_c20220616.csv.gz",
+                "folderPath": "details",
+                "fileSystem": "newfiles"
+            },
+            "columnDelimiter": ",",
+            "compressionCodec": "gzip",
+            "escapeChar": "\"",
+            "firstRowAsHeader": true,
+            "quoteChar": "\""
+        },
+        "schema": []
+    }
+}

@@ -26,12 +26,13 @@
 
 			---------
 
-			Activity 2 - Copy details blob newfiles container to MySQL (STRIP ROWS FOR ONLY NEW DATA)
-			Activity 3 - Copy fatalities blob newfiles container to MySQL (STRIP ROWS FOR ONLY NEW DATA)
+			Activity 2 - Copy updated details blob severeweathercontainer to MySQL Staging Table
+			Activity 3 - Copy updated fatalities blob severeweathercontainer to MySQL Staging Table
 
-			---------
-			Activity 4 - Copy details file from newfiles blob container to severeweathercontainer container
-			Activity 5 - Copy fatalities file from newfiles blob container to severeweathercontainer container
+			Activity 4 - Data Flow details upsert from MySQL Staging Table to MySQL Final Table
+			Activity 5 - Data Flow details upsert from MySQL Staging Table to MySQL Final Table
+
+			Activity 6 - Databricks Python cleanup container script, moving files from newfiles container to severeweathercontainer
 
 			container:newfiles
 				-details EMPTY
@@ -39,7 +40,7 @@
 
 			----------
 
-			Activity 1 >> [Activity2, Activity 3] >> [Activity4, Activity 5]
+			Activity 1 >> [Activity2, Activity 3] >> [Activity4, Activity 5] >> Activity 6
 
 			defaultdb.details + ~5k new rows
 			defaultdb.fatalities + ~50 new rows
@@ -56,12 +57,13 @@
 
 			---------
 
-			Activity 3 - Copy details newfiles blob container to MySQL (VERIFY ONLY SEND NEW ROWS)
-			Activity 4 - Copy fatalities newfiles blob container to MySQL (VERIFY ONLY SEND NEW ROWS)
+			Activity 2 - Copy new details blob severeweathercontainer to MySQL Staging Table
+			Activity 3 - Copy new fatalities blob severeweathercontainer to MySQL Staging Table
 
-			---------
-			Activity 5 - Copy details file from newfiles blob container to severeweathercontainer container
-			Activity 6 - Copy fatalities file from newfiles blob container to severeweathercontainer container
+			Activity 4 - Data Flow details insert from MySQL Staging Table to MySQL Final Table
+			Activity 5 - Data Flow details insert from MySQL Staging Table to MySQL Final Table
+
+			Activity 6 - Databricks Python cleanup container script, moving files from newfiles container to severeweathercontainer
 
 			container:newfiles
 				-details EMPTY
@@ -69,7 +71,7 @@
 
 			----------
 
-		Activity 1 >> [Activity2, Activity 3] >> [Activity4, Activity 5]
+		Activity 1 >> [Activity2, Activity 3] >> [Activity4, Activity 5] >> Activity 6
 
 			defaultdb.details + ~5k new rows
 			defaultdb.fatalities + ~50 new rows
