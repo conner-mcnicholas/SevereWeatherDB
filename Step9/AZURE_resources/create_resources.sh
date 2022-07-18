@@ -123,12 +123,12 @@ az datafactory pipeline create --resource-group $AZ_DATAFACTORY_RESOURCE_GROUP \
 
 #create new pipelines
 az datafactory pipeline create --resource-group $AZ_DATAFACTORY_RESOURCE_GROUP \
-    --factory-name $AZ_DATAFACTORY_NAME --name new_pipeline\
+    --factory-name $AZ_DATAFACTORY_NAME --name new_pipeline \
     --pipeline DATAFACTORY_pipelines/new_pipeline/pipeline/new_pipeline.json
 
 #run init pipeline
 az datafactory pipeline create-run --resource-group $AZ_DATAFACTORY_RESOURCE_GROUP \
-    --name $PIPELINE1 --factory-name $AZ_DATAFACTORY_NAME
+    --name init_pipeline --factory-name $AZ_DATAFACTORY_NAME
 
 #verify pipeline run success
 az datafactory pipeline-run show --resource-group $AZ_DATAFACTORY_RESOURCE_GROUP \
