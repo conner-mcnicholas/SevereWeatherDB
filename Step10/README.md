@@ -4,14 +4,12 @@
 
 ### Current State
 
-Final Submission:<br>
-&emsp;&emsp;-Prior steps outlined as slide-deck PDF in respective folders<br>
-&emsp;&emsp;-Architecture:<br>
+Step 10: Build A Monitoring Dashboard<br>
+&emsp;&emsp;-Built monitoring dashboards for storage and mysql resources: <br>
 
-![alt text](https://github.com/conner-mcnicholas/SevereWeatherDB/blob/main/Step7/diagram_formats/final_archdiagram_mod.png?raw=true)
+![alt text](https://github.com/conner-mcnicholas/SevereWeatherDB/blob/main/Step10/imgs/blob_metrics_dash.png?raw=true) <br>
 
-This application was built as a series of steps, and not all work made it into final build.
+![alt text](https://github.com/conner-mcnicholas/SevereWeatherDB/blob/main/Step10/imgs/blob_metrics_dash.png?raw=true) <br>
 
-To preserve a record of the development process, all files were retained in folders: Step*[1-10]
-
-The final build deployment is in the Final folder
+This step was really very simple.  As it should be, considering ease of administration <br>
+is one of the cloud's most salient selling points.
