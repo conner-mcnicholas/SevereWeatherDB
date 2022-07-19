@@ -16,17 +16,21 @@ Step 9 - Deploy Code to Production:<br>
 
 &emsp;&emsp;-Deployed all logic as pipelines in Azure Data Factory and scheduled triggers:<br>
 
-&emsp;&emsp;(see: overview_all_pipelines.txt)<br>
+&emsp;&emsp;(see: Step9/overview_all_pipelines.txt)<br>
 
-&emsp;&emsp;&emsp;1) Initial Pipeline - One time ingestion of all available data past Start Year = 2000: <br>
+&emsp;&emsp;&emsp;1) Initial Pipeline - One time ingestion of all data post y2k: <br>
+&emsp;&emsp;&emsp;(data extract logic captured in Step9/scripts/initial_files_to_blob.py)<br>
+&emsp;&emsp;&emsp;(previously implemented as Step8/batch_upload_to_blob.py)<br>
 
 ![alt text](https://github.com/conner-mcnicholas/SevereWeatherDB/blob/main/Step9/imgs/full_init_pipeline.png?raw=true)<br>
 
 &emsp;&emsp;&emsp;2) Update Pipeline - Runs monthly, ingests updated file with extra rows added for current year+month :<br>
+&emsp;&emsp;&emsp;(data extract logic captured in Step9/scripts/update_files_to_blob.py)<br>
 
 ![alt text](https://github.com/conner-mcnicholas/SevereWeatherDB/blob/main/Step9/imgs/full_update_pipeline.png?raw=true)<br>
 
-&emsp;&emsp;&emsp;2) New Pipeline - Runs annually, ingests new file with all new data for current year:<br>
+&emsp;&emsp;&emsp;3) New Pipeline - Runs annually, ingests new file with all new data for current year:<br>
+&emsp;&emsp;&emsp;(data extract logic captured in Step9/scripts/new_files_to_blob.py)<br>
 
 ![alt text](https://github.com/conner-mcnicholas/SevereWeatherDB/blob/main/Step9/imgs/full_new_pipeline.png?raw=true)<br>
 
@@ -35,8 +39,7 @@ Step 9 - Deploy Code to Production:<br>
 ![alt text](https://github.com/conner-mcnicholas/SevereWeatherDB/blob/main/Step9/imgs/clean_containers_output.png?raw=true)<br>
 
 &emsp;&emsp;-Update and New ETL Pipelines covered by 4 additional test cases (2 pipelines x 2 tables - details + fatalities):<br>
-&emsp;&emsp;&emsp;1 test to verify that updated file pipeline ingests all additonal rows from updated file <br>
-&emsp;&emsp;&emsp;1 test to verify that new file pipeline ingests all rows from new file <br>
+&emsp;&emsp;(see: Step9/testing/testing_plan_all_pipelines.txt)
 
 &emsp;&emsp;-All tests pass:<br>
 
