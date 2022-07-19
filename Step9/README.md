@@ -15,9 +15,6 @@ Step 9 - Deploy Code to Production:<br>
 &emsp;&emsp;(see: Step9/AZURE_resources/README.md)<br>
 
 &emsp;&emsp;-Deployed all logic within 3 pipelines in Azure Data Factory and scheduled triggers:<br>
-
-&emsp;&emsp;(see: Step9/overview_all_pipelines.txt)<br>
-
 &emsp;&emsp;&emsp;1) Initial Load: <br>
 &emsp;&emsp;&emsp;(data extract logic captured in Step9/scripts/initial_files_to_blob.py)<br>
 &emsp;&emsp;&emsp;(previously implemented as Step8/batch_upload_to_blob.py)<br>
