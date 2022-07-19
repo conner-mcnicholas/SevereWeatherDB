@@ -1,5 +1,5 @@
 {
-    "name": "TEST_output_details_mysql",
+    "name": "output_details_mysql",
     "properties": {
         "linkedServiceName": {
             "referenceName": "output_mysql",
@@ -316,7 +316,7 @@
             }
         ],
         "typeProperties": {
-            "tableName": "test_details"
+            "tableName": "details"
         }
     }
 }

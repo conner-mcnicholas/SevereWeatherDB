@@ -12,7 +12,7 @@ Step 9 - Deploy Code to Production:<br>
 
 &emsp;&emsp;-Packaged scripts as docker container to auto-deploy all required Azure Resources based on config:<br>
 
-&emsp;&emsp;(see: AZURE_resources/CLI-resource_creator)<br>
+&emsp;&emsp;(see: Step9/AZURE_resources/README.md)<br>
 
 &emsp;&emsp;-Deployed all logic as pipelines in Azure Data Factory and scheduled triggers:<br>
 
