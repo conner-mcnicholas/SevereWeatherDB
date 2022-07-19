@@ -26,7 +26,7 @@ def cleanup_containers():
     source_container_name = 'newfiles'
     source_container_client = client.get_container_client(source_container_name)
 
-    destination_container_name = 'testbatch'
+    destination_container_name = 'allfiles'
     destination_container_client = client.get_container_client(destination_container_name)
 
     for table in ['details','fatalities']:

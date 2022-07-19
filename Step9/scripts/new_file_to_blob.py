@@ -263,7 +263,7 @@ CONNECTION_STRING = os.environ["AZURE_STORAGE_CONNECTION_STRING"]
 targetyear = int(str(date.today())[0:4])
 sourceurl = "https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles"
 blob_service_client = BlobServiceClient.from_connection_string(CONNECTION_STRING)
-batchcontainer = 'testbatch'
+batchcontainer = 'allfiles'
 newcontainer = "newfiles"
 
 for tabletype in ['details','fatalities']:

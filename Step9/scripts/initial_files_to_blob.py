@@ -61,7 +61,7 @@ def sendtoblob(url,thefiles):
 
     CONNECTION_STRING = os.environ["AZURE_STORAGE_CONNECTION_STRING"]
     blob_service_client = BlobServiceClient.from_connection_string(CONNECTION_STRING)
-    container = "testbatch"
+    container = "allfiles"
 
     succeeded = []
     failed = []
