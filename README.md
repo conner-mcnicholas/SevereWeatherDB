@@ -2,51 +2,22 @@
 
 ## Cloud database of 21st Century severe US storms
 
-### Current State
+### Capstone Project For Springboard Data Engineering School
 
-Step 9 - Deploy Code to Production:<br>
-&emsp;&emsp;-Prior steps outlined as slide-deck PDF in respective folders<br>
-&emsp;&emsp;-Architecture:<br>
+This application was built as a series of steps, and not all work made it into final build.
 
-![alt text](https://github.com/conner-mcnicholas/SevereWeatherDB/blob/main/Step7/diagram_formats/final_archdiagram_mod.png?raw=true)
+To preserve a record of the development process, all files retained in Step*[1-10] folders
 
-&emsp;&emsp;-Packaged scripts as docker container to auto-deploy all required Azure Resources based on config:<br>
+Documents describing the objective and deliverable for each step is in Objectives folder
+The final build deployment is in Final folder
 
-&emsp;&emsp;(see: Step9/AZURE_resources/README.md)<br>
-
-&emsp;&emsp;-Deployed all logic as pipelines in Azure Data Factory and scheduled triggers:<br>
-
-&emsp;&emsp;(see: Step9/overview_all_pipelines.txt)<br>
-
-&emsp;&emsp;&emsp;1) Initial Pipeline - One time ingestion of all data post y2k: <br>
-&emsp;&emsp;&emsp;(data extract logic captured in Step9/scripts/initial_files_to_blob.py)<br>
-&emsp;&emsp;&emsp;(previously implemented as Step8/batch_upload_to_blob.py)<br>
-
-![alt text](https://github.com/conner-mcnicholas/SevereWeatherDB/blob/main/Step9/imgs/full_init_pipeline.png?raw=true)<br>
-
-&emsp;&emsp;&emsp;2) Update Pipeline - Runs monthly, ingests updated file with extra rows added for current year+month :<br>
-&emsp;&emsp;&emsp;(data extract logic captured in Step9/scripts/update_files_to_blob.py)<br>
-
-![alt text](https://github.com/conner-mcnicholas/SevereWeatherDB/blob/main/Step9/imgs/full_update_pipeline.png?raw=true)<br>
-
-&emsp;&emsp;&emsp;3) New Pipeline - Runs annually, ingests new file with all new data for current year:<br>
-&emsp;&emsp;&emsp;(data extract logic captured in Step9/scripts/new_files_to_blob.py)<br>
-
-![alt text](https://github.com/conner-mcnicholas/SevereWeatherDB/blob/main/Step9/imgs/full_new_pipeline.png?raw=true)<br>
-
-&emsp;&emsp;Pipelines include handling for Azure Data Lake blob container maintenaince:<br>
-
-![alt text](https://github.com/conner-mcnicholas/SevereWeatherDB/blob/main/Step9/imgs/clean_containers_output.png?raw=true)<br>
-
-&emsp;&emsp;-Update and New ETL Pipelines covered by 4 additional test cases (2 pipelines x 2 tables - details + fatalities):<br>
-&emsp;&emsp;(see: Step9/testing/testing_plan_all_pipelines.txt)
-
-&emsp;&emsp;-All tests pass:<br>
-
-![alt text](https://github.com/conner-mcnicholas/SevereWeatherDB/blob/main/Step9/imgs/pipeline_test_success.png?raw=true)
-
-&emsp;&emsp;- Available to explore -> 1.5M rows capturing 21st century weather data across 62 columns:<br>
-
-![alt text](https://github.com/conner-mcnicholas/SevereWeatherDB/blob/main/Step8/imgs/mysqlworkbench_detdate.png?raw=true)
-
-![alt text](https://github.com/conner-mcnicholas/SevereWeatherDB/blob/main/Step8/imgs/sanddance.png?raw=true)
+Final_Submission
+Step 1(Group1):Build_Monitoring_Dash
+Step (Group1):Overview
+Step (Group1):Project_Proposal
+Step (Group1):Collect_Data
+Step (Group1):Data_Exploration
+Step (Group1):Prototyping_Data_Pipeline
+Step (Group1):Create_Architecture
+Step (Group1):Deploy_for_Testing
+Step (Group1):Deploy_To_ProductionF
