@@ -7,7 +7,7 @@
         "pipelines": [
             {
                 "pipelineReference": {
-                    "referenceName": "TEST_new_pipeline",
+                    "referenceName": "new_pipeline",
                     "type": "PipelineReference"
                 }
             }

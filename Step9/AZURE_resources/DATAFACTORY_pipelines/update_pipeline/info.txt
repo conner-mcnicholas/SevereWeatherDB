@@ -1,4 +1,4 @@
-selected resource name:		TEST_update_pipeline
+selected resource name:		update_pipeline
 selected resource type:		pipeline
 factory name:			datafactoryausins
 factory location:		australiaeast

@@ -15,7 +15,7 @@
             "sinks": [
                 {
                     "dataset": {
-                        "referenceName": "TEST_output_fatalities_mysql",
+                        "referenceName": "output_fatalities_mysql",
                         "type": "DatasetReference"
                     },
                     "name": "sink1"

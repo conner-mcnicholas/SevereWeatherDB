@@ -1,124 +1,13 @@
 {
-    "name": "TEST_new_pipeline",
+    "name": "init_pipeline",
     "properties": {
         "activities": [
             {
-                "name": "new_file_loader",
-                "type": "DatabricksSparkPython",
-                "dependsOn": [],
-                "policy": {
-                    "timeout": "0.00:10:00",
-                    "retry": 0,
-                    "retryIntervalInSeconds": 30,
-                    "secureOutput": false,
-                    "secureInput": false
-                },
-                "userProperties": [],
-                "typeProperties": {
-                    "pythonFile": "dbfs:/FileStore/script_new_file_to_blob.py",
-                    "parameters": [
-                        "2022"
-                    ],
-                    "libraries": [
-                        {
-                            "pypi": {
-                                "package": "azure-storage-blob==12.12.0"
-                            }
-                        },
-                        {
-                            "pypi": {
-                                "package": "beautifulsoup4==4.10.0"
-                            }
-                        },
-                        {
-                            "pypi": {
-                                "package": "requests==2.26.0"
-                            }
-                        },
-                        {
-                            "pypi": {
-                                "package": "mysql-connector-python==8.0.29"
-                            }
-                        }
-                    ]
-                },
-                "linkedServiceName": {
-                    "referenceName": "PythonInitialLoader",
-                    "type": "LinkedServiceReference"
-                }
-            },
-            {
-                "name": "upsert_final_details",
-                "type": "ExecuteDataFlow",
-                "dependsOn": [
-                    {
-                        "activity": "copy_staging_details",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    }
-                ],
-                "policy": {
-                    "timeout": "1.00:00:00",
-                    "retry": 0,
-                    "retryIntervalInSeconds": 30,
-                    "secureOutput": false,
-                    "secureInput": false
-                },
-                "userProperties": [],
-                "typeProperties": {
-                    "dataflow": {
-                        "referenceName": "dataflow1",
-                        "type": "DataFlowReference"
-                    },
-                    "staging": {
-                        "folderPath": ""
-                    },
-                    "compute": {
-                        "coreCount": 8,
-                        "computeType": "General"
-                    },
-                    "traceLevel": "Fine"
-                }
-            },
-            {
-                "name": "upsert_final_fatalities",
-                "type": "ExecuteDataFlow",
-                "dependsOn": [
-                    {
-                        "activity": "copy_staging_fatalities",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    }
-                ],
-                "policy": {
-                    "timeout": "1.00:00:00",
-                    "retry": 0,
-                    "retryIntervalInSeconds": 30,
-                    "secureOutput": false,
-                    "secureInput": false
-                },
-                "userProperties": [],
-                "typeProperties": {
-                    "dataflow": {
-                        "referenceName": "dataflow2",
-                        "type": "DataFlowReference"
-                    },
-                    "compute": {
-                        "coreCount": 8,
-                        "computeType": "General"
-                    },
-                    "traceLevel": "Fine",
-                    "runConcurrently": false
-                }
-            },
-            {
-                "name": "copy_staging_details",
+                "name": "init_copy_details",
                 "type": "Copy",
                 "dependsOn": [
                     {
-                        "activity": "new_file_loader",
+                        "activity": "init_python_loader",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -777,23 +666,68 @@
                 },
                 "inputs": [
                     {
-                        "referenceName": "input_new_details_gz",
+                        "referenceName": "input_details_gz",
                         "type": "DatasetReference"
                     }
                 ],
                 "outputs": [
                     {
-                        "referenceName": "output_staging_details_mysql",
+                        "referenceName": "output_details_mysql",
                         "type": "DatasetReference"
                     }
                 ]
             },
             {
-                "name": "copy_staging_fatalities",
+                "name": "init_python_loader",
+                "type": "DatabricksSparkPython",
+                "dependsOn": [],
+                "policy": {
+                    "timeout": "0.00:10:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "pythonFile": "dbfs:/FileStore/script_upload_to_blob.py",
+                    "parameters": [
+                        "2019"
+                    ],
+                    "libraries": [
+                        {
+                            "pypi": {
+                                "package": "azure-storage-blob==12.12.0"
+                            }
+                        },
+                        {
+                            "pypi": {
+                                "package": "beautifulsoup4==4.10.0"
+                            }
+                        },
+                        {
+                            "pypi": {
+                                "package": "requests==2.26.0"
+                            }
+                        },
+                        {
+                            "pypi": {
+                                "package": "mysql-connector-python==8.0.29"
+                            }
+                        }
+                    ]
+                },
+                "linkedServiceName": {
+                    "referenceName": "PythonInitialLoader",
+                    "type": "LinkedServiceReference"
+                }
+            },
+            {
+                "name": "init_copy_fatalities",
                 "type": "Copy",
                 "dependsOn": [
                     {
-                        "activity": "new_file_loader",
+                        "activity": "init_python_loader",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -801,7 +735,7 @@
                 ],
                 "policy": {
                     "timeout": "7.00:00:00",
-                    "retry": 0,
+                    "retry": 1,
                     "retryIntervalInSeconds": 30,
                     "secureOutput": false,
                     "secureInput": false
@@ -972,61 +906,16 @@
                 },
                 "inputs": [
                     {
-                        "referenceName": "input_new_fatalities_gz",
+                        "referenceName": "input_fatalities_gz",
                         "type": "DatasetReference"
                     }
                 ],
                 "outputs": [
                     {
-                        "referenceName": "output_staging_fatalities_mysql",
+                        "referenceName": "output_fatalities_mysql",
                         "type": "DatasetReference"
                     }
                 ]
-            },
-            {
-                "name": "cleanup_containers",
-                "type": "DatabricksSparkPython",
-                "dependsOn": [
-                    {
-                        "activity": "upsert_final_details",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    },
-                    {
-                        "activity": "upsert_final_fatalities",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    }
-                ],
-                "policy": {
-                    "timeout": "7.00:00:00",
-                    "retry": 0,
-                    "retryIntervalInSeconds": 30,
-                    "secureOutput": false,
-                    "secureInput": false
-                },
-                "userProperties": [],
-                "typeProperties": {
-                    "pythonFile": "dbfs:/FileStore/clean_newfile_container.py",
-                    "libraries": [
-                        {
-                            "pypi": {
-                                "package": "mysql-connector-python==8.0.29"
-                            }
-                        },
-                        {
-                            "pypi": {
-                                "package": "azure-storage-blob==12.12.0"
-                            }
-                        }
-                    ]
-                },
-                "linkedServiceName": {
-                    "referenceName": "PythonInitialLoader",
-                    "type": "LinkedServiceReference"
-                }
             }
         ],
         "annotations": [],

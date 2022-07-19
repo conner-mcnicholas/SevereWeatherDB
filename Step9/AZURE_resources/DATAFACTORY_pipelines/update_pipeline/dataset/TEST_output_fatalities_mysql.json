@@ -1,5 +1,5 @@
 {
-    "name": "TEST_output_fatalities_mysql",
+    "name": "output_fatalities_mysql",
     "properties": {
         "linkedServiceName": {
             "referenceName": "output_mysql",

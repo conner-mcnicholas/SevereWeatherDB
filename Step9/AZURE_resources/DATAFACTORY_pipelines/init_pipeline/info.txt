@@ -1,4 +1,4 @@
-selected resource name:		TEST_init_pipeline
+selected resource name:		init_pipeline
 selected resource type:		pipeline
 factory name:			datafactoryausins
 factory location:		australiaeast

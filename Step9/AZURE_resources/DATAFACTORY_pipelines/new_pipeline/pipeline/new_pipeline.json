@@ -1,9 +1,9 @@
 {
-    "name": "TEST_update_pipeline",
+    "name": "new_pipeline",
     "properties": {
         "activities": [
             {
-                "name": "updated_file_loader",
+                "name": "new_file_loader",
                 "type": "DatabricksSparkPython",
                 "dependsOn": [],
                 "policy": {
@@ -15,7 +15,7 @@
                 },
                 "userProperties": [],
                 "typeProperties": {
-                    "pythonFile": "dbfs:/FileStore/script_updated_file_to_blob.py",
+                    "pythonFile": "dbfs:/FileStore/script_new_file_to_blob.py",
                     "parameters": [
                         "2022"
                     ],
@@ -82,7 +82,7 @@
                 }
             },
             {
-                "name": "upsert_final__fatalities",
+                "name": "upsert_final_fatalities",
                 "type": "ExecuteDataFlow",
                 "dependsOn": [
                     {
@@ -118,7 +118,7 @@
                 "type": "Copy",
                 "dependsOn": [
                     {
-                        "activity": "updated_file_loader",
+                        "activity": "new_file_loader",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -793,7 +793,7 @@
                 "type": "Copy",
                 "dependsOn": [
                     {
-                        "activity": "updated_file_loader",
+                        "activity": "new_file_loader",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -994,7 +994,7 @@
                         ]
                     },
                     {
-                        "activity": "upsert_final__fatalities",
+                        "activity": "upsert_final_fatalities",
                         "dependencyConditions": [
                             "Succeeded"
                         ]

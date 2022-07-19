@@ -16,7 +16,7 @@
         "gitType": "live"
     },
     "additionalInfo": {
-        "selectedResource": "TEST_new_pipeline",
+        "selectedResource": "new_pipeline",
         "selectedResourceType": "pipeline"
     }
 }

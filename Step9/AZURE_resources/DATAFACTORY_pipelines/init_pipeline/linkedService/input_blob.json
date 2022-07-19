@@ -1,5 +1,5 @@
 {
-    "name": "TEST_input_blob",
+    "name": "input_blob",
     "type": "Microsoft.DataFactory/factories/linkedservices",
     "properties": {
         "annotations": [],

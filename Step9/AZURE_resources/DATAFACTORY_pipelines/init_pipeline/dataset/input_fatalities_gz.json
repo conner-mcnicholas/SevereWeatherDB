@@ -11,7 +11,7 @@
             "location": {
                 "type": "AzureBlobFSLocation",
                 "folderPath": "fatalities",
-                "fileSystem": "testbatch"
+                "fileSystem": "allfiles"
             },
             "columnDelimiter": ",",
             "compressionCodec": "gzip",
