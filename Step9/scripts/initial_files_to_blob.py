@@ -13,7 +13,7 @@ from mysql.connector import errorcode
 config = {
   'host':'sevwethmysqlserv.mysql.database.azure.com',
   'user':'conner@sevwethmysqlserv',
-  'password':'<password>',
+  'password':'Universal124!',
   'database':'defaultdb',
   'client_flags': [mysql.connector.ClientFlag.SSL],
   'ssl_ca': f'{os.environ["HOME"]}/.ssh/DigiCertGlobalRootG2.crt.pem'
@@ -37,19 +37,18 @@ def listtarget(flist, start_year):
     """
     Create list of files that are past start date and target for upload to blob
     """
-    print("\n\n***** Start of method listtarget *****\n")
     targeted = []
     for file in flist:
         filename = Path(file).parts[-1]
-        print(f"Assessing: {filename}")
+        #print(f"Assessing: {filename}")
         felements = filename.split("_")
         ftype = felements[1].split("-")[0]
         fyear = felements[3][1:5]
         if int(fyear) >= start_year:
-            print(f"File is past start date({start_year}), adding...\n")
+            #print(f"File is past start date({start_year}), adding...\n")
             targeted.append(filename)
-        else:
-            print(f"File is before start date({start_year}), skipping...\n")
+        #else:
+            #print(f"File is before start date({start_year}), skipping...\n")
     print("number of target files for loading to blob:" + str(len(targeted)))
     return targeted
 
@@ -57,8 +56,6 @@ def sendtoblob(url,thefiles):
     """
     uploads single file to blob
     """
-    print("\n\n***** Start of method sendtoblob *****")
-
     CONNECTION_STRING = os.environ["AZURE_STORAGE_CONNECTION_STRING"]
     blob_service_client = BlobServiceClient.from_connection_string(CONNECTION_STRING)
     container = "allfiles"
@@ -68,7 +65,7 @@ def sendtoblob(url,thefiles):
 
     for thefile in thefiles:
         sourcefile = url+'/'+thefile
-        print("\nuploading sourcefile:" + thefile)
+        print(f"\nuploading sourcefile: {thefile}")
         filename = Path(thefile).parts[-1]
         filetype = filename.split("_")[1].split("-")[0]
 
@@ -83,7 +80,7 @@ def sendtoblob(url,thefiles):
             if status == "success":
                 break
             else:
-                print("Copy not yet successful, waiting 2 seconds...")
+                #print("Copy not yet successful, waiting 2 seconds...")
                 sleep(2)
 
         if status == "success":
@@ -105,8 +102,8 @@ def sendtoblob(url,thefiles):
 
 def delete_and_create_tables():
     table_description = (
-        "DROP TABLE IF EXISTS TEST_details;"
-        "CREATE TABLE TEST_details ("
+        "DROP TABLE IF EXISTS details;"
+        "CREATE TABLE details ("
         "  BEGIN_YEARMONTH VARCHAR(6),"
         "  BEGIN_DAY VARCHAR(2),"
         "  BEGIN_TIME VARCHAR(4),"
@@ -158,8 +155,8 @@ def delete_and_create_tables():
         "  EPISODE_NARRATIVE TEXT,"
         "  EVENT_NARRATIVE TEXT,"
         "  DATA_SOURCE VARCHAR(3));"
-        "DROP TABLE IF EXISTS TEST_fatalities;"
-        "CREATE TABLE TEST_fatalities ("
+        "DROP TABLE IF EXISTS fatalities;"
+        "CREATE TABLE fatalities ("
         "  FAT_YEARMONTH VARCHAR(6),"
         "  FAT_DAY VARCHAR(2),"
         "  FAT_TIME VARCHAR(4),"
@@ -175,22 +172,10 @@ def delete_and_create_tables():
 
     conn = mysql.connector.connect(**config)
     cursor = conn.cursor()
-    try:
-        print("Delete and Creating tables")
-        cursor.execute(table_description)
-        conn = mysql.connector.connect(**config)
-        cursor = conn.cursor()
-        conn.commit() # This right here
-    except mysql.connector.Error as err:
-        if err.errno == errorcode.ER_TABLE_EXISTS_ERROR:
-            print("already exists.")
-        else:
-            print(err.msg)
-    else:
-        print("OK")
-        cursor.close()
-        conn.close()
-        print("Done.")
+    print("Creating empty final tables")
+    cursor.execute(table_description)
+    cursor.close()
+    conn.close()
 
 """
 Removed from main method as I want to execute this file as a script from databricks in ADF

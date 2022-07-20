@@ -74,7 +74,7 @@ def create_table_postcounts():
     config = {
       'host':'sevwethmysqlserv.mysql.database.azure.com',
       'user':'conner@sevwethmysqlserv',
-      'password':'<password>',
+      'password':'Universal124!',
       'database':'defaultdb',
       'client_flags': [mysql.connector.ClientFlag.SSL],
       'ssl_ca': f'{os.environ["HOME"]}/.ssh/DigiCertGlobalRootG2.crt.pem',

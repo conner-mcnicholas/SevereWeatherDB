@@ -18,7 +18,7 @@ from mysql.connector import errorcode
 config = {
   'host':'sevwethmysqlserv.mysql.database.azure.com',
   'user':'conner@sevwethmysqlserv',
-  'password':'<password>',
+  'password':'Universal124!',
   'database':'defaultdb',
   'client_flags': [mysql.connector.ClientFlag.SSL],
   'ssl_ca': f'{os.environ["HOME"]}/.ssh/DigiCertGlobalRootG2.crt.pem',
@@ -30,8 +30,6 @@ def listblobfiles(tabletype):
     Given table type
     list all files in blob initial batch container
     """
-    print("\n\n\t\t***** START: listblobfiles *****\n")
-
     flist=[]
     print(f"Connecting to blob for list of {tabletype} files...")
     blob_service_client = BlobServiceClient.from_connection_string(CONNECTION_STRING)
@@ -40,7 +38,6 @@ def listblobfiles(tabletype):
     print("Transfer of blob file list complete...")
     for blob in blob_list:
         flist.append(blob)
-    print("\n\t\t***** END: listblobfiles *****\n\n")
     return flist
 
 
@@ -49,7 +46,6 @@ def findblobupdated(dictlist, tyear):
     Given file list from blob
     Returns creation date of file from year of interest (usually this year)
     """
-    print("\n\n\t\t***** START: findblobupdated *****\n")
     for filedict in dictlist:
         file = filedict['name']
         filename = Path(str(file)).parts[-1]
@@ -61,39 +57,29 @@ def findblobupdated(dictlist, tyear):
         #print(f"\nBLOB: {filename} does {fyear} = {tyear} ?")
         if fyear == tyear:
             print(f"YUP! returning target year's last updated date:{fdateup}")
-            print("\n\t\t***** END: findblobupdated *****\n\n")
             return fdateup
         #else:
             #print(f"no, file year is out of scope\n")
     print('processing complete, no file from target year exists in file list')
-
-    print("\n\t\t***** END: findblobupdated *****\n\n")
 
 def listsourcefiles(url,tabletype):
     """
     Given source url
     Returns list of all files at the given source URL
     """
-    print("\n\n\t\t***** START: listsourcefiles *****\n")
-
     print(f"Connecting to source url for list of {tabletype} files...")
     page = requests.get(url).text
     soup = BeautifulSoup(page, "html.parser")
     print("\nReturning parsed text....")
-    print("\n\t\t***** END: listsourcefiles *****\n\n")
     return [url + "/" + node.get("href")
             for node in soup.find_all("a") if
             ((node.get("href").startswith(f"StormEvents_{tabletype}")) and (node.get("href").endswith("csv.gz")))]
-
-    print("\n\t\t***** END: listsourcefiles *****\n\n")
 
 def findupdatedfile(sourcefiles, targetyr, bloblatestupdate):
     """
     Given file list from source
     Find if file from target year is more recent than latest bloblatestupdate from blob
     """
-    print("\n\n\t\t***** START: findupdatedfile *****\n")
-
     for file in sourcefiles:
         filename = Path(file).parts[-1]
         felements = filename.split("_")
@@ -104,10 +90,9 @@ def findupdatedfile(sourcefiles, targetyr, bloblatestupdate):
         #fdateup = fdateup + timedelta(days = 1) #faking for test
         #print(f"\nSOURCE: {filename} does {fyear} = {targetyr} ?")
         if fyear == targetyr:
-            print(f"YES, file year in scope. is creation date {fdateup} > {bloblatestupdate} ?")
+            #print(f"YES, file year in scope. is creation date {fdateup} > {bloblatestupdate} ?")
             if fdateup > bloblatestupdate:
-                print("YES, returning new file!")
-                print("\n\t\t***** END: findupdatedfile *****\n\n")
+                print(f"Found updated file for this month: {filename}")
                 return filename
             #elif fdateup == bloblatestupdate:
             #    print("no, target year file creation dates match - we already have file.")
@@ -115,18 +100,14 @@ def findupdatedfile(sourcefiles, targetyr, bloblatestupdate):
             #    print("no, file is older than blob file - how?")
         #else:
         #    print(f"no, file year out of scope\n")
-
-    print('\nprocessing has not identified a new file')
-    print("\n\t\t***** END: findupdatedfile *****\n\n")
-    return('NOT FOUND')
+    print(f'\nFailed to identify a new source file for {targetyr}, exiting')
+    sys.exit()
 
 def filetoblob(sourceurl, thefile, tabletype):
     """
     Given source url and filename
     uploads single source file to blob
     """
-    print("\n\n\t\t***** START: filetoblob *****\n")
-
     sourcefile = sourceurl+'/'+thefile
     print(f"\ningesting {thefile} to {newcontainer}/{tabletype}")
 
@@ -136,12 +117,11 @@ def filetoblob(sourceurl, thefile, tabletype):
     for i in range(12):
         props = copied_blob.get_blob_properties()
         status = props.copy.status
-        print("Copy status: " + status)
+        #print("Copy status: " + status)
         if status == "success":
-            print("\n\t\t***** END: filetoblob *****\n\n")
             break
         else:
-            print("Copy not yet successful, waiting 5 seconds...")
+            #print("Copy not yet successful, waiting 5 seconds...")
             sleep(5)
 
     if status == "success":
@@ -155,8 +135,6 @@ def filetoblob(sourceurl, thefile, tabletype):
         copied_blob.abort_copy(copy_id)
         props = copied_blob.get_blob_properties()
         print(props.copy.status)
-
-    print("\n\t\t***** END: filetoblob *****\n\n")
 
 def delete_and_create_staging_tables():
     table_description = (
@@ -230,39 +208,30 @@ def delete_and_create_staging_tables():
 
     conn = mysql.connector.connect(**config)
     cursor = conn.cursor()
-    try:
-        print("Delete and Creating Staging Tables")
-        cursor.execute(table_description)
-        conn = mysql.connector.connect(**config)
-        cursor = conn.cursor()
-        conn.commit() # This right here
-    except mysql.connector.Error as err:
-        if err.errno == errorcode.ER_TABLE_EXISTS_ERROR:
-            print("already exists.")
-        else:
-            print(err.msg)
-    else:
-        print("OK")
-        cursor.close()
-        conn.close()
-        print("Done.")
+    print("Creating empty staging tables")
+    cursor.execute(table_description)
+    cursor.close()
+    conn.close()
+
 
 def create_table_precounts():
     query = ("DROP TABLE IF EXISTS vPreDelete;"
         "CREATE TABLE vPreDelete AS"
     	"  SELECT d_PreDelete,f_PreDelete FROM"
-    	"	(SELECT COUNT(*) AS  d_PreDelete  FROM test_details) AS d,"
-    	"	(SELECT COUNT(*) AS  f_PreDelete  FROM test_fatalities) AS f;"
-        "DELETE FROM test_details WHERE BEGIN_YEARMONTH = '202203';"
-        "DELETE FROM test_fatalities WHERE FAT_YEARMONTH = '202203';"
+    	"	(SELECT COUNT(*) AS d_PreDelete FROM details) AS d,"
+    	"	(SELECT COUNT(*) AS f_PreDelete FROM fatalities) AS f;"
+        "DELETE FROM details WHERE BEGIN_YEARMONTH = '202203';"
+        "DELETE FROM fatalities WHERE FAT_YEARMONTH = '202203';"
         "DROP TABLE IF EXISTS vPostDelete;"
         "CREATE TABLE vPostDelete AS"
     	"  SELECT d_PostDelete,f_PostDelete FROM"
-    	"	(SELECT COUNT(*) AS  d_PostDelete  FROM test_details) AS d,"
-    	"	(SELECT COUNT(*) AS  f_PostDelete  FROM test_fatalities) AS f;")
+    	"	(SELECT COUNT(*) AS d_PostDelete FROM details) AS d,"
+    	"	(SELECT COUNT(*) AS f_PostDelete FROM fatalities) AS f;")
     conn = mysql.connector.connect(**config)
     cursor = conn.cursor()
     cursor.execute(query)
+    cursor.close()
+    conn.close()
 
 create_table_precounts() #for testing,creates view of counts prior to update action, will compare after
 
@@ -279,8 +248,6 @@ for tabletype in ['details','fatalities']:
     bloblatestupdate = findblobupdated(blobfiles,targetyear)
     sourcefiles = listsourcefiles(sourceurl,tabletype)
     updatedsourcefile = findupdatedfile(sourcefiles, targetyear, bloblatestupdate)
-    if updatedsourcefile != 'NOT FOUND':
-        #print(f'updated file identified for {targetyear} - > {updatedsourcefile} (Placeholder for sending file to blob)')
-        filetoblob(sourceurl,updatedsourcefile,tabletype)
+    filetoblob(sourceurl,updatedsourcefile,tabletype) # this method will exit if updated source file not found
 
 delete_and_create_staging_tables()

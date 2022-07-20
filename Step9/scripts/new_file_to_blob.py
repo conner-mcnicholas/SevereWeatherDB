@@ -18,7 +18,7 @@ from mysql.connector import errorcode
 config = {
   'host':'sevwethmysqlserv.mysql.database.azure.com',
   'user':'conner@sevwethmysqlserv',
-  'password':'<password>',
+  'password':'Universal124!',
   'database':'defaultdb',
   'client_flags': [mysql.connector.ClientFlag.SSL],
   'ssl_ca': f'{os.environ["HOME"]}/.ssh/DigiCertGlobalRootG2.crt.pem',
@@ -30,8 +30,6 @@ def listblobfiles(tabletype):
     Given table type
     list all files in blob initial batch container
     """
-    print("\n\n\t\t***** START: listblobfiles *****\n")
-
     flist=[]
     print(f"Connecting to blob for list of {tabletype} files...")
     blob_service_client = BlobServiceClient.from_connection_string(CONNECTION_STRING)
@@ -40,16 +38,14 @@ def listblobfiles(tabletype):
     print("Transfer of blob file list complete...")
     for blob in blob_list:
         flist.append(blob)
-    print("\n\t\t***** END: listblobfiles *****\n\n")
     return flist
 
 
 def findblobnew(dictlist, tyear):
     """
-    Given file list from blob
-    Returns creation date of file from year of interest (usually this year)
+    Given file list from blob and year of interest (i.e. the new year)
+    Exits script if the blob file list already contains file for that year
     """
-    print("\n\n\t\t***** START: findblobnew *****\n")
     for filedict in dictlist:
         file = filedict['name']
         filename = Path(str(file)).parts[-1]
@@ -58,42 +54,32 @@ def findblobnew(dictlist, tyear):
         fdateup = felements[-1][1:9]
         fdateup = datetime.strptime(fdateup, '%Y%m%d')
         fdateup = fdateup.date()
-        print(f"\nBLOB: {filename} does {fyear} = {tyear} ?")
+        #print(f"\nBLOB: {filename} does {fyear} = {tyear} ?")
         if fyear == tyear:
-            print(f"YUP! We already have file for this year, no need to continue")
-            print("\n\t\t***** END: findblobnew *****\n\n")
-            return fdateup
-        else:
-            print(f"no, file year is out of scope\n")
-    print('processing complete, no file from target year exists in file list')
-    print("\n\t\t***** END: findblobnew *****\n\n")
-    return('NO NEW FILE')
+            print(f"We already ingested latest year({tyear}) file: {filename}, exiting")
+            sys.exit()
+        #else:
+            #print(f"no, file year is out of scope\n")
+    print('processing complete, no file from target year exists in blob file list')
 
 def listsourcefiles(url,tabletype):
     """
     Given source url
     Returns list of all files at the given source URL
     """
-    print("\n\n\t\t***** START: listsourcefiles *****\n")
-
     print(f"Connecting to source url for list of {tabletype} files...")
     page = requests.get(url).text
     soup = BeautifulSoup(page, "html.parser")
     print("\nReturning parsed text....")
-    print("\n\t\t***** END: listsourcefiles *****\n\n")
     return [url + "/" + node.get("href")
             for node in soup.find_all("a") if
             ((node.get("href").startswith(f"StormEvents_{tabletype}")) and (node.get("href").endswith("csv.gz")))]
-
-    print("\n\t\t***** END: listsourcefiles *****\n\n")
 
 def findnewfile(sourcefiles, targetyr):
     """
     Given file list from source
     Find if file from target year exists yet on source
     """
-    print("\n\n\t\t***** START: findnewfile *****\n")
-
     for file in sourcefiles:
         filename = Path(file).parts[-1]
         felements = filename.split("_")
@@ -102,24 +88,19 @@ def findnewfile(sourcefiles, targetyr):
         fdateup = datetime.strptime(fdateup, '%Y%m%d')
         fdateup = fdateup.date()
         #fdateup = fdateup + timedelta(days = 1) #faking for test
-        print(f"\nSOURCE: {filename} does {fyear} = {targetyr} ?")
+        #rint(f"\nSOURCE: {filename} does {fyear} = {targetyr} ?")
         if fyear == targetyr:
-            print(f"YES, returning new file created on {fdateup}")
+            print(f"Found new file for {targetyr} created on {fdateup}")
             return filename
-        else:
-            print(f"no, file year out of scope\n")
 
-    print('\nprocessing has not identified a new file')
-    print("\n\t\t***** END: findnewfile *****\n\n")
-    return('NOT FOUND')
+    print(f'\nFailed to identify a new source file for {targetyr}, exiting')
+    sys.exit()
 
 def filetoblob(sourceurl, thefile, tabletype):
     """
     Given source url and filename
     uploads single source file to blob
     """
-    print("\n\n\t\t***** START: filetoblob *****\n")
-
     sourcefile = sourceurl+'/'+thefile
     print(f"\ningesting {thefile} to {newcontainer}/{tabletype}")
 
@@ -131,10 +112,8 @@ def filetoblob(sourceurl, thefile, tabletype):
         status = props.copy.status
         print("Copy status: " + status)
         if status == "success":
-            print("\n\t\t***** END: filetoblob *****\n\n")
             break
         else:
-            print("Copy not yet successful, waiting 5 seconds...")
             sleep(5)
 
     if status == "success":
@@ -148,8 +127,6 @@ def filetoblob(sourceurl, thefile, tabletype):
         copied_blob.abort_copy(copy_id)
         props = copied_blob.get_blob_properties()
         print(props.copy.status)
-
-    print("\n\t\t***** END: filetoblob *****\n\n")
 
 def delete_and_create_staging_tables():
     table_description = (
@@ -223,22 +200,10 @@ def delete_and_create_staging_tables():
 
     conn = mysql.connector.connect(**config)
     cursor = conn.cursor()
-    try:
-        print("Delete and Creating Staging Tables")
-        cursor.execute(table_description)
-        conn = mysql.connector.connect(**config)
-        cursor = conn.cursor()
-        conn.commit() # This right here
-    except mysql.connector.Error as err:
-        if err.errno == errorcode.ER_TABLE_EXISTS_ERROR:
-            print("already exists.")
-        else:
-            print(err.msg)
-    else:
-        print("OK")
-        cursor.close()
-        conn.close()
-        print("Done.")
+    print("Delete and Creating Staging Tables")
+    cursor.execute(table_description)
+    cursor.close()
+    conn.close()
 
 def create_table_precounts():
     query = ("DROP TABLE IF EXISTS tPreDelete;"
@@ -256,6 +221,8 @@ def create_table_precounts():
     conn = mysql.connector.connect(**config)
     cursor = conn.cursor()
     cursor.execute(query)
+    cursor.close()
+    conn.close()
 
 create_table_precounts() #for testing,creates view of counts prior to update action, will compare after
 
@@ -269,12 +236,9 @@ newcontainer = "newfiles"
 for tabletype in ['details','fatalities']:
     print(f"Picking up any new {tabletype} file for {targetyear}")
     blobfiles = listblobfiles(tabletype)
-    blobnew = findblobnew(blobfiles,targetyear)
-    if blobnew == 'NO NEW FILE':
-        sourcefiles = listsourcefiles(sourceurl,tabletype)
-        newsourcefile = findnewfile(sourcefiles, targetyear)
-        if newsourcefile != 'NOT FOUND':
-            #print(f'new file identified for {targetyear} - > {newsourcefile} (Placeholder for sending file to blob)\n')
-            filetoblob(sourceurl,newsourcefile,tabletype)
+    findblobnew(blobfiles,targetyear) #this method will exit script if it determines a new file already exists in blob container
+    sourcefiles = listsourcefiles(sourceurl,tabletype)
+    newsourcefile = findnewfile(sourcefiles, targetyear) #this method will exit script if it fails to identify new file available at source url
+    filetoblob(sourceurl,newsourcefile,tabletype)
 
 delete_and_create_staging_tables()

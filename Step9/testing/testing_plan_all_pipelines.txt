@@ -22,7 +22,7 @@
   IN BLOB CONTAINER
   -- DELETE 2022 FILE IN ARCHIVE CONTAINER
 
-  IN NEW SCRIPT, (PRIOR TO RUNNING UPDATE LOGIC)
+  IN NEW SCRIPT, (PRIOR TO RUNNING NEW FILE LOGIC)
 
   -- SET RowsPreDelete -> SELECT count(*) FROM test_{table};-- (all rows in table before deletion)
   -- DELETE from TEST_{table} where SUBSTR(YEARMONTH,1,5) = 2022
