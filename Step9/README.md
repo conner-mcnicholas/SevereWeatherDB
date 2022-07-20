@@ -14,6 +14,9 @@ Step 9 - Deploy Code to Production:<br>
 
 &emsp;&emsp;(see: AZURE_resources/README.md)<br>
 
+&emsp;&emsp;-The success up to this stage makes it reasonable to finally load all files
+&emsp;&emsp;&emsp;&emsp;-From earliest records in 1950-Present (previously had only loaded files for years > 2000)
+
 &emsp;&emsp;-Deployed all logic within 3 pipelines in Azure Data Factory and scheduled triggers:<br>
 &emsp;&emsp;&emsp;1) Initial Load: <br>
 &emsp;&emsp;&emsp;(data extract logic captured in scripts/initial_files_to_blob.py)<br>

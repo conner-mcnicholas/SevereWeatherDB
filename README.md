@@ -1,6 +1,6 @@
 # Severe Weather Database
 
-## Cloud database of 21st Century severe US storms
+## Cloud database of severe storms in U.S. from 1950 - Present
 
 ### Capstone Project For Springboard Data Engineering School
 
