@@ -48,8 +48,6 @@ Step 9 - Deploy Code to Production:<br>
 
 ![alt text](https://github.com/conner-mcnicholas/SevereWeatherDB/blob/main/Step9/imgs/pipeline_test_success.png?raw=true)
 
-&emsp;&emsp;- Available to explore -> 1.5M rows capturing 21st century weather data across 62 columns:<br>
+&emsp;&emsp;- Available to explore -> 1.8M rows capturing 70 years of weather data across 62 columns:<br>
 
 ![alt text](https://github.com/conner-mcnicholas/SevereWeatherDB/blob/main/Step8/imgs/mysqlworkbench_detdate.png?raw=true)
-
-![alt text](https://github.com/conner-mcnicholas/SevereWeatherDB/blob/main/Step8/imgs/sanddance.png?raw=true)
