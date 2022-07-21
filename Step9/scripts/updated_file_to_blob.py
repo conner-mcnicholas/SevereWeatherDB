@@ -18,7 +18,7 @@ from mysql.connector import errorcode
 config = {
   'host':'sevwethmysqlserv.mysql.database.azure.com',
   'user':'conner@sevwethmysqlserv',
-  'password':'Universal124!',
+  'password':'<password>',
   'database':'defaultdb',
   'client_flags': [mysql.connector.ClientFlag.SSL],
   'ssl_ca': f'{os.environ["HOME"]}/.ssh/DigiCertGlobalRootG2.crt.pem',
@@ -56,7 +56,7 @@ def findblobupdated(dictlist, tyear):
         fdateup = fdateup.date()
         #print(f"\nBLOB: {filename} does {fyear} = {tyear} ?")
         if fyear == tyear:
-            print(f"YUP! returning target year's last updated date:{fdateup}")
+            print(f"YUP returning target year's last updated date:{fdateup}")
             return fdateup
         #else:
             #print(f"no, file year is out of scope\n")
@@ -126,7 +126,7 @@ def filetoblob(sourceurl, thefile, tabletype):
 
     if status == "success":
         # Copy finished
-        print("Copy successful!")
+        print("Copy successful")
     else:
         # if not finished after 1 min, cancel the operation
         print("Copy unsuccessful")

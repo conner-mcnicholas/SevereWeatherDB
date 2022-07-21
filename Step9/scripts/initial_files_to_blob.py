@@ -13,7 +13,7 @@ from mysql.connector import errorcode
 config = {
   'host':'sevwethmysqlserv.mysql.database.azure.com',
   'user':'conner@sevwethmysqlserv',
-  'password':'Universal124!',
+  'password':'<password>',
   'database':'defaultdb',
   'client_flags': [mysql.connector.ClientFlag.SSL],
   'ssl_ca': f'{os.environ["HOME"]}/.ssh/DigiCertGlobalRootG2.crt.pem'
@@ -86,7 +86,7 @@ def sendtoblob(url,thefiles):
         if status == "success":
             # Copy finished
             succeeded.append(thefile)
-            print("Copy successful!")
+            print("Copy successful")
         else:
             # if not finished after 1 min, cancel the operation
             failed.append(thefile)
