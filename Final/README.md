@@ -4,7 +4,7 @@
 
 ### Current State
 
-Final Build:
+Final Build:<br>
 &emsp;&emsp;-Architecture:<br>
 ![alt text](https://github.com/conner-mcnicholas/SevereWeatherDB/blob/main/Step7/diagram_formats/final_archdiagram_mod.png?raw=true)
 
