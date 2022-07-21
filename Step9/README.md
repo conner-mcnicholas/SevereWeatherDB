@@ -2,7 +2,10 @@
 
 ## Cloud database of severe storms in U.S. from 1950 - Present
 
-Final Build:
+### Current State
+
+Step 9 - Deploy Code to Production:<br>
+&emsp;&emsp;-Prior steps outlined as slide-deck PDF in respective folders<br>
 &emsp;&emsp;-Architecture:<br>
 
 ![alt text](https://github.com/conner-mcnicholas/SevereWeatherDB/blob/main/Step7/diagram_formats/final_archdiagram_mod.png?raw=true)
