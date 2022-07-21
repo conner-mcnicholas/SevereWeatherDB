@@ -40,8 +40,8 @@ Step 9 - Deploy Code to Production:<br>
 ![alt text](https://github.com/conner-mcnicholas/SevereWeatherDB/blob/main/Step9/imgs/clean_containers_output.png?raw=true)<br>
 
 &emsp;&emsp;-Testing: 8 total tests:<br>
-&emsp;&emsp;&emsp;&emsp;[1 Extract   x 2 tables] = 2 tests to confirm each year since 1950 is accounted for with a csvgz file in Data Lake<br>
-&emsp;&emsp;&emsp;&emsp;[3 Pipelines x 2 Tables] = 6 tests to confirm all rows in source csvgz file is accounted for with a row in MySQL table<br>
+&emsp;&emsp;&emsp;&emsp;2 tests [1 Extraction x 2 tables] to confirm each year since 1950 is accounted for with a csvgz file in Data Lake<br>
+&emsp;&emsp;&emsp;&emsp;6 tests [3 Pipelines  x 2 Tables] to confirm all rows in source csvgz file is accounted for with a row in MySQL table<br>
 &emsp;&emsp;&emsp;&emsp;(see: testing/testing_plan_all_pipelines.txt)<br>
 
 &emsp;&emsp;-All tests pass:<br>
