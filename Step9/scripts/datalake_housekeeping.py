@@ -10,13 +10,13 @@ from mysql.connector import errorcode
 
 def cleanup_containers():
     CONNECTION_STRING = os.environ["AZURE_STORAGE_CONNECTION_STRING"]
-
+    ACCOUNT_KEY = os.environ["AZURE_ACCOUNT_KEY"]
     client = BlobServiceClient.from_connection_string(CONNECTION_STRING)
 
     # Create sas token for blob
     sas_token = generate_account_sas(
         account_name = client.account_name,
-        account_key = <account_key>, # The account key for the source container
+        account_key = ACCOUNT_KEY, # The account key for the source container
         resource_types = ResourceTypes(object=True, container=True),
         permission= AccountSasPermissions(read=True,list=True),
         start = datetime.now(),
@@ -32,24 +32,41 @@ def cleanup_containers():
     for table in ['details','fatalities']:
         source_container_list = source_container_client.list_blobs()
         for s in source_container_list:
+            print('\n\nBEGIN SOURCE LOOP')
+            print(f'\ns: {s}')
             depth = len(Path(s.name).parts)
+            print(f'\ndepth check source: {depth}')
             if depth == 2:
+                print(f'SOURCE DEPTH PASSED')
                 filetype = Path(s.name).parts[0]
                 filename = Path(s.name).parts[-1]
                 felements = filename.split("_")
                 fyear = int(felements[3][1:5])
+                print(f'filename: {filename}')
+                print(f'fyear: {fyear}\n')
                 if filetype == table:
                     newfile = filename
                     updateyear = fyear
                     new_blob_name = s.name
                     destination_container_list = destination_container_client.list_blobs()
+                    print(f'SOURCE TABLE PASSED')
+                    print(f'newfile: {newfile}')
+                    print(f'updateyear : {updateyear}')
+                    print(f'new_blob_name : {new_blob_name}\n')
+                    print('LOOPING DESTINATIONS d\n')
                     for d in destination_container_list:
+                        print('\n\nBEGIN DESTINATION LOOP')
+                        print(f'\n\nd: {d}')
                         depth = len(Path(d.name).parts)
+                        print(f'depth check destination: {depth}')
                         if depth == 2:
+                            print(f'DEPTH DESTINATION PASSED')
                             filetype = Path(d.name).parts[0]
                             filename = Path(d.name).parts[-1]
                             felements = filename.split("_")
                             pyear = int(felements[3][1:5])
+                            print(f'filename : {filename}')
+                            print(f'pyear : {pyear}\n')
                             if filetype == table and pyear == updateyear:
                                 print(f'{table} - DELETING old file: {d.name} FROM destination: {d.container}')
                                 destination_blob = destination_container_client.get_blob_client(d)
@@ -63,14 +80,14 @@ def cleanup_containers():
                                     blob_name = new_blob_name,
                                     credential = sas_token
                                 )
-                                print(f'{table} - COPYING new file: {s.name} FROM source: {s.container} TO destination: {d.container}')
+                                print(f'{table} - COPYING updated file: {s.name} FROM source: {s.container} TO destination: {d.container}')
                                 new_blob.start_copy_from_url(source_blob.url)
 
-                                print(f'{table} - DELETING new file: {s.name} FROM source: {s.container}')
+                                print(f'{table} - DELETING updated file: {s.name} FROM source: {s.container}')
                                 source_blob_dl = source_container_client.get_blob_client(s)
                                 source_blob_dl.delete_blob()
 
-def create_table_postcounts():
+def create_table_postcounts(P):
     config = {
       'host':'sevwethmysqlserv.mysql.database.azure.com',
       'user':'conner@sevwethmysqlserv',
@@ -81,11 +98,11 @@ def create_table_postcounts():
       'autocommit': True
     }
 
-    query = ("DROP TABLE IF EXISTS vPostUpdate;"
-        "CREATE TABLE vPostUpdate AS"
-        "  SELECT d_PostUpdate,f_PostUpdate FROM"
-        "	(SELECT COUNT(*) AS  d_PostUpdate  FROM test_details) AS d,"
-        "	(SELECT COUNT(*) AS  f_PostUpdate  FROM test_fatalities) AS f;")
+    query = (f"DROP TABLE IF EXISTS {P}_PostUpdate;"
+        f"CREATE TABLE {P}_PostUpdate AS" # U for Updated File Pipeline
+        "  SELECT * FROM"
+        "	(SELECT COUNT(*) AS D_PostUpdate FROM details) AS d,"
+        "	(SELECT COUNT(*) AS F_PostUpdate FROM fatalities) AS f;")
 
     conn = mysql.connector.connect(**config)
     cursor = conn.cursor()
@@ -93,4 +110,7 @@ def create_table_postcounts():
 
 cleanup_containers()
 
-create_table_postcounts()
+#Pipeline Type Variable, just for creating distinct test tables
+p = sys.argv[1] # 'N' is passed from New File Pipeline, 'U' is passed from Updated File Pipeline
+
+create_table_postcounts(p)

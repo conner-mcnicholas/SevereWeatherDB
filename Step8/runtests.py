@@ -6,7 +6,7 @@ import delete_and_create_tables_azuremysql
 import count_srcfile_rows
 
 year = date.today().year
-start_year = 2019
+start_year = 1950
 
 def test_details_uploaded():
     """verifies same # of details files exist in blob as years since start"""

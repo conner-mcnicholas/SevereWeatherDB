@@ -161,7 +161,7 @@ def delete_and_create_tables():
         "  FAT_DAY VARCHAR(2),"
         "  FAT_TIME VARCHAR(4),"
         "  FATALITY_ID INT NOT NULL,"
-        "  EVENT_ID INT,"
+        "  EVENT_ID INT NOT NULL,"
         "  FATALITY_TYPE VARCHAR(1),"
         "  FATALITY_DATE VARCHAR(19),"
         "  FATALITY_AGE INT DEFAULT NULL,"

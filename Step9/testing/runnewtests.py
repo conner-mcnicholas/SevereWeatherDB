@@ -14,24 +14,23 @@ config = {
   'ssl_ca': f'{os.environ["HOME"]}/.ssh/DigiCertGlobalRootG2.crt.pem'
 }
 
-query = (
-    "SELECT * FROM"
+query = ("SELECT * FROM"
     "   (SELECT * FROM"
-    "       (SELECT * FROM tPreDelete) AS pred,"
-    "       (SELECT * FROM tPostDelete) AS postd) AS ppd,"
-    "   (SELECT * FROM tPostUpdate) AS postu")
+    "       (SELECT * FROM N_PreDelete) AS pred,"
+    "       (SELECT * FROM N_PostDelete) AS postd) AS ppd,"
+    "   (SELECT * FROM N_PostUpdate) AS postu;")
 
 conn = mysql.connector.connect(**config)
 cursor = conn.cursor()
 cursor.execute(query)
-d_PreDelete,f_PreDelete,d_PostDelete,f_PostDelete,d_PostUpdate,f_PostUpdate = cursor.fetchone()
+D_PreDelete,F_PreDelete,D_PostDelete,F_PostDelete,D_PostUpdate,F_PostUpdate = cursor.fetchone()
 
 def test_details_new():
     "verifies details table gained full row count after running new pipeline"
-    assert d_PreDelete > d_PostDelete, "Details Had No Missing Rows"
-    assert d_PostUpdate == d_PreDelete, "Details Did Not Fully Update"
+    assert D_PreDelete > D_PostDelete, "Details Had No Missing Rows"
+    assert D_PostUpdate == D_PreDelete, "Details Did Not Fully Update"
 
 def test_fatalities_new():
     "verifies fatalities table gained full row count after running new pipeline"
-    assert f_PreDelete > f_PostDelete, "Fatalities Had No Missing Rows"
-    assert f_PostUpdate == f_PreDelete, "Fatalities Did Not Fully Update"
+    assert F_PreDelete > F_PostDelete, "Fatalities Had No Missing Rows"
+    assert F_PostUpdate == F_PreDelete, "Fatalities Did Not Fully Update"

@@ -1,3 +1,14 @@
+-----------------------------------INITIAL FILES PIPELINE TEST-------------------------------------------
+
+  RUNNING ADF INITIAL PIPELINE
+    PULLS ALL CSVGZ FILES FROM SOURCE TO DATA LAKE "allfiles" CONTAINER:
+      -- SET FILES_ROWCOUNT -> FOR EACH BLOB IN "allfiles", UNZIP DOWNLOADED DATA STREAM AND COUNT # ROWS, SUMMING GRAND TOTAL
+
+    LOADS DATA FROM "allfiles" TO TABLES IN MYSQL:
+      -- SET TABLES_ROWCOUNT -> select count(*) from {table};-- (all rows in the table after initial load)
+
+  VERIFY FILES_ROWCOUNT == TABLES_ROWCOUNT 
+
 -----------------------------------MONTHLY UPDATE FILE PIPELINE TEST-------------------------------------------
 
   IN BLOB CONTAINER

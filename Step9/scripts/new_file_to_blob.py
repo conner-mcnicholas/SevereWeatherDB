@@ -189,7 +189,7 @@ def delete_and_create_staging_tables():
         "  FAT_DAY VARCHAR(2),"
         "  FAT_TIME VARCHAR(4),"
         "  FATALITY_ID INT NOT NULL,"
-        "  EVENT_ID INT,"
+        "  EVENT_ID INT NOT NULL,"
         "  FATALITY_TYPE VARCHAR(1),"
         "  FATALITY_DATE VARCHAR(19),"
         "  FATALITY_AGE INT DEFAULT NULL,"
@@ -206,25 +206,25 @@ def delete_and_create_staging_tables():
     conn.close()
 
 def create_table_precounts():
-    query = ("DROP TABLE IF EXISTS tPreDelete;"
-        "CREATE TABLE tPreDelete AS"
-    	"  SELECT d_PreDelete,f_PreDelete FROM"
-    	"	(SELECT COUNT(*) AS  d_PreDelete  FROM test_details) AS d,"
-    	"	(SELECT COUNT(*) AS  f_PreDelete  FROM test_fatalities) AS f;"
-        "DELETE FROM test_details WHERE SUBSTR(BEGIN_YEARMONTH,1,4) = '2022';"
-        "DELETE FROM test_fatalities WHERE SUBSTR(FAT_YEARMONTH,1,4) = '2022';"
-        "DROP TABLE IF EXISTS tPostDelete;"
-        "CREATE TABLE tPostDelete AS"
-    	"  SELECT d_PostDelete,f_PostDelete FROM"
-    	"	(SELECT COUNT(*) AS  d_PostDelete  FROM test_details) AS d,"
-    	"	(SELECT COUNT(*) AS  f_PostDelete  FROM test_fatalities) AS f;")
+    query = ("DROP TABLE IF EXISTS N_PreDelete;"
+        "CREATE TABLE N_PreDelete AS"
+    	"  SELECT * FROM"
+    	"	(SELECT COUNT(*) AS D_PreDelete FROM details) AS d,"
+    	"	(SELECT COUNT(*) AS F_PreDelete FROM fatalities) AS f;"
+        f"DELETE FROM details WHERE SUBSTR(BEGIN_YEARMONTH,1,4) = '{targetyear}';"
+        f"DELETE FROM fatalities WHERE SUBSTR(FAT_YEARMONTH,1,4) = '{targetyear}';"
+        "DROP TABLE IF EXISTS N_PostDelete;"
+        "CREATE TABLE N_PostDelete AS"
+    	"  SELECT * FROM"
+    	"	(SELECT COUNT(*) AS D_PostDelete FROM details) AS d,"
+    	"	(SELECT COUNT(*) AS F_PostDelete FROM fatalities) AS f;")
     conn = mysql.connector.connect(**config)
     cursor = conn.cursor()
+    print(f'Deleting {targetyear} rows from details and fatalities\n')
+    print('Creating N_PreDelete and N_PostDelete')
     cursor.execute(query)
     cursor.close()
     conn.close()
-
-create_table_precounts() #for testing,creates view of counts prior to update action, will compare after
 
 CONNECTION_STRING = os.environ["AZURE_STORAGE_CONNECTION_STRING"]
 targetyear = int(str(date.today())[0:4])
@@ -232,6 +232,8 @@ sourceurl = "https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles"
 blob_service_client = BlobServiceClient.from_connection_string(CONNECTION_STRING)
 batchcontainer = 'allfiles'
 newcontainer = "newfiles"
+
+create_table_precounts() #for testing,creates view of counts prior to update action, will compare after
 
 for tabletype in ['details','fatalities']:
     print(f"Picking up any new {tabletype} file for {targetyear}")

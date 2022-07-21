@@ -1,6 +1,6 @@
 # Severe Weather Database
 
-## Cloud database of 21st Century severe US storms
+## Cloud database of severe storms in U.S. from 1950 - Present
 
 ### Current State
 
@@ -35,7 +35,7 @@ Step 9 - Deploy Code to Production:<br>
 ![alt text](https://github.com/conner-mcnicholas/SevereWeatherDB/blob/main/Step9/imgs/yearly_new.png?raw=true)<br>
 
 &emsp;&emsp;-Pipelines include handling for Azure Data Lake blob container maintenaince:<br>
-&emsp;&emsp;(maintenance logic captured in scripts/clean_newfile_container.py)<br>
+&emsp;&emsp;(maintenance logic captured in scripts/datalake_housekeeping.py)<br>
 
 ![alt text](https://github.com/conner-mcnicholas/SevereWeatherDB/blob/main/Step9/imgs/clean_containers_output.png?raw=true)<br>
 
