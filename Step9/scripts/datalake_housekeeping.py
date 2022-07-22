@@ -110,7 +110,6 @@ def create_table_postcounts(P):
 
 cleanup_containers()
 
-#Pipeline Type Variable, just for creating distinct test tables
-p = sys.argv[1] # 'N' is passed from New File Pipeline, 'U' is passed from Updated File Pipeline
+p = sys.argv[1] #pipeline type = 'U'[pdate] or 'N'[ew] cmd line var from data factory settings
 
-create_table_postcounts(p)
+create_table_postcounts(p)  #to compare to precounts in testing
