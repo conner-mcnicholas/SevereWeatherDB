@@ -63,19 +63,20 @@ def cleanup_containers():
                     source_blob_dl = source_container_client.get_blob_client(s)
                     source_blob_dl.delete_blob()
 
-def create_table_postcounts(P):
+def create_table_postcounts():
+    mysqlpass = os.environ["AZ_MYSQL_ADMIN_PASSWORD"]
     config = {
       'host':'sevwethmysqlserv.mysql.database.azure.com',
       'user':'conner@sevwethmysqlserv',
-      'password':'<password>',
+      'password':mysqlpass,
       'database':'defaultdb',
       'client_flags': [mysql.connector.ClientFlag.SSL],
       'ssl_ca': f'{os.environ["HOME"]}/.ssh/DigiCertGlobalRootG2.crt.pem',
       'autocommit': True
     }
 
-    query = (f"DROP TABLE IF EXISTS {P}_PostUpdate;"
-        f"CREATE TABLE {P}_PostUpdate AS" # U for Updated File Pipeline
+    query = (f"DROP TABLE IF EXISTS N_PostUpdate;"
+        f"CREATE TABLE N_PostUpdate AS" # U for Updated File Pipeline
         "  SELECT * FROM"
         "	(SELECT COUNT(*) AS D_PostUpdate FROM details) AS d,"
         "	(SELECT COUNT(*) AS F_PostUpdate FROM fatalities) AS f;")
@@ -83,9 +84,9 @@ def create_table_postcounts(P):
     conn = mysql.connector.connect(**config)
     cursor = conn.cursor()
     cursor.execute(query)
+    cursor.close()
+    conn.close()
 
 cleanup_containers()
 
-p = sys.argv[1] # #pipeline type = 'U'[pdate] or 'N'[ew] cmd line var from data factory settings
-
-create_table_postcounts(p) #to compare to precounts in testing
+create_table_postcounts() #to compare to precounts in testing

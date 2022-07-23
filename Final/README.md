@@ -6,11 +6,18 @@
 
 Final Build:<br>
 &emsp;&emsp;-Architecture:<br>
-![alt text](https://github.com/conner-mcnicholas/SevereWeatherDB/blob/main/Step7/diagram_formats/final_archdiagram_mod.png?raw=true)
+![alt text](https://github.com/conner-mcnicholas/SevereWeatherDB/blob/main/Final/imgs/architecture_diagram.png?raw=true)<br>
+
+&emsp;&emsp;-ELT Process Overview:<br>
+
+![alt text](https://github.com/conner-mcnicholas/SevereWeatherDB/blob/main/Final/imgs/annotated_pull_new_w_id.png?raw=true)<br>
+
+![alt text](https://github.com/conner-mcnicholas/SevereWeatherDB/blob/main/Final/imgs/pull_new_and_trigger_pipeline_success.png?raw=true)<br>
+
+![alt text](https://github.com/conner-mcnicholas/SevereWeatherDB/blob/main/Final/imgs/triggered_new_pipeline_in_progress.png?raw=true)<br>
 
 &emsp;&emsp;-Packaged scripts as docker container to auto-deploy all required Azure Resources based on config:<br>
-
-&emsp;&emsp;(see: AZURE_resources/README.md)<br>
+&emsp;&emsp;(copy readme language and get pic of run)<br>
 
 &emsp;&emsp;-The success up to this stage makes it reasonable to finally load all files<br>
 &emsp;&emsp;&emsp;&emsp;-From earliest records in 1950-Present (previously had only loaded files for years > 2000)<br>
