@@ -2,42 +2,34 @@
 
 ## Cloud database of severe storms in U.S. from 1950 - Present
 
-### Current State
+### Background
 
-Final Build:<br>
-&emsp;&emsp;-Architecture:<br>
+### Data Model
+
+### Architecture
+
 ![alt text](https://github.com/conner-mcnicholas/SevereWeatherDB/blob/main/Final/imgs/architecture_diagram.png?raw=true)<br>
 
-&emsp;&emsp;-ELT Process Overview:<br>
+### ELT Pipelines Overview:
+
+There are three general processes that have been tailored to the NOAA's release cadence for severe weather data record files.
+
+The first is the most straightforward - just ingest all of the available details and fatalities csv.gz files available so at present.
+
+To keep the database in sync with the latest data available, we must ingest new data as it is released.  This occurs in two primary ways:
+
+1) Each month, the filename
+
+&emsp;&emsp;1) Initial Load (extract logic in scripts/initial_files_to_blob.py)<br>
+&emsp;&emsp;&emsp;&emsp;Immediately triggered load of all available files at source url.<br>
+&emsp;&emsp;2) Monthly Update (extract logic in scripts/update_files_to_blob_only.py)<br>
+&emsp;&emsp;&emsp;&emsp;ELT the current year's source data file, which is updated monthly.<br>
+&emsp;&emsp;3) Yearly New (extract logic in scripts/new_files_to_blob_only.py)<br>
+&emsp;&emsp;&emsp;&emsp;ELT the new year's source data file, which lands fresh at source url annually<br>
 
 ![alt text](https://github.com/conner-mcnicholas/SevereWeatherDB/blob/main/Final/imgs/annotated_pull_new_w_id.png?raw=true)<br>
 
-![alt text](https://github.com/conner-mcnicholas/SevereWeatherDB/blob/main/Final/imgs/pull_new_and_trigger_pipe_success.png?raw=true)<br>
-
-![alt text](https://github.com/conner-mcnicholas/SevereWeatherDB/blob/main/Final/imgs/triggered_new_pipe_in_progress.png?raw=true)<br>
-
-&emsp;&emsp;-Packaged scripts as docker container to auto-deploy all required Azure Resources based on config:<br>
-&emsp;&emsp;(copy readme language and get pic of run)<br>
-
-&emsp;&emsp;-The success up to this stage makes it reasonable to finally load all files<br>
-&emsp;&emsp;&emsp;&emsp;-From earliest records in 1950-Present (previously had only loaded files for years > 2000)<br>
-
-&emsp;&emsp;-Deployed all logic within 3 pipelines in Azure Data Factory and scheduled triggers:<br>
-&emsp;&emsp;&emsp;1) Initial Load: <br>
-&emsp;&emsp;&emsp;(data extract logic captured in scripts/initial_files_to_blob.py)<br>
-&emsp;&emsp;&emsp;(previously implemented as ../Step8/batch_upload_to_blob.py)<br>
-
-![alt text](https://github.com/conner-mcnicholas/SevereWeatherDB/blob/main/Step9/imgs/initial_load.png?raw=true)<br>
-
-&emsp;&emsp;&emsp;2) Monthly Update:<br>
-&emsp;&emsp;&emsp;(data extract logic captured in scripts/update_files_to_blob.py)<br>
-
-![alt text](https://github.com/conner-mcnicholas/SevereWeatherDB/blob/main/Step9/imgs/monthly_update.png?raw=true)<br>
-
-&emsp;&emsp;&emsp;3) Yearly New:<br>
-&emsp;&emsp;&emsp;(data extract logic captured in scripts/new_files_to_blob.py)<br>
-
-![alt text](https://github.com/conner-mcnicholas/SevereWeatherDB/blob/main/Step9/imgs/yearly_new.png?raw=true)<br>
+![alt text](https://github.com/conner-mcnicholas/SevereWeatherDB/blob/main/Step9/imgs/yearly_deepdive.png?raw=true)<br>
 
 &emsp;&emsp;-Pipelines include handling for Azure Data Lake blob container maintenaince:<br>
 &emsp;&emsp;(maintenance logic captured in scripts/datalake_housekeeping.py)<br>

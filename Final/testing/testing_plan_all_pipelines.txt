@@ -1,0 +1,47 @@
+-----------------------------------INITIAL FILES PIPELINE TEST-------------------------------------------
+
+  RUNNING ADF INITIAL PIPELINE
+    PULLS ALL CSVGZ FILES FROM SOURCE TO DATA LAKE "allfiles" CONTAINER:
+      -- SET FILES_ROWCOUNT -> FOR EACH BLOB IN "allfiles", UNZIP DOWNLOADED DATA STREAM AND COUNT # ROWS, SUMMING GRAND TOTAL
+
+    LOADS DATA FROM "allfiles" TO TABLES IN MYSQL:
+      -- SET TABLES_ROWCOUNT -> select count(*) from {table};-- (all rows in the table after initial load)
+
+  VERIFY FILES_ROWCOUNT == TABLES_ROWCOUNT 
+
+-----------------------------------MONTHLY UPDATE FILE PIPELINE TEST-------------------------------------------
+
+  IN BLOB CONTAINER
+  -- RENAME 2022 FILE IN ARCHIVE CONTAINER TO SHOW MODIFIED DATE OF LAST MONTH 20220516
+
+  IN UPDATE SCRIPT, (PRIOR TO RUNNING UPDATE LOGIC)
+
+  -- SET RowsPreDelete -> SELECT count(*) FROM test_{table};-- (all rows in table before deletion)
+  -- DELETE from TEST_{table} where BEGIN_YEARMONTH = '202203';
+
+  RUNNING ADF UPDATE PIPELINE WILL IDENTIFY NEWER SOURCE FILE AVAILABLE THAN THE FILE WE RENAMED 20220616, APPENDS ALL 202203 ROWS
+
+  IN CLEANUP SCRIPT, (AT VERY END, BUT ORDER DOESNT MATTER)
+
+  -- Set RowsPostUpdate -> select count(*) from test_{table};-- (all rows in this table after update)
+
+  VERIFY vPreDelete.RowsPostUpdate == RowsPreDelete
+
+
+-----------------------------------YEARLY NEW FILE PIPELINE TEST------------------------------------------------
+
+  IN BLOB CONTAINER
+  -- DELETE 2022 FILE IN ARCHIVE CONTAINER
+
+  IN NEW SCRIPT, (PRIOR TO RUNNING NEW FILE LOGIC)
+
+  -- SET RowsPreDelete -> SELECT count(*) FROM test_{table};-- (all rows in table before deletion)
+  -- DELETE from TEST_{table} where SUBSTR(YEARMONTH,1,5) = 2022
+
+  RUNNING ADF NEW PIPELINE WILL IDENTIFY NEW SOURCE FILE AVAILABLE FOR CURRENT YEAR, APPENDS ALL 2022 ROWS
+
+  IN CLEANUP SCRIPT, (AT VERY END, BUT ORDER DOESNT MATTER)
+
+-- Set RowsPostInsert -> select count(*) from test_{table};-- (all rows in this table after all file rows inserted)
+
+VERIFY RowsPostInsert == RowsPreDelete
