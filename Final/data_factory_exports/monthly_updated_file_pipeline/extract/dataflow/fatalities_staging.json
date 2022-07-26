@@ -1,0 +1,87 @@
+{
+    "name": "fatalities_staging",
+    "properties": {
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "output_staging_fatalities_mysql",
+                        "type": "DatasetReference"
+                    },
+                    "name": "sourcefatalities"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "output_fatalities_mysql",
+                        "type": "DatasetReference"
+                    },
+                    "name": "sinkfatalities"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "UpsertCompoundKey"
+                }
+            ],
+            "scriptLines": [
+                "source(output(",
+                "          FAT_YEARMONTH as string,",
+                "          FAT_DAY as string,",
+                "          FAT_TIME as string,",
+                "          FATALITY_ID as integer,",
+                "          EVENT_ID as integer,",
+                "          FATALITY_TYPE as string,",
+                "          FATALITY_DATE as string,",
+                "          FATALITY_AGE as integer,",
+                "          FATALITY_SEX as string,",
+                "          FATALITY_LOCATION as string,",
+                "          EVENT_YEARMONTH as string",
+                "     ),",
+                "     allowSchemaDrift: false,",
+                "     validateSchema: false,",
+                "     isolationLevel: 'READ_UNCOMMITTED',",
+                "     format: 'table') ~> sourcefatalities",
+                "sourcefatalities alterRow(upsertIf(true())) ~> UpsertCompoundKey",
+                "UpsertCompoundKey sink(allowSchemaDrift: false,",
+                "     validateSchema: false,",
+                "     input(",
+                "          FAT_YEARMONTH as string,",
+                "          FAT_DAY as string,",
+                "          FAT_TIME as string,",
+                "          FATALITY_ID as integer,",
+                "          EVENT_ID as integer,",
+                "          FATALITY_TYPE as string,",
+                "          FATALITY_DATE as string,",
+                "          FATALITY_AGE as integer,",
+                "          FATALITY_SEX as string,",
+                "          FATALITY_LOCATION as string,",
+                "          EVENT_YEARMONTH as string",
+                "     ),",
+                "     deletable:false,",
+                "     insertable:true,",
+                "     updateable:false,",
+                "     upsertable:true,",
+                "     keys:['FATALITY_ID','EVENT_ID'],",
+                "     format: 'table',",
+                "     skipDuplicateMapInputs: true,",
+                "     skipDuplicateMapOutputs: true,",
+                "     mapColumn(",
+                "          FAT_YEARMONTH,",
+                "          FAT_DAY,",
+                "          FAT_TIME,",
+                "          FATALITY_ID,",
+                "          EVENT_ID,",
+                "          FATALITY_TYPE,",
+                "          FATALITY_DATE,",
+                "          FATALITY_AGE,",
+                "          FATALITY_SEX,",
+                "          FATALITY_LOCATION,",
+                "          EVENT_YEARMONTH",
+                "     )) ~> sinkfatalities"
+            ]
+        }
+    }
+}

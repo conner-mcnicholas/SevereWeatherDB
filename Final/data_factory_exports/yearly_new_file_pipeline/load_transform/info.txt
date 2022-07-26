@@ -1,0 +1,6 @@
+selected resource name:		load_transfer_new_file
+selected resource type:		pipeline
+factory name:			datafactoryausins
+factory location:		australiaeast
+subscription id:		b5f807fa-c5eb-4a4d-8357-76a176efc946
+time of download (UTC):		Tue, 26 Jul 2022 18:33:14 GMT

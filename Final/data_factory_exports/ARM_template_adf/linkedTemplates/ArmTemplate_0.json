@@ -1,0 +1,3768 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "factoryName": {
+            "type": "string",
+            "metadata": "Data Factory name",
+            "defaultValue": "datafactoryausins"
+        },
+        "input_blob_accountKey": {
+            "type": "secureString",
+            "metadata": "Secure string for 'accountKey' of 'input_blob'"
+        },
+        "output_mysql_connectionString": {
+            "type": "secureString",
+            "metadata": "Secure string for 'connectionString' of 'output_mysql'"
+        },
+        "direct_blob_accountKey": {
+            "type": "secureString",
+            "metadata": "Secure string for 'accountKey' of 'direct_blob'"
+        },
+        "TEST_input_blob_accountKey": {
+            "type": "secureString",
+            "metadata": "Secure string for 'accountKey' of 'TEST_input_blob'"
+        },
+        "input_data_lake_accountKey": {
+            "type": "secureString",
+            "metadata": "Secure string for 'accountKey' of 'input_data_lake'"
+        },
+        "housekeeping_accessToken": {
+            "type": "secureString",
+            "metadata": "Secure string for 'accessToken' of 'housekeeping'"
+        },
+        "fully_authd_accessToken": {
+            "type": "secureString",
+            "metadata": "Secure string for 'accessToken' of 'fully_authd'"
+        },
+        "input_blob_properties_typeProperties_url": {
+            "type": "string",
+            "defaultValue": "https://pipelinestorageacctaus.dfs.core.windows.net/"
+        },
+        "direct_blob_properties_typeProperties_url": {
+            "type": "string",
+            "defaultValue": "https://pipelinestorageacctaus.dfs.core.windows.net/"
+        },
+        "TEST_input_blob_properties_typeProperties_url": {
+            "type": "string",
+            "defaultValue": "https://pipelinestorageacctaus.dfs.core.windows.net/"
+        },
+        "input_data_lake_properties_typeProperties_url": {
+            "type": "string",
+            "defaultValue": "https://pipelinestorageacctaus.dfs.core.windows.net/"
+        },
+        "fully_authd_properties_typeProperties_existingClusterId": {
+            "type": "string",
+            "defaultValue": "0722-143425-2gmvk2rw"
+        }
+    },
+    "variables": {
+        "factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+    },
+    "resources": [
+        {
+            "name": "[concat(parameters('factoryName'), '/input_blob')]",
+            "type": "Microsoft.DataFactory/factories/linkedServices",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "annotations": [],
+                "type": "AzureBlobFS",
+                "typeProperties": {
+                    "url": "[parameters('input_blob_properties_typeProperties_url')]",
+                    "accountKey": {
+                        "type": "SecureString",
+                        "value": "[parameters('input_blob_accountKey')]"
+                    }
+                }
+            },
+            "dependsOn": []
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/output_mysql')]",
+            "type": "Microsoft.DataFactory/factories/linkedServices",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "annotations": [],
+                "type": "AzureMySql",
+                "typeProperties": {
+                    "connectionString": "[parameters('output_mysql_connectionString')]"
+                }
+            },
+            "dependsOn": []
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/direct_blob')]",
+            "type": "Microsoft.DataFactory/factories/linkedServices",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "annotations": [],
+                "type": "AzureBlobFS",
+                "typeProperties": {
+                    "url": "[parameters('direct_blob_properties_typeProperties_url')]",
+                    "accountKey": {
+                        "type": "SecureString",
+                        "value": "[parameters('direct_blob_accountKey')]"
+                    }
+                }
+            },
+            "dependsOn": []
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/TEST_input_blob')]",
+            "type": "Microsoft.DataFactory/factories/linkedServices",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "annotations": [],
+                "type": "AzureBlobFS",
+                "typeProperties": {
+                    "url": "[parameters('TEST_input_blob_properties_typeProperties_url')]",
+                    "accountKey": {
+                        "type": "SecureString",
+                        "value": "[parameters('TEST_input_blob_accountKey')]"
+                    }
+                }
+            },
+            "dependsOn": []
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/input_data_lake')]",
+            "type": "Microsoft.DataFactory/factories/linkedServices",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "annotations": [],
+                "type": "AzureBlobFS",
+                "typeProperties": {
+                    "url": "[parameters('input_data_lake_properties_typeProperties_url')]",
+                    "accountKey": {
+                        "type": "SecureString",
+                        "value": "[parameters('input_data_lake_accountKey')]"
+                    }
+                }
+            },
+            "dependsOn": []
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/housekeeping')]",
+            "type": "Microsoft.DataFactory/factories/linkedServices",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "annotations": [],
+                "type": "AzureDatabricks",
+                "typeProperties": {
+                    "domain": "https://adb-3064050213402635.15.azuredatabricks.net",
+                    "accessToken": {
+                        "type": "SecureString",
+                        "value": "[parameters('housekeeping_accessToken')]"
+                    },
+                    "newClusterNodeType": "Standard_DS3_v2",
+                    "newClusterNumOfWorker": "1",
+                    "newClusterSparkConf": {
+                        "fs.azure.account.key.pipelinestorageacctaus.blob.core.windows.net": "f6fWRdrrX8qYB9a1y2Rlgu7qCuyeHuD59j3UIb0hi3ZanAn8DUmej+uofzFi7irJm954fTa5LtBb+AStzjJHYA==",
+                        "spark.hadoop.fs.azure.account.key.pipelinestorageacctaus.blob.core.windows.net": "f6fWRdrrX8qYB9a1y2Rlgu7qCuyeHuD59j3UIb0hi3ZanAn8DUmej+uofzFi7irJm954fTa5LtBb+AStzjJHYA=="
+                    },
+                    "newClusterSparkEnvVars": {
+                        "AZURE_ACCOUNT_KEY": "f6fWRdrrX8qYB9a1y2Rlgu7qCuyeHuD59j3UIb0hi3ZanAn8DUmej+uofzFi7irJm954fTa5LtBb+AStzjJHYA==",
+                        "AZURE_STORAGE_CONNECTION_STRING": "DefaultEndpointsProtocol=https;AccountName=pipelinestorageacctaus;AccountKey=f6fWRdrrX8qYB9a1y2Rlgu7qCuyeHuD59j3UIb0hi3ZanAn8DUmej+uofzFi7irJm954fTa5LtBb+AStzjJHYA==;EndpointSuffix=core.windows.net",
+                        "PYSPARK_PYTHON": "/databricks/python3/bin/python3"
+                    },
+                    "newClusterVersion": "10.3.x-scala2.12",
+                    "newClusterInitScripts": [],
+                    "newClusterDriverNodeType": "Standard_D3_v2",
+                    "clusterOption": "Fixed"
+                }
+            },
+            "dependsOn": []
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/fully_authd')]",
+            "type": "Microsoft.DataFactory/factories/linkedServices",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "annotations": [],
+                "type": "AzureDatabricks",
+                "typeProperties": {
+                    "domain": "https://adb-3064050213402635.15.azuredatabricks.net",
+                    "accessToken": {
+                        "type": "SecureString",
+                        "value": "[parameters('fully_authd_accessToken')]"
+                    },
+                    "existingClusterId": "[parameters('fully_authd_properties_typeProperties_existingClusterId')]"
+                }
+            },
+            "dependsOn": []
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/monthly_update_trigger')]",
+            "type": "Microsoft.DataFactory/factories/triggers",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "annotations": [],
+                "runtimeState": "Stopped",
+                "pipelines": [],
+                "type": "ScheduleTrigger",
+                "typeProperties": {
+                    "recurrence": {
+                        "frequency": "Month",
+                        "interval": 1,
+                        "startTime": "2022-07-23T00:01:00Z",
+                        "timeZone": "UTC",
+                        "schedule": {
+                            "monthDays": [
+                                17
+                            ]
+                        }
+                    }
+                }
+            },
+            "dependsOn": []
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/output_fatalities_mysql')]",
+            "type": "Microsoft.DataFactory/factories/datasets",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "linkedServiceName": {
+                    "referenceName": "output_mysql",
+                    "type": "LinkedServiceReference"
+                },
+                "annotations": [],
+                "type": "AzureMySqlTable",
+                "schema": [
+                    {
+                        "name": "FAT_YEARMONTH",
+                        "type": "varchar",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "FAT_DAY",
+                        "type": "varchar",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "FAT_TIME",
+                        "type": "varchar",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "FATALITY_ID",
+                        "type": "int",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "EVENT_ID",
+                        "type": "int",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "FATALITY_TYPE",
+                        "type": "varchar",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "FATALITY_DATE",
+                        "type": "varchar",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "FATALITY_AGE",
+                        "type": "int",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "FATALITY_SEX",
+                        "type": "char",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "FATALITY_LOCATION",
+                        "type": "text",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "EVENT_YEARMONTH",
+                        "type": "varchar",
+                        "precision": 0,
+                        "scale": 0
+                    }
+                ],
+                "typeProperties": {
+                    "tableName": "fatalities"
+                }
+            },
+            "dependsOn": [
+                "[concat(variables('factoryId'), '/linkedServices/output_mysql')]"
+            ]
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/input_fatalities_gz')]",
+            "type": "Microsoft.DataFactory/factories/datasets",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "linkedServiceName": {
+                    "referenceName": "input_data_lake",
+                    "type": "LinkedServiceReference"
+                },
+                "annotations": [],
+                "type": "DelimitedText",
+                "typeProperties": {
+                    "location": {
+                        "type": "AzureBlobFSLocation",
+                        "fileSystem": "allfiles"
+                    },
+                    "columnDelimiter": ",",
+                    "compressionCodec": "gzip",
+                    "escapeChar": "\\",
+                    "firstRowAsHeader": true,
+                    "quoteChar": "\""
+                },
+                "schema": [
+                    {
+                        "name": "FAT_YEARMONTH",
+                        "type": "String"
+                    },
+                    {
+                        "name": "FAT_DAY",
+                        "type": "String"
+                    },
+                    {
+                        "name": "FAT_TIME",
+                        "type": "String"
+                    },
+                    {
+                        "name": "FATALITY_ID",
+                        "type": "String"
+                    },
+                    {
+                        "name": "EVENT_ID",
+                        "type": "String"
+                    },
+                    {
+                        "name": "FATALITY_TYPE",
+                        "type": "String"
+                    },
+                    {
+                        "name": "FATALITY_DATE",
+                        "type": "String"
+                    },
+                    {
+                        "name": "FATALITY_AGE",
+                        "type": "String"
+                    },
+                    {
+                        "name": "FATALITY_SEX",
+                        "type": "String"
+                    },
+                    {
+                        "name": "FATALITY_LOCATION",
+                        "type": "String"
+                    },
+                    {
+                        "name": "EVENT_YEARMONTH",
+                        "type": "String"
+                    }
+                ]
+            },
+            "dependsOn": [
+                "[concat(variables('factoryId'), '/linkedServices/input_data_lake')]"
+            ]
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/input_details_gz')]",
+            "type": "Microsoft.DataFactory/factories/datasets",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "linkedServiceName": {
+                    "referenceName": "input_data_lake",
+                    "type": "LinkedServiceReference"
+                },
+                "annotations": [],
+                "type": "DelimitedText",
+                "typeProperties": {
+                    "location": {
+                        "type": "AzureBlobFSLocation",
+                        "fileSystem": "allfiles"
+                    },
+                    "columnDelimiter": ",",
+                    "compressionCodec": "gzip",
+                    "escapeChar": "\"",
+                    "firstRowAsHeader": true,
+                    "quoteChar": "\""
+                },
+                "schema": [
+                    {
+                        "name": "BEGIN_YEARMONTH",
+                        "type": "String"
+                    },
+                    {
+                        "name": "BEGIN_DAY",
+                        "type": "String"
+                    },
+                    {
+                        "name": "BEGIN_TIME",
+                        "type": "String"
+                    },
+                    {
+                        "name": "END_YEARMONTH",
+                        "type": "String"
+                    },
+                    {
+                        "name": "END_DAY",
+                        "type": "String"
+                    },
+                    {
+                        "name": "END_TIME",
+                        "type": "String"
+                    },
+                    {
+                        "name": "EPISODE_ID",
+                        "type": "String"
+                    },
+                    {
+                        "name": "EVENT_ID",
+                        "type": "String"
+                    },
+                    {
+                        "name": "STATE",
+                        "type": "String"
+                    },
+                    {
+                        "name": "STATE_FIPS",
+                        "type": "String"
+                    },
+                    {
+                        "name": "YEAR",
+                        "type": "String"
+                    },
+                    {
+                        "name": "MONTH_NAME",
+                        "type": "String"
+                    },
+                    {
+                        "name": "EVENT_TYPE",
+                        "type": "String"
+                    },
+                    {
+                        "name": "CZ_TYPE",
+                        "type": "String"
+                    },
+                    {
+                        "name": "CZ_FIPS",
+                        "type": "String"
+                    },
+                    {
+                        "name": "CZ_NAME",
+                        "type": "String"
+                    },
+                    {
+                        "name": "WFO",
+                        "type": "String"
+                    },
+                    {
+                        "name": "BEGIN_DATE_TIME",
+                        "type": "String"
+                    },
+                    {
+                        "name": "CZ_TIMEZONE",
+                        "type": "String"
+                    },
+                    {
+                        "name": "END_DATE_TIME",
+                        "type": "String"
+                    },
+                    {
+                        "name": "INJURIES_DIRECT",
+                        "type": "String"
+                    },
+                    {
+                        "name": "INJURIES_INDIRECT",
+                        "type": "String"
+                    },
+                    {
+                        "name": "DEATHS_DIRECT",
+                        "type": "String"
+                    },
+                    {
+                        "name": "DEATHS_INDIRECT",
+                        "type": "String"
+                    },
+                    {
+                        "name": "DAMAGE_PROPERTY",
+                        "type": "String"
+                    },
+                    {
+                        "name": "DAMAGE_CROPS",
+                        "type": "String"
+                    },
+                    {
+                        "name": "SOURCE",
+                        "type": "String"
+                    },
+                    {
+                        "name": "MAGNITUDE",
+                        "type": "String"
+                    },
+                    {
+                        "name": "MAGNITUDE_TYPE",
+                        "type": "String"
+                    },
+                    {
+                        "name": "FLOOD_CAUSE",
+                        "type": "String"
+                    },
+                    {
+                        "name": "CATEGORY",
+                        "type": "String"
+                    },
+                    {
+                        "name": "TOR_F_SCALE",
+                        "type": "String"
+                    },
+                    {
+                        "name": "TOR_LENGTH",
+                        "type": "String"
+                    },
+                    {
+                        "name": "TOR_WIDTH",
+                        "type": "String"
+                    },
+                    {
+                        "name": "TOR_OTHER_WFO",
+                        "type": "String"
+                    },
+                    {
+                        "name": "TOR_OTHER_CZ_STATE",
+                        "type": "String"
+                    },
+                    {
+                        "name": "TOR_OTHER_CZ_FIPS",
+                        "type": "String"
+                    },
+                    {
+                        "name": "TOR_OTHER_CZ_NAME",
+                        "type": "String"
+                    },
+                    {
+                        "name": "BEGIN_RANGE",
+                        "type": "String"
+                    },
+                    {
+                        "name": "BEGIN_AZIMUTH",
+                        "type": "String"
+                    },
+                    {
+                        "name": "BEGIN_LOCATION",
+                        "type": "String"
+                    },
+                    {
+                        "name": "END_RANGE",
+                        "type": "String"
+                    },
+                    {
+                        "name": "END_AZIMUTH",
+                        "type": "String"
+                    },
+                    {
+                        "name": "END_LOCATION",
+                        "type": "String"
+                    },
+                    {
+                        "name": "BEGIN_LAT",
+                        "type": "String"
+                    },
+                    {
+                        "name": "BEGIN_LON",
+                        "type": "String"
+                    },
+                    {
+                        "name": "END_LAT",
+                        "type": "String"
+                    },
+                    {
+                        "name": "END_LON",
+                        "type": "String"
+                    },
+                    {
+                        "name": "EPISODE_NARRATIVE",
+                        "type": "String"
+                    },
+                    {
+                        "name": "EVENT_NARRATIVE",
+                        "type": "String"
+                    },
+                    {
+                        "name": "DATA_SOURCE",
+                        "type": "String"
+                    }
+                ]
+            },
+            "dependsOn": [
+                "[concat(variables('factoryId'), '/linkedServices/input_data_lake')]"
+            ]
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/output_details_mysql')]",
+            "type": "Microsoft.DataFactory/factories/datasets",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "linkedServiceName": {
+                    "referenceName": "output_mysql",
+                    "type": "LinkedServiceReference"
+                },
+                "annotations": [],
+                "type": "AzureMySqlTable",
+                "schema": [
+                    {
+                        "name": "BEGIN_YEARMONTH",
+                        "type": "varchar",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "BEGIN_DAY",
+                        "type": "varchar",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "BEGIN_TIME",
+                        "type": "varchar",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "END_YEARMONTH",
+                        "type": "varchar",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "END_DAY",
+                        "type": "varchar",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "END_TIME",
+                        "type": "varchar",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "EPISODE_ID",
+                        "type": "int",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "EVENT_ID",
+                        "type": "int",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "STATE",
+                        "type": "text",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "STATE_FIPS",
+                        "type": "int",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "YEAR",
+                        "type": "int",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "MONTH_NAME",
+                        "type": "varchar",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "EVENT_TYPE",
+                        "type": "text",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "CZ_TYPE",
+                        "type": "varchar",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "CZ_FIPS",
+                        "type": "int",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "CZ_NAME",
+                        "type": "text",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "WFO",
+                        "type": "varchar",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "BEGIN_DATE_TIME",
+                        "type": "varchar",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "CZ_TIMEZONE",
+                        "type": "text",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "END_DATE_TIME",
+                        "type": "varchar",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "INJURIES_DIRECT",
+                        "type": "int",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "INJURIES_INDIRECT",
+                        "type": "int",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "DEATHS_DIRECT",
+                        "type": "int",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "DEATHS_INDIRECT",
+                        "type": "int",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "DAMAGE_PROPERTY",
+                        "type": "text",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "DAMAGE_CROPS",
+                        "type": "text",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "SOURCE",
+                        "type": "text",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "MAGNITUDE",
+                        "type": "decimal",
+                        "precision": 9,
+                        "scale": 2
+                    },
+                    {
+                        "name": "MAGNITUDE_TYPE",
+                        "type": "varchar",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "FLOOD_CAUSE",
+                        "type": "text",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "CATEGORY",
+                        "type": "int",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "TOR_F_SCALE",
+                        "type": "varchar",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "TOR_LENGTH",
+                        "type": "decimal",
+                        "precision": 9,
+                        "scale": 2
+                    },
+                    {
+                        "name": "TOR_WIDTH",
+                        "type": "decimal",
+                        "precision": 9,
+                        "scale": 2
+                    },
+                    {
+                        "name": "TOR_OTHER_WFO",
+                        "type": "varchar",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "TOR_OTHER_CZ_STATE",
+                        "type": "varchar",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "TOR_OTHER_CZ_FIPS",
+                        "type": "int",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "TOR_OTHER_CZ_NAME",
+                        "type": "text",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "BEGIN_RANGE",
+                        "type": "int",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "BEGIN_AZIMUTH",
+                        "type": "varchar",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "BEGIN_LOCATION",
+                        "type": "text",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "END_RANGE",
+                        "type": "int",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "END_AZIMUTH",
+                        "type": "varchar",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "END_LOCATION",
+                        "type": "text",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "BEGIN_LAT",
+                        "type": "decimal",
+                        "precision": 9,
+                        "scale": 4
+                    },
+                    {
+                        "name": "BEGIN_LON",
+                        "type": "decimal",
+                        "precision": 9,
+                        "scale": 4
+                    },
+                    {
+                        "name": "END_LAT",
+                        "type": "decimal",
+                        "precision": 9,
+                        "scale": 4
+                    },
+                    {
+                        "name": "END_LON",
+                        "type": "decimal",
+                        "precision": 9,
+                        "scale": 4
+                    },
+                    {
+                        "name": "EPISODE_NARRATIVE",
+                        "type": "text",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "EVENT_NARRATIVE",
+                        "type": "text",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "DATA_SOURCE",
+                        "type": "varchar",
+                        "precision": 0,
+                        "scale": 0
+                    }
+                ],
+                "typeProperties": {
+                    "tableName": "details"
+                }
+            },
+            "dependsOn": [
+                "[concat(variables('factoryId'), '/linkedServices/output_mysql')]"
+            ]
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/input_new_details_gz')]",
+            "type": "Microsoft.DataFactory/factories/datasets",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "linkedServiceName": {
+                    "referenceName": "input_data_lake",
+                    "type": "LinkedServiceReference"
+                },
+                "annotations": [],
+                "type": "DelimitedText",
+                "typeProperties": {
+                    "location": {
+                        "type": "AzureBlobFSLocation",
+                        "folderPath": "details",
+                        "fileSystem": "newfiles"
+                    },
+                    "columnDelimiter": ",",
+                    "compressionCodec": "gzip",
+                    "escapeChar": "\"",
+                    "firstRowAsHeader": true,
+                    "quoteChar": "\""
+                },
+                "schema": []
+            },
+            "dependsOn": [
+                "[concat(variables('factoryId'), '/linkedServices/input_data_lake')]"
+            ]
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/input_new_fatalities_gz')]",
+            "type": "Microsoft.DataFactory/factories/datasets",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "linkedServiceName": {
+                    "referenceName": "input_data_lake",
+                    "type": "LinkedServiceReference"
+                },
+                "annotations": [],
+                "type": "DelimitedText",
+                "typeProperties": {
+                    "location": {
+                        "type": "AzureBlobFSLocation",
+                        "folderPath": "fatalities",
+                        "fileSystem": "newfiles"
+                    },
+                    "columnDelimiter": ",",
+                    "compressionCodec": "gzip",
+                    "escapeChar": "\\",
+                    "firstRowAsHeader": true,
+                    "quoteChar": "\""
+                },
+                "schema": [
+                    {
+                        "name": "FAT_YEARMONTH",
+                        "type": "String"
+                    },
+                    {
+                        "name": "FAT_DAY",
+                        "type": "String"
+                    },
+                    {
+                        "name": "FAT_TIME",
+                        "type": "String"
+                    },
+                    {
+                        "name": "FATALITY_ID",
+                        "type": "String"
+                    },
+                    {
+                        "name": "EVENT_ID",
+                        "type": "String"
+                    },
+                    {
+                        "name": "FATALITY_TYPE",
+                        "type": "String"
+                    },
+                    {
+                        "name": "FATALITY_DATE",
+                        "type": "String"
+                    },
+                    {
+                        "name": "FATALITY_AGE",
+                        "type": "String"
+                    },
+                    {
+                        "name": "FATALITY_SEX",
+                        "type": "String"
+                    },
+                    {
+                        "name": "FATALITY_LOCATION",
+                        "type": "String"
+                    },
+                    {
+                        "name": "EVENT_YEARMONTH",
+                        "type": "String"
+                    }
+                ]
+            },
+            "dependsOn": [
+                "[concat(variables('factoryId'), '/linkedServices/input_data_lake')]"
+            ]
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/output_staging_fatalities_mysql')]",
+            "type": "Microsoft.DataFactory/factories/datasets",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "linkedServiceName": {
+                    "referenceName": "output_mysql",
+                    "type": "LinkedServiceReference"
+                },
+                "annotations": [],
+                "type": "AzureMySqlTable",
+                "schema": [
+                    {
+                        "name": "FAT_YEARMONTH",
+                        "type": "varchar",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "FAT_DAY",
+                        "type": "varchar",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "FAT_TIME",
+                        "type": "varchar",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "FATALITY_ID",
+                        "type": "int",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "EVENT_ID",
+                        "type": "int",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "FATALITY_TYPE",
+                        "type": "varchar",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "FATALITY_DATE",
+                        "type": "varchar",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "FATALITY_AGE",
+                        "type": "int",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "FATALITY_SEX",
+                        "type": "char",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "FATALITY_LOCATION",
+                        "type": "text",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "EVENT_YEARMONTH",
+                        "type": "varchar",
+                        "precision": 0,
+                        "scale": 0
+                    }
+                ],
+                "typeProperties": {
+                    "tableName": "staging_fatalities"
+                }
+            },
+            "dependsOn": [
+                "[concat(variables('factoryId'), '/linkedServices/output_mysql')]"
+            ]
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/output_staging_details_mysql')]",
+            "type": "Microsoft.DataFactory/factories/datasets",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "linkedServiceName": {
+                    "referenceName": "output_mysql",
+                    "type": "LinkedServiceReference"
+                },
+                "annotations": [],
+                "type": "AzureMySqlTable",
+                "schema": [
+                    {
+                        "name": "BEGIN_YEARMONTH",
+                        "type": "varchar",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "BEGIN_DAY",
+                        "type": "varchar",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "BEGIN_TIME",
+                        "type": "varchar",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "END_YEARMONTH",
+                        "type": "varchar",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "END_DAY",
+                        "type": "varchar",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "END_TIME",
+                        "type": "varchar",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "EPISODE_ID",
+                        "type": "int",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "EVENT_ID",
+                        "type": "int",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "STATE",
+                        "type": "text",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "STATE_FIPS",
+                        "type": "int",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "YEAR",
+                        "type": "int",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "MONTH_NAME",
+                        "type": "varchar",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "EVENT_TYPE",
+                        "type": "text",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "CZ_TYPE",
+                        "type": "varchar",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "CZ_FIPS",
+                        "type": "int",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "CZ_NAME",
+                        "type": "text",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "WFO",
+                        "type": "varchar",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "BEGIN_DATE_TIME",
+                        "type": "varchar",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "CZ_TIMEZONE",
+                        "type": "text",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "END_DATE_TIME",
+                        "type": "varchar",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "INJURIES_DIRECT",
+                        "type": "int",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "INJURIES_INDIRECT",
+                        "type": "int",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "DEATHS_DIRECT",
+                        "type": "int",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "DEATHS_INDIRECT",
+                        "type": "int",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "DAMAGE_PROPERTY",
+                        "type": "text",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "DAMAGE_CROPS",
+                        "type": "text",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "SOURCE",
+                        "type": "text",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "MAGNITUDE",
+                        "type": "decimal",
+                        "precision": 9,
+                        "scale": 2
+                    },
+                    {
+                        "name": "MAGNITUDE_TYPE",
+                        "type": "varchar",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "FLOOD_CAUSE",
+                        "type": "text",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "CATEGORY",
+                        "type": "int",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "TOR_F_SCALE",
+                        "type": "varchar",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "TOR_LENGTH",
+                        "type": "decimal",
+                        "precision": 9,
+                        "scale": 2
+                    },
+                    {
+                        "name": "TOR_WIDTH",
+                        "type": "decimal",
+                        "precision": 9,
+                        "scale": 2
+                    },
+                    {
+                        "name": "TOR_OTHER_WFO",
+                        "type": "varchar",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "TOR_OTHER_CZ_STATE",
+                        "type": "varchar",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "TOR_OTHER_CZ_FIPS",
+                        "type": "int",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "TOR_OTHER_CZ_NAME",
+                        "type": "text",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "BEGIN_RANGE",
+                        "type": "int",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "BEGIN_AZIMUTH",
+                        "type": "varchar",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "BEGIN_LOCATION",
+                        "type": "text",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "END_RANGE",
+                        "type": "int",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "END_AZIMUTH",
+                        "type": "varchar",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "END_LOCATION",
+                        "type": "text",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "BEGIN_LAT",
+                        "type": "decimal",
+                        "precision": 9,
+                        "scale": 4
+                    },
+                    {
+                        "name": "BEGIN_LON",
+                        "type": "decimal",
+                        "precision": 9,
+                        "scale": 4
+                    },
+                    {
+                        "name": "END_LAT",
+                        "type": "decimal",
+                        "precision": 9,
+                        "scale": 4
+                    },
+                    {
+                        "name": "END_LON",
+                        "type": "decimal",
+                        "precision": 9,
+                        "scale": 4
+                    },
+                    {
+                        "name": "EPISODE_NARRATIVE",
+                        "type": "text",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "EVENT_NARRATIVE",
+                        "type": "text",
+                        "precision": 0,
+                        "scale": 0
+                    },
+                    {
+                        "name": "DATA_SOURCE",
+                        "type": "varchar",
+                        "precision": 0,
+                        "scale": 0
+                    }
+                ],
+                "typeProperties": {
+                    "tableName": "staging_details"
+                }
+            },
+            "dependsOn": [
+                "[concat(variables('factoryId'), '/linkedServices/output_mysql')]"
+            ]
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/fatalities_staging')]",
+            "type": "Microsoft.DataFactory/factories/dataflows",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "type": "MappingDataFlow",
+                "typeProperties": {
+                    "sources": [
+                        {
+                            "dataset": {
+                                "referenceName": "output_staging_fatalities_mysql",
+                                "type": "DatasetReference"
+                            },
+                            "name": "sourcefatalities"
+                        }
+                    ],
+                    "sinks": [
+                        {
+                            "dataset": {
+                                "referenceName": "output_fatalities_mysql",
+                                "type": "DatasetReference"
+                            },
+                            "name": "sinkfatalities"
+                        }
+                    ],
+                    "transformations": [
+                        {
+                            "name": "UpsertCompoundKey"
+                        }
+                    ],
+                    "scriptLines": [
+                        "source(output(",
+                        "          FAT_YEARMONTH as string,",
+                        "          FAT_DAY as string,",
+                        "          FAT_TIME as string,",
+                        "          FATALITY_ID as integer,",
+                        "          EVENT_ID as integer,",
+                        "          FATALITY_TYPE as string,",
+                        "          FATALITY_DATE as string,",
+                        "          FATALITY_AGE as integer,",
+                        "          FATALITY_SEX as string,",
+                        "          FATALITY_LOCATION as string,",
+                        "          EVENT_YEARMONTH as string",
+                        "     ),",
+                        "     allowSchemaDrift: false,",
+                        "     validateSchema: false,",
+                        "     isolationLevel: 'READ_UNCOMMITTED',",
+                        "     format: 'table') ~> sourcefatalities",
+                        "sourcefatalities alterRow(upsertIf(true())) ~> UpsertCompoundKey",
+                        "UpsertCompoundKey sink(allowSchemaDrift: false,",
+                        "     validateSchema: false,",
+                        "     input(",
+                        "          FAT_YEARMONTH as string,",
+                        "          FAT_DAY as string,",
+                        "          FAT_TIME as string,",
+                        "          FATALITY_ID as integer,",
+                        "          EVENT_ID as integer,",
+                        "          FATALITY_TYPE as string,",
+                        "          FATALITY_DATE as string,",
+                        "          FATALITY_AGE as integer,",
+                        "          FATALITY_SEX as string,",
+                        "          FATALITY_LOCATION as string,",
+                        "          EVENT_YEARMONTH as string",
+                        "     ),",
+                        "     deletable:false,",
+                        "     insertable:true,",
+                        "     updateable:false,",
+                        "     upsertable:true,",
+                        "     keys:['FATALITY_ID','EVENT_ID'],",
+                        "     format: 'table',",
+                        "     skipDuplicateMapInputs: true,",
+                        "     skipDuplicateMapOutputs: true,",
+                        "     mapColumn(",
+                        "          FAT_YEARMONTH,",
+                        "          FAT_DAY,",
+                        "          FAT_TIME,",
+                        "          FATALITY_ID,",
+                        "          EVENT_ID,",
+                        "          FATALITY_TYPE,",
+                        "          FATALITY_DATE,",
+                        "          FATALITY_AGE,",
+                        "          FATALITY_SEX,",
+                        "          FATALITY_LOCATION,",
+                        "          EVENT_YEARMONTH",
+                        "     )) ~> sinkfatalities"
+                    ]
+                }
+            },
+            "dependsOn": [
+                "[concat(variables('factoryId'), '/datasets/output_staging_fatalities_mysql')]",
+                "[concat(variables('factoryId'), '/datasets/output_fatalities_mysql')]"
+            ]
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/details_staging')]",
+            "type": "Microsoft.DataFactory/factories/dataflows",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "type": "MappingDataFlow",
+                "typeProperties": {
+                    "sources": [
+                        {
+                            "dataset": {
+                                "referenceName": "output_staging_details_mysql",
+                                "type": "DatasetReference"
+                            },
+                            "name": "sourcedetails"
+                        }
+                    ],
+                    "sinks": [
+                        {
+                            "dataset": {
+                                "referenceName": "output_details_mysql",
+                                "type": "DatasetReference"
+                            },
+                            "name": "sinkdetails"
+                        }
+                    ],
+                    "transformations": [
+                        {
+                            "name": "UpsertPrimaryKey"
+                        }
+                    ],
+                    "scriptLines": [
+                        "source(output(",
+                        "          BEGIN_YEARMONTH as string,",
+                        "          BEGIN_DAY as string,",
+                        "          BEGIN_TIME as string,",
+                        "          END_YEARMONTH as string,",
+                        "          END_DAY as string,",
+                        "          END_TIME as string,",
+                        "          EPISODE_ID as integer,",
+                        "          EVENT_ID as integer,",
+                        "          STATE as string,",
+                        "          STATE_FIPS as integer,",
+                        "          YEAR as integer,",
+                        "          MONTH_NAME as string,",
+                        "          EVENT_TYPE as string,",
+                        "          CZ_TYPE as string,",
+                        "          CZ_FIPS as integer,",
+                        "          CZ_NAME as string,",
+                        "          WFO as string,",
+                        "          BEGIN_DATE_TIME as string,",
+                        "          CZ_TIMEZONE as string,",
+                        "          END_DATE_TIME as string,",
+                        "          INJURIES_DIRECT as integer,",
+                        "          INJURIES_INDIRECT as integer,",
+                        "          DEATHS_DIRECT as integer,",
+                        "          DEATHS_INDIRECT as integer,",
+                        "          DAMAGE_PROPERTY as string,",
+                        "          DAMAGE_CROPS as string,",
+                        "          SOURCE as string,",
+                        "          MAGNITUDE as decimal(9,2),",
+                        "          MAGNITUDE_TYPE as string,",
+                        "          FLOOD_CAUSE as string,",
+                        "          CATEGORY as integer,",
+                        "          TOR_F_SCALE as string,",
+                        "          TOR_LENGTH as decimal(9,2),",
+                        "          TOR_WIDTH as decimal(9,2),",
+                        "          TOR_OTHER_WFO as string,",
+                        "          TOR_OTHER_CZ_STATE as string,",
+                        "          TOR_OTHER_CZ_FIPS as integer,",
+                        "          TOR_OTHER_CZ_NAME as string,",
+                        "          BEGIN_RANGE as integer,",
+                        "          BEGIN_AZIMUTH as string,",
+                        "          BEGIN_LOCATION as string,",
+                        "          END_RANGE as integer,",
+                        "          END_AZIMUTH as string,",
+                        "          END_LOCATION as string,",
+                        "          BEGIN_LAT as decimal(9,4),",
+                        "          BEGIN_LON as decimal(9,4),",
+                        "          END_LAT as decimal(9,4),",
+                        "          END_LON as decimal(9,4),",
+                        "          EPISODE_NARRATIVE as string,",
+                        "          EVENT_NARRATIVE as string,",
+                        "          DATA_SOURCE as string",
+                        "     ),",
+                        "     allowSchemaDrift: false,",
+                        "     validateSchema: false,",
+                        "     fileList: true,",
+                        "     isolationLevel: 'READ_UNCOMMITTED',",
+                        "     format: 'table') ~> sourcedetails",
+                        "sourcedetails alterRow(upsertIf(true())) ~> UpsertPrimaryKey",
+                        "UpsertPrimaryKey sink(allowSchemaDrift: false,",
+                        "     validateSchema: false,",
+                        "     input(",
+                        "          BEGIN_YEARMONTH as string,",
+                        "          BEGIN_DAY as string,",
+                        "          BEGIN_TIME as string,",
+                        "          END_YEARMONTH as string,",
+                        "          END_DAY as string,",
+                        "          END_TIME as string,",
+                        "          EPISODE_ID as integer,",
+                        "          EVENT_ID as integer,",
+                        "          STATE as string,",
+                        "          STATE_FIPS as integer,",
+                        "          YEAR as integer,",
+                        "          MONTH_NAME as string,",
+                        "          EVENT_TYPE as string,",
+                        "          CZ_TYPE as string,",
+                        "          CZ_FIPS as integer,",
+                        "          CZ_NAME as string,",
+                        "          WFO as string,",
+                        "          BEGIN_DATE_TIME as string,",
+                        "          CZ_TIMEZONE as string,",
+                        "          END_DATE_TIME as string,",
+                        "          INJURIES_DIRECT as integer,",
+                        "          INJURIES_INDIRECT as integer,",
+                        "          DEATHS_DIRECT as integer,",
+                        "          DEATHS_INDIRECT as integer,",
+                        "          DAMAGE_PROPERTY as string,",
+                        "          DAMAGE_CROPS as string,",
+                        "          SOURCE as string,",
+                        "          MAGNITUDE as decimal(9,2),",
+                        "          MAGNITUDE_TYPE as string,",
+                        "          FLOOD_CAUSE as string,",
+                        "          CATEGORY as integer,",
+                        "          TOR_F_SCALE as string,",
+                        "          TOR_LENGTH as decimal(9,2),",
+                        "          TOR_WIDTH as decimal(9,2),",
+                        "          TOR_OTHER_WFO as string,",
+                        "          TOR_OTHER_CZ_STATE as string,",
+                        "          TOR_OTHER_CZ_FIPS as integer,",
+                        "          TOR_OTHER_CZ_NAME as string,",
+                        "          BEGIN_RANGE as integer,",
+                        "          BEGIN_AZIMUTH as string,",
+                        "          BEGIN_LOCATION as string,",
+                        "          END_RANGE as integer,",
+                        "          END_AZIMUTH as string,",
+                        "          END_LOCATION as string,",
+                        "          BEGIN_LAT as decimal(9,4),",
+                        "          BEGIN_LON as decimal(9,4),",
+                        "          END_LAT as decimal(9,4),",
+                        "          END_LON as decimal(9,4),",
+                        "          EPISODE_NARRATIVE as string,",
+                        "          EVENT_NARRATIVE as string,",
+                        "          DATA_SOURCE as string",
+                        "     ),",
+                        "     deletable:false,",
+                        "     insertable:false,",
+                        "     updateable:false,",
+                        "     upsertable:true,",
+                        "     keys:['EVENT_ID'],",
+                        "     format: 'table',",
+                        "     skipDuplicateMapInputs: true,",
+                        "     skipDuplicateMapOutputs: true,",
+                        "     mapColumn(",
+                        "          BEGIN_YEARMONTH,",
+                        "          BEGIN_DAY,",
+                        "          BEGIN_TIME,",
+                        "          END_YEARMONTH,",
+                        "          END_DAY,",
+                        "          END_TIME,",
+                        "          EPISODE_ID,",
+                        "          EVENT_ID,",
+                        "          STATE,",
+                        "          STATE_FIPS,",
+                        "          YEAR,",
+                        "          MONTH_NAME,",
+                        "          EVENT_TYPE,",
+                        "          CZ_TYPE,",
+                        "          CZ_FIPS,",
+                        "          CZ_NAME,",
+                        "          WFO,",
+                        "          BEGIN_DATE_TIME,",
+                        "          CZ_TIMEZONE,",
+                        "          END_DATE_TIME,",
+                        "          INJURIES_DIRECT,",
+                        "          INJURIES_INDIRECT,",
+                        "          DEATHS_DIRECT,",
+                        "          DEATHS_INDIRECT,",
+                        "          DAMAGE_PROPERTY,",
+                        "          DAMAGE_CROPS,",
+                        "          SOURCE,",
+                        "          MAGNITUDE,",
+                        "          MAGNITUDE_TYPE,",
+                        "          FLOOD_CAUSE,",
+                        "          CATEGORY,",
+                        "          TOR_F_SCALE,",
+                        "          TOR_LENGTH,",
+                        "          TOR_WIDTH,",
+                        "          TOR_OTHER_WFO,",
+                        "          TOR_OTHER_CZ_STATE,",
+                        "          TOR_OTHER_CZ_FIPS,",
+                        "          TOR_OTHER_CZ_NAME,",
+                        "          BEGIN_RANGE,",
+                        "          BEGIN_AZIMUTH,",
+                        "          BEGIN_LOCATION,",
+                        "          END_RANGE,",
+                        "          END_AZIMUTH,",
+                        "          END_LOCATION,",
+                        "          BEGIN_LAT,",
+                        "          BEGIN_LON,",
+                        "          END_LAT,",
+                        "          END_LON,",
+                        "          EPISODE_NARRATIVE,",
+                        "          EVENT_NARRATIVE,",
+                        "          DATA_SOURCE",
+                        "     )) ~> sinkdetails"
+                    ]
+                }
+            },
+            "dependsOn": [
+                "[concat(variables('factoryId'), '/datasets/output_staging_details_mysql')]",
+                "[concat(variables('factoryId'), '/datasets/output_details_mysql')]"
+            ]
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/elt_all_files')]",
+            "type": "Microsoft.DataFactory/factories/pipelines",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "activities": [
+                    {
+                        "name": "init_copy_details",
+                        "type": "Copy",
+                        "dependsOn": [
+                            {
+                                "activity": "init_python_loader",
+                                "dependencyConditions": [
+                                    "Succeeded"
+                                ]
+                            }
+                        ],
+                        "policy": {
+                            "timeout": "7.00:00:00",
+                            "retry": 0,
+                            "retryIntervalInSeconds": 30,
+                            "secureOutput": false,
+                            "secureInput": false
+                        },
+                        "userProperties": [],
+                        "typeProperties": {
+                            "source": {
+                                "type": "DelimitedTextSource",
+                                "storeSettings": {
+                                    "type": "AzureBlobFSReadSettings",
+                                    "recursive": true,
+                                    "wildcardFolderPath": "details",
+                                    "wildcardFileName": "*.gz",
+                                    "enablePartitionDiscovery": false
+                                },
+                                "formatSettings": {
+                                    "type": "DelimitedTextReadSettings"
+                                }
+                            },
+                            "sink": {
+                                "type": "AzureMySqlSink",
+                                "writeBatchSize": 10000,
+                                "writeBatchTimeout": "00:00:30"
+                            },
+                            "enableStaging": false,
+                            "translator": {
+                                "type": "TabularTranslator",
+                                "mappings": [
+                                    {
+                                        "source": {
+                                            "name": "BEGIN_YEARMONTH",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "BEGIN_YEARMONTH",
+                                            "type": "String",
+                                            "physicalType": "varchar"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "BEGIN_DAY",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "BEGIN_DAY",
+                                            "type": "String",
+                                            "physicalType": "varchar"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "BEGIN_TIME",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "BEGIN_TIME",
+                                            "type": "String",
+                                            "physicalType": "varchar"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "END_YEARMONTH",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "END_YEARMONTH",
+                                            "type": "String",
+                                            "physicalType": "varchar"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "END_DAY",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "END_DAY",
+                                            "type": "String",
+                                            "physicalType": "varchar"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "END_TIME",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "END_TIME",
+                                            "type": "String",
+                                            "physicalType": "varchar"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "EPISODE_ID",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "EPISODE_ID",
+                                            "type": "Int32",
+                                            "physicalType": "int"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "EVENT_ID",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "EVENT_ID",
+                                            "type": "Int32",
+                                            "physicalType": "int"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "STATE",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "STATE",
+                                            "type": "String",
+                                            "physicalType": "text"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "STATE_FIPS",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "STATE_FIPS",
+                                            "type": "Int32",
+                                            "physicalType": "int"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "YEAR",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "YEAR",
+                                            "type": "Int32",
+                                            "physicalType": "int"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "MONTH_NAME",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "MONTH_NAME",
+                                            "type": "String",
+                                            "physicalType": "varchar"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "EVENT_TYPE",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "EVENT_TYPE",
+                                            "type": "String",
+                                            "physicalType": "text"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "CZ_TYPE",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "CZ_TYPE",
+                                            "type": "String",
+                                            "physicalType": "varchar"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "CZ_FIPS",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "CZ_FIPS",
+                                            "type": "Int32",
+                                            "physicalType": "int"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "CZ_NAME",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "CZ_NAME",
+                                            "type": "String",
+                                            "physicalType": "text"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "WFO",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "WFO",
+                                            "type": "String",
+                                            "physicalType": "varchar"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "BEGIN_DATE_TIME",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "BEGIN_DATE_TIME",
+                                            "type": "String",
+                                            "physicalType": "varchar"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "CZ_TIMEZONE",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "CZ_TIMEZONE",
+                                            "type": "String",
+                                            "physicalType": "text"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "END_DATE_TIME",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "END_DATE_TIME",
+                                            "type": "String",
+                                            "physicalType": "varchar"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "INJURIES_DIRECT",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "INJURIES_DIRECT",
+                                            "type": "Int32",
+                                            "physicalType": "int"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "INJURIES_INDIRECT",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "INJURIES_INDIRECT",
+                                            "type": "Int32",
+                                            "physicalType": "int"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "DEATHS_DIRECT",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "DEATHS_DIRECT",
+                                            "type": "Int32",
+                                            "physicalType": "int"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "DEATHS_INDIRECT",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "DEATHS_INDIRECT",
+                                            "type": "Int32",
+                                            "physicalType": "int"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "DAMAGE_PROPERTY",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "DAMAGE_PROPERTY",
+                                            "type": "String",
+                                            "physicalType": "text"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "DAMAGE_CROPS",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "DAMAGE_CROPS",
+                                            "type": "String",
+                                            "physicalType": "text"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "SOURCE",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "SOURCE",
+                                            "type": "String",
+                                            "physicalType": "text"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "MAGNITUDE",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "MAGNITUDE",
+                                            "type": "Decimal",
+                                            "physicalType": "decimal"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "MAGNITUDE_TYPE",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "MAGNITUDE_TYPE",
+                                            "type": "String",
+                                            "physicalType": "varchar"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "FLOOD_CAUSE",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "FLOOD_CAUSE",
+                                            "type": "String",
+                                            "physicalType": "text"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "CATEGORY",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "CATEGORY",
+                                            "type": "Int32",
+                                            "physicalType": "int"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "TOR_F_SCALE",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "TOR_F_SCALE",
+                                            "type": "String",
+                                            "physicalType": "varchar"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "TOR_LENGTH",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "TOR_LENGTH",
+                                            "type": "Decimal",
+                                            "physicalType": "decimal"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "TOR_WIDTH",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "TOR_WIDTH",
+                                            "type": "Decimal",
+                                            "physicalType": "decimal"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "TOR_OTHER_WFO",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "TOR_OTHER_WFO",
+                                            "type": "String",
+                                            "physicalType": "varchar"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "TOR_OTHER_CZ_STATE",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "TOR_OTHER_CZ_STATE",
+                                            "type": "String",
+                                            "physicalType": "varchar"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "TOR_OTHER_CZ_FIPS",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "TOR_OTHER_CZ_FIPS",
+                                            "type": "Int32",
+                                            "physicalType": "int"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "TOR_OTHER_CZ_NAME",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "TOR_OTHER_CZ_NAME",
+                                            "type": "String",
+                                            "physicalType": "text"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "BEGIN_RANGE",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "BEGIN_RANGE",
+                                            "type": "Int32",
+                                            "physicalType": "int"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "BEGIN_AZIMUTH",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "BEGIN_AZIMUTH",
+                                            "type": "String",
+                                            "physicalType": "varchar"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "BEGIN_LOCATION",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "BEGIN_LOCATION",
+                                            "type": "String",
+                                            "physicalType": "text"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "END_RANGE",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "END_RANGE",
+                                            "type": "Int32",
+                                            "physicalType": "int"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "END_AZIMUTH",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "END_AZIMUTH",
+                                            "type": "String",
+                                            "physicalType": "varchar"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "END_LOCATION",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "END_LOCATION",
+                                            "type": "String",
+                                            "physicalType": "text"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "BEGIN_LAT",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "BEGIN_LAT",
+                                            "type": "Decimal",
+                                            "physicalType": "decimal"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "BEGIN_LON",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "BEGIN_LON",
+                                            "type": "Decimal",
+                                            "physicalType": "decimal"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "END_LAT",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "END_LAT",
+                                            "type": "Decimal",
+                                            "physicalType": "decimal"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "END_LON",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "END_LON",
+                                            "type": "Decimal",
+                                            "physicalType": "decimal"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "EPISODE_NARRATIVE",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "EPISODE_NARRATIVE",
+                                            "type": "String",
+                                            "physicalType": "text"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "EVENT_NARRATIVE",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "EVENT_NARRATIVE",
+                                            "type": "String",
+                                            "physicalType": "text"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "DATA_SOURCE",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "DATA_SOURCE",
+                                            "type": "String",
+                                            "physicalType": "varchar"
+                                        }
+                                    }
+                                ],
+                                "typeConversion": true,
+                                "typeConversionSettings": {
+                                    "allowDataTruncation": true,
+                                    "treatBooleanAsNumber": false
+                                }
+                            }
+                        },
+                        "inputs": [
+                            {
+                                "referenceName": "input_details_gz",
+                                "type": "DatasetReference",
+                                "parameters": {}
+                            }
+                        ],
+                        "outputs": [
+                            {
+                                "referenceName": "output_details_mysql",
+                                "type": "DatasetReference",
+                                "parameters": {}
+                            }
+                        ]
+                    },
+                    {
+                        "name": "init_python_loader",
+                        "type": "DatabricksSparkPython",
+                        "dependsOn": [],
+                        "policy": {
+                            "timeout": "7.00:00:00",
+                            "retry": 0,
+                            "retryIntervalInSeconds": 30,
+                            "secureOutput": false,
+                            "secureInput": false
+                        },
+                        "userProperties": [],
+                        "typeProperties": {
+                            "pythonFile": "dbfs:/FileStore/initial_files_to_blob.py",
+                            "parameters": [
+                                "1950"
+                            ],
+                            "libraries": [
+                                {
+                                    "pypi": {
+                                        "package": "azure-storage-blob==12.12.0"
+                                    }
+                                },
+                                {
+                                    "pypi": {
+                                        "package": "beautifulsoup4==4.10.0"
+                                    }
+                                },
+                                {
+                                    "pypi": {
+                                        "package": "requests==2.26.0"
+                                    }
+                                },
+                                {
+                                    "pypi": {
+                                        "package": "mysql-connector-python==8.0.29"
+                                    }
+                                }
+                            ]
+                        },
+                        "linkedServiceName": {
+                            "referenceName": "fully_authd",
+                            "type": "LinkedServiceReference"
+                        }
+                    },
+                    {
+                        "name": "init_copy_fatalities",
+                        "type": "Copy",
+                        "dependsOn": [
+                            {
+                                "activity": "init_python_loader",
+                                "dependencyConditions": [
+                                    "Succeeded"
+                                ]
+                            }
+                        ],
+                        "policy": {
+                            "timeout": "7.00:00:00",
+                            "retry": 1,
+                            "retryIntervalInSeconds": 30,
+                            "secureOutput": false,
+                            "secureInput": false
+                        },
+                        "userProperties": [],
+                        "typeProperties": {
+                            "source": {
+                                "type": "DelimitedTextSource",
+                                "storeSettings": {
+                                    "type": "AzureBlobFSReadSettings",
+                                    "recursive": true,
+                                    "wildcardFolderPath": "fatalities",
+                                    "wildcardFileName": "*.gz",
+                                    "enablePartitionDiscovery": false
+                                },
+                                "formatSettings": {
+                                    "type": "DelimitedTextReadSettings"
+                                }
+                            },
+                            "sink": {
+                                "type": "AzureMySqlSink",
+                                "writeBatchSize": 10000,
+                                "writeBatchTimeout": "00:00:30"
+                            },
+                            "enableStaging": false,
+                            "translator": {
+                                "type": "TabularTranslator",
+                                "mappings": [
+                                    {
+                                        "source": {
+                                            "name": "FAT_YEARMONTH",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "FAT_YEARMONTH",
+                                            "type": "String",
+                                            "physicalType": "varchar"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "FAT_DAY",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "FAT_DAY",
+                                            "type": "String",
+                                            "physicalType": "varchar"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "FAT_TIME",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "FAT_TIME",
+                                            "type": "String",
+                                            "physicalType": "varchar"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "FATALITY_ID",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "FATALITY_ID",
+                                            "type": "Int32",
+                                            "physicalType": "int"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "EVENT_ID",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "EVENT_ID",
+                                            "type": "Int32",
+                                            "physicalType": "int"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "FATALITY_TYPE",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "FATALITY_TYPE",
+                                            "type": "String",
+                                            "physicalType": "varchar"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "FATALITY_DATE",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "FATALITY_DATE",
+                                            "type": "String",
+                                            "physicalType": "varchar"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "FATALITY_AGE",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "FATALITY_AGE",
+                                            "type": "Int32",
+                                            "physicalType": "int"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "FATALITY_SEX",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "FATALITY_SEX",
+                                            "type": "String",
+                                            "physicalType": "char"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "FATALITY_LOCATION",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "FATALITY_LOCATION",
+                                            "type": "String",
+                                            "physicalType": "text"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "EVENT_YEARMONTH",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "EVENT_YEARMONTH",
+                                            "type": "String",
+                                            "physicalType": "varchar"
+                                        }
+                                    }
+                                ],
+                                "typeConversion": true,
+                                "typeConversionSettings": {
+                                    "allowDataTruncation": true,
+                                    "treatBooleanAsNumber": false
+                                }
+                            }
+                        },
+                        "inputs": [
+                            {
+                                "referenceName": "input_fatalities_gz",
+                                "type": "DatasetReference",
+                                "parameters": {}
+                            }
+                        ],
+                        "outputs": [
+                            {
+                                "referenceName": "output_fatalities_mysql",
+                                "type": "DatasetReference",
+                                "parameters": {}
+                            }
+                        ]
+                    }
+                ],
+                "policy": {
+                    "elapsedTimeMetric": {},
+                    "cancelAfter": {}
+                },
+                "annotations": [],
+                "lastPublishTime": "2022-07-23T13:12:14Z"
+            },
+            "dependsOn": [
+                "[concat(variables('factoryId'), '/datasets/input_details_gz')]",
+                "[concat(variables('factoryId'), '/datasets/output_details_mysql')]",
+                "[concat(variables('factoryId'), '/linkedServices/fully_authd')]",
+                "[concat(variables('factoryId'), '/datasets/input_fatalities_gz')]",
+                "[concat(variables('factoryId'), '/datasets/output_fatalities_mysql')]"
+            ]
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/load_transfer_new_file')]",
+            "type": "Microsoft.DataFactory/factories/pipelines",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "activities": [
+                    {
+                        "name": "reset_pre_new",
+                        "type": "DatabricksSparkPython",
+                        "dependsOn": [],
+                        "policy": {
+                            "timeout": "7.00:00:00",
+                            "retry": 0,
+                            "retryIntervalInSeconds": 30,
+                            "secureOutput": false,
+                            "secureInput": false
+                        },
+                        "userProperties": [],
+                        "typeProperties": {
+                            "pythonFile": "dbfs:/FileStore/reset_pre_update.py",
+                            "parameters": [
+                                "N"
+                            ],
+                            "libraries": [
+                                {
+                                    "pypi": {
+                                        "package": "azure-storage-blob==12.12.0"
+                                    }
+                                },
+                                {
+                                    "pypi": {
+                                        "package": "beautifulsoup4==4.10.0"
+                                    }
+                                },
+                                {
+                                    "pypi": {
+                                        "package": "requests==2.26.0"
+                                    }
+                                },
+                                {
+                                    "pypi": {
+                                        "package": "mysql-connector-python==8.0.29"
+                                    }
+                                }
+                            ]
+                        },
+                        "linkedServiceName": {
+                            "referenceName": "fully_authd",
+                            "type": "LinkedServiceReference"
+                        }
+                    },
+                    {
+                        "name": "upsert_details",
+                        "type": "ExecuteDataFlow",
+                        "dependsOn": [
+                            {
+                                "activity": "copy_staging_details",
+                                "dependencyConditions": [
+                                    "Succeeded"
+                                ]
+                            }
+                        ],
+                        "policy": {
+                            "timeout": "1.00:00:00",
+                            "retry": 0,
+                            "retryIntervalInSeconds": 30,
+                            "secureOutput": false,
+                            "secureInput": false
+                        },
+                        "userProperties": [],
+                        "typeProperties": {
+                            "dataflow": {
+                                "referenceName": "details_staging",
+                                "type": "DataFlowReference",
+                                "parameters": {},
+                                "datasetParameters": {
+                                    "sourcedetails": {},
+                                    "sinkdetails": {}
+                                }
+                            },
+                            "staging": {},
+                            "compute": {
+                                "coreCount": 8,
+                                "computeType": "General"
+                            },
+                            "traceLevel": "Fine"
+                        }
+                    },
+                    {
+                        "name": "upsert_fatalities",
+                        "type": "ExecuteDataFlow",
+                        "dependsOn": [
+                            {
+                                "activity": "copy_staging_fatalities",
+                                "dependencyConditions": [
+                                    "Succeeded"
+                                ]
+                            }
+                        ],
+                        "policy": {
+                            "timeout": "1.00:00:00",
+                            "retry": 0,
+                            "retryIntervalInSeconds": 30,
+                            "secureOutput": false,
+                            "secureInput": false
+                        },
+                        "userProperties": [],
+                        "typeProperties": {
+                            "dataflow": {
+                                "referenceName": "fatalities_staging",
+                                "type": "DataFlowReference",
+                                "parameters": {},
+                                "datasetParameters": {
+                                    "sourcefatalities": {},
+                                    "sinkfatalities": {}
+                                }
+                            },
+                            "staging": {},
+                            "compute": {
+                                "coreCount": 8,
+                                "computeType": "General"
+                            },
+                            "traceLevel": "Fine"
+                        }
+                    },
+                    {
+                        "name": "copy_staging_details",
+                        "type": "Copy",
+                        "dependsOn": [
+                            {
+                                "activity": "reset_pre_new",
+                                "dependencyConditions": [
+                                    "Succeeded"
+                                ]
+                            }
+                        ],
+                        "policy": {
+                            "timeout": "7.00:00:00",
+                            "retry": 0,
+                            "retryIntervalInSeconds": 30,
+                            "secureOutput": false,
+                            "secureInput": false
+                        },
+                        "userProperties": [],
+                        "typeProperties": {
+                            "source": {
+                                "type": "DelimitedTextSource",
+                                "storeSettings": {
+                                    "type": "AzureBlobFSReadSettings",
+                                    "recursive": true,
+                                    "wildcardFolderPath": "details",
+                                    "wildcardFileName": "*.gz",
+                                    "enablePartitionDiscovery": false
+                                },
+                                "formatSettings": {
+                                    "type": "DelimitedTextReadSettings"
+                                }
+                            },
+                            "sink": {
+                                "type": "AzureMySqlSink",
+                                "writeBatchSize": 10000,
+                                "writeBatchTimeout": "00:00:30"
+                            },
+                            "enableStaging": false,
+                            "translator": {
+                                "type": "TabularTranslator",
+                                "mappings": [
+                                    {
+                                        "source": {
+                                            "name": "BEGIN_YEARMONTH",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "BEGIN_YEARMONTH",
+                                            "type": "String",
+                                            "physicalType": "varchar"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "BEGIN_DAY",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "BEGIN_DAY",
+                                            "type": "String",
+                                            "physicalType": "varchar"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "BEGIN_TIME",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "BEGIN_TIME",
+                                            "type": "String",
+                                            "physicalType": "varchar"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "END_YEARMONTH",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "END_YEARMONTH",
+                                            "type": "String",
+                                            "physicalType": "varchar"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "END_DAY",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "END_DAY",
+                                            "type": "String",
+                                            "physicalType": "varchar"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "END_TIME",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "END_TIME",
+                                            "type": "String",
+                                            "physicalType": "varchar"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "EPISODE_ID",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "EPISODE_ID",
+                                            "type": "Int32",
+                                            "physicalType": "int"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "EVENT_ID",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "EVENT_ID",
+                                            "type": "Int32",
+                                            "physicalType": "int"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "STATE",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "STATE",
+                                            "type": "String",
+                                            "physicalType": "text"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "STATE_FIPS",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "STATE_FIPS",
+                                            "type": "Int32",
+                                            "physicalType": "int"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "YEAR",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "YEAR",
+                                            "type": "Int32",
+                                            "physicalType": "int"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "MONTH_NAME",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "MONTH_NAME",
+                                            "type": "String",
+                                            "physicalType": "varchar"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "EVENT_TYPE",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "EVENT_TYPE",
+                                            "type": "String",
+                                            "physicalType": "text"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "CZ_TYPE",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "CZ_TYPE",
+                                            "type": "String",
+                                            "physicalType": "varchar"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "CZ_FIPS",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "CZ_FIPS",
+                                            "type": "Int32",
+                                            "physicalType": "int"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "CZ_NAME",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "CZ_NAME",
+                                            "type": "String",
+                                            "physicalType": "text"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "WFO",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "WFO",
+                                            "type": "String",
+                                            "physicalType": "varchar"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "BEGIN_DATE_TIME",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "BEGIN_DATE_TIME",
+                                            "type": "String",
+                                            "physicalType": "varchar"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "CZ_TIMEZONE",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "CZ_TIMEZONE",
+                                            "type": "String",
+                                            "physicalType": "text"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "END_DATE_TIME",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "END_DATE_TIME",
+                                            "type": "String",
+                                            "physicalType": "varchar"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "INJURIES_DIRECT",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "INJURIES_DIRECT",
+                                            "type": "Int32",
+                                            "physicalType": "int"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "INJURIES_INDIRECT",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "INJURIES_INDIRECT",
+                                            "type": "Int32",
+                                            "physicalType": "int"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "DEATHS_DIRECT",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "DEATHS_DIRECT",
+                                            "type": "Int32",
+                                            "physicalType": "int"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "DEATHS_INDIRECT",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "DEATHS_INDIRECT",
+                                            "type": "Int32",
+                                            "physicalType": "int"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "DAMAGE_PROPERTY",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "DAMAGE_PROPERTY",
+                                            "type": "String",
+                                            "physicalType": "text"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "DAMAGE_CROPS",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "DAMAGE_CROPS",
+                                            "type": "String",
+                                            "physicalType": "text"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "SOURCE",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "SOURCE",
+                                            "type": "String",
+                                            "physicalType": "text"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "MAGNITUDE",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "MAGNITUDE",
+                                            "type": "Decimal",
+                                            "physicalType": "decimal"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "MAGNITUDE_TYPE",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "MAGNITUDE_TYPE",
+                                            "type": "String",
+                                            "physicalType": "varchar"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "FLOOD_CAUSE",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "FLOOD_CAUSE",
+                                            "type": "String",
+                                            "physicalType": "text"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "CATEGORY",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "CATEGORY",
+                                            "type": "Int32",
+                                            "physicalType": "int"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "TOR_F_SCALE",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "TOR_F_SCALE",
+                                            "type": "String",
+                                            "physicalType": "varchar"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "TOR_LENGTH",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "TOR_LENGTH",
+                                            "type": "Decimal",
+                                            "physicalType": "decimal"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "TOR_WIDTH",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "TOR_WIDTH",
+                                            "type": "Decimal",
+                                            "physicalType": "decimal"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "TOR_OTHER_WFO",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "TOR_OTHER_WFO",
+                                            "type": "String",
+                                            "physicalType": "varchar"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "TOR_OTHER_CZ_STATE",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "TOR_OTHER_CZ_STATE",
+                                            "type": "String",
+                                            "physicalType": "varchar"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "TOR_OTHER_CZ_FIPS",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "TOR_OTHER_CZ_FIPS",
+                                            "type": "Int32",
+                                            "physicalType": "int"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "TOR_OTHER_CZ_NAME",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "TOR_OTHER_CZ_NAME",
+                                            "type": "String",
+                                            "physicalType": "text"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "BEGIN_RANGE",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "BEGIN_RANGE",
+                                            "type": "Int32",
+                                            "physicalType": "int"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "BEGIN_AZIMUTH",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "BEGIN_AZIMUTH",
+                                            "type": "String",
+                                            "physicalType": "varchar"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "BEGIN_LOCATION",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "BEGIN_LOCATION",
+                                            "type": "String",
+                                            "physicalType": "text"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "END_RANGE",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "END_RANGE",
+                                            "type": "Int32",
+                                            "physicalType": "int"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "END_AZIMUTH",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "END_AZIMUTH",
+                                            "type": "String",
+                                            "physicalType": "varchar"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "END_LOCATION",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "END_LOCATION",
+                                            "type": "String",
+                                            "physicalType": "text"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "BEGIN_LAT",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "BEGIN_LAT",
+                                            "type": "Decimal",
+                                            "physicalType": "decimal"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "BEGIN_LON",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "BEGIN_LON",
+                                            "type": "Decimal",
+                                            "physicalType": "decimal"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "END_LAT",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "END_LAT",
+                                            "type": "Decimal",
+                                            "physicalType": "decimal"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "END_LON",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "END_LON",
+                                            "type": "Decimal",
+                                            "physicalType": "decimal"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "EPISODE_NARRATIVE",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "EPISODE_NARRATIVE",
+                                            "type": "String",
+                                            "physicalType": "text"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "EVENT_NARRATIVE",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "EVENT_NARRATIVE",
+                                            "type": "String",
+                                            "physicalType": "text"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "DATA_SOURCE",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "DATA_SOURCE",
+                                            "type": "String",
+                                            "physicalType": "varchar"
+                                        }
+                                    }
+                                ],
+                                "typeConversion": true,
+                                "typeConversionSettings": {
+                                    "allowDataTruncation": true,
+                                    "treatBooleanAsNumber": false
+                                }
+                            }
+                        },
+                        "inputs": [
+                            {
+                                "referenceName": "input_new_details_gz",
+                                "type": "DatasetReference",
+                                "parameters": {}
+                            }
+                        ],
+                        "outputs": [
+                            {
+                                "referenceName": "output_staging_details_mysql",
+                                "type": "DatasetReference",
+                                "parameters": {}
+                            }
+                        ]
+                    },
+                    {
+                        "name": "copy_staging_fatalities",
+                        "type": "Copy",
+                        "dependsOn": [
+                            {
+                                "activity": "reset_pre_new",
+                                "dependencyConditions": [
+                                    "Succeeded"
+                                ]
+                            }
+                        ],
+                        "policy": {
+                            "timeout": "7.00:00:00",
+                            "retry": 0,
+                            "retryIntervalInSeconds": 30,
+                            "secureOutput": false,
+                            "secureInput": false
+                        },
+                        "userProperties": [],
+                        "typeProperties": {
+                            "source": {
+                                "type": "DelimitedTextSource",
+                                "storeSettings": {
+                                    "type": "AzureBlobFSReadSettings",
+                                    "recursive": true,
+                                    "wildcardFolderPath": "fatalities",
+                                    "wildcardFileName": "*.gz",
+                                    "enablePartitionDiscovery": false
+                                },
+                                "formatSettings": {
+                                    "type": "DelimitedTextReadSettings"
+                                }
+                            },
+                            "sink": {
+                                "type": "AzureMySqlSink",
+                                "writeBatchSize": 10000,
+                                "writeBatchTimeout": "00:00:30"
+                            },
+                            "enableStaging": false,
+                            "translator": {
+                                "type": "TabularTranslator",
+                                "mappings": [
+                                    {
+                                        "source": {
+                                            "name": "FAT_YEARMONTH",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "FAT_YEARMONTH",
+                                            "type": "String",
+                                            "physicalType": "varchar"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "FAT_DAY",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "FAT_DAY",
+                                            "type": "String",
+                                            "physicalType": "varchar"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "FAT_TIME",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "FAT_TIME",
+                                            "type": "String",
+                                            "physicalType": "varchar"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "FATALITY_ID",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "FATALITY_ID",
+                                            "type": "Int32",
+                                            "physicalType": "int"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "EVENT_ID",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "EVENT_ID",
+                                            "type": "Int32",
+                                            "physicalType": "int"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "FATALITY_TYPE",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "FATALITY_TYPE",
+                                            "type": "String",
+                                            "physicalType": "varchar"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "FATALITY_DATE",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "FATALITY_DATE",
+                                            "type": "String",
+                                            "physicalType": "varchar"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "FATALITY_AGE",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "FATALITY_AGE",
+                                            "type": "Int32",
+                                            "physicalType": "int"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "FATALITY_SEX",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "FATALITY_SEX",
+                                            "type": "String",
+                                            "physicalType": "char"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "FATALITY_LOCATION",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "FATALITY_LOCATION",
+                                            "type": "String",
+                                            "physicalType": "text"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "EVENT_YEARMONTH",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "EVENT_YEARMONTH",
+                                            "type": "String",
+                                            "physicalType": "varchar"
+                                        }
+                                    }
+                                ],
+                                "typeConversion": true,
+                                "typeConversionSettings": {
+                                    "allowDataTruncation": true,
+                                    "treatBooleanAsNumber": false
+                                }
+                            }
+                        },
+                        "inputs": [
+                            {
+                                "referenceName": "input_new_fatalities_gz",
+                                "type": "DatasetReference",
+                                "parameters": {}
+                            }
+                        ],
+                        "outputs": [
+                            {
+                                "referenceName": "output_staging_fatalities_mysql",
+                                "type": "DatasetReference",
+                                "parameters": {}
+                            }
+                        ]
+                    },
+                    {
+                        "name": "clean_new_container",
+                        "type": "DatabricksSparkPython",
+                        "dependsOn": [
+                            {
+                                "activity": "upsert_details",
+                                "dependencyConditions": [
+                                    "Succeeded"
+                                ]
+                            },
+                            {
+                                "activity": "upsert_fatalities",
+                                "dependencyConditions": [
+                                    "Succeeded"
+                                ]
+                            }
+                        ],
+                        "policy": {
+                            "timeout": "7.00:00:00",
+                            "retry": 0,
+                            "retryIntervalInSeconds": 30,
+                            "secureOutput": false,
+                            "secureInput": false
+                        },
+                        "userProperties": [],
+                        "typeProperties": {
+                            "pythonFile": "dbfs:/FileStore/datalake_housekeeping_new.py",
+                            "parameters": [],
+                            "libraries": [
+                                {
+                                    "pypi": {
+                                        "package": "mysql-connector-python==8.0.29"
+                                    }
+                                },
+                                {
+                                    "pypi": {
+                                        "package": "azure-storage-blob==12.12.0"
+                                    }
+                                }
+                            ]
+                        },
+                        "linkedServiceName": {
+                            "referenceName": "fully_authd",
+                            "type": "LinkedServiceReference"
+                        }
+                    }
+                ],
+                "policy": {
+                    "elapsedTimeMetric": {},
+                    "cancelAfter": {}
+                },
+                "annotations": [],
+                "lastPublishTime": "2022-07-23T13:12:14Z"
+            },
+            "dependsOn": [
+                "[concat(variables('factoryId'), '/linkedServices/fully_authd')]",
+                "[concat(variables('factoryId'), '/dataflows/details_staging')]",
+                "[concat(variables('factoryId'), '/dataflows/fatalities_staging')]",
+                "[concat(variables('factoryId'), '/datasets/input_new_details_gz')]",
+                "[concat(variables('factoryId'), '/datasets/output_staging_details_mysql')]",
+                "[concat(variables('factoryId'), '/datasets/input_new_fatalities_gz')]",
+                "[concat(variables('factoryId'), '/datasets/output_staging_fatalities_mysql')]"
+            ]
+        }
+    ]
+}

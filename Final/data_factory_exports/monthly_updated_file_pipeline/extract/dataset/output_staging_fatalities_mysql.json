@@ -1,0 +1,83 @@
+{
+    "name": "output_staging_fatalities_mysql",
+    "properties": {
+        "linkedServiceName": {
+            "referenceName": "output_mysql",
+            "type": "LinkedServiceReference"
+        },
+        "annotations": [],
+        "type": "AzureMySqlTable",
+        "schema": [
+            {
+                "name": "FAT_YEARMONTH",
+                "type": "varchar",
+                "precision": 0,
+                "scale": 0
+            },
+            {
+                "name": "FAT_DAY",
+                "type": "varchar",
+                "precision": 0,
+                "scale": 0
+            },
+            {
+                "name": "FAT_TIME",
+                "type": "varchar",
+                "precision": 0,
+                "scale": 0
+            },
+            {
+                "name": "FATALITY_ID",
+                "type": "int",
+                "precision": 0,
+                "scale": 0
+            },
+            {
+                "name": "EVENT_ID",
+                "type": "int",
+                "precision": 0,
+                "scale": 0
+            },
+            {
+                "name": "FATALITY_TYPE",
+                "type": "varchar",
+                "precision": 0,
+                "scale": 0
+            },
+            {
+                "name": "FATALITY_DATE",
+                "type": "varchar",
+                "precision": 0,
+                "scale": 0
+            },
+            {
+                "name": "FATALITY_AGE",
+                "type": "int",
+                "precision": 0,
+                "scale": 0
+            },
+            {
+                "name": "FATALITY_SEX",
+                "type": "char",
+                "precision": 0,
+                "scale": 0
+            },
+            {
+                "name": "FATALITY_LOCATION",
+                "type": "text",
+                "precision": 0,
+                "scale": 0
+            },
+            {
+                "name": "EVENT_YEARMONTH",
+                "type": "varchar",
+                "precision": 0,
+                "scale": 0
+            }
+        ],
+        "typeProperties": {
+            "tableName": "staging_fatalities"
+        }
+    },
+    "type": "Microsoft.DataFactory/factories/datasets"
+}

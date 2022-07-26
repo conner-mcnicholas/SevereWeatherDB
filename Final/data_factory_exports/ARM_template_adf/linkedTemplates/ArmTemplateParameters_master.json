@@ -1,0 +1,54 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "factoryName": {
+            "value": "datafactoryausins"
+        },
+        "input_blob_accountKey": {
+            "value": ""
+        },
+        "output_mysql_connectionString": {
+            "value": ""
+        },
+        "direct_blob_accountKey": {
+            "value": ""
+        },
+        "TEST_input_blob_accountKey": {
+            "value": ""
+        },
+        "input_data_lake_accountKey": {
+            "value": ""
+        },
+        "housekeeping_accessToken": {
+            "value": ""
+        },
+        "fully_authd_accessToken": {
+            "value": ""
+        },
+        "input_blob_properties_typeProperties_url": {
+            "value": "https://pipelinestorageacctaus.dfs.core.windows.net/"
+        },
+        "direct_blob_properties_typeProperties_url": {
+            "value": "https://pipelinestorageacctaus.dfs.core.windows.net/"
+        },
+        "TEST_input_blob_properties_typeProperties_url": {
+            "value": "https://pipelinestorageacctaus.dfs.core.windows.net/"
+        },
+        "input_data_lake_properties_typeProperties_url": {
+            "value": "https://pipelinestorageacctaus.dfs.core.windows.net/"
+        },
+        "fully_authd_properties_typeProperties_existingClusterId": {
+            "value": "0722-143425-2gmvk2rw"
+        },
+        "trigger_on_new_blob_properties_typeProperties_scope": {
+            "value": "/subscriptions/b5f807fa-c5eb-4a4d-8357-76a176efc946/resourceGroups/storageaus_rg/providers/Microsoft.Storage/storageAccounts/pipelinestorageacctaus"
+        },
+        "containerUri": {
+            "value": ""
+        },
+        "containerSasToken": {
+            "value": ""
+        }
+    }
+}

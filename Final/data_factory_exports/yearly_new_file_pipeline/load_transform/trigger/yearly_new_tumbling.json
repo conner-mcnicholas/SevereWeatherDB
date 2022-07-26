@@ -1,0 +1,26 @@
+{
+    "name": "yearly_new_tumbling",
+    "properties": {
+        "annotations": [],
+        "runtimeState": "Started",
+        "pipeline": {
+            "pipelineReference": {
+                "referenceName": "extract_new_file",
+                "type": "PipelineReference"
+            }
+        },
+        "type": "TumblingWindowTrigger",
+        "typeProperties": {
+            "frequency": "Month",
+            "interval": 12,
+            "startTime": "2023-04-17T00:00:00Z",
+            "delay": "00:00:00",
+            "maxConcurrency": 1,
+            "retryPolicy": {
+                "count": 13,
+                "intervalInSeconds": 86400
+            },
+            "dependsOn": []
+        }
+    }
+}

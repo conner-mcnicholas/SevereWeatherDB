@@ -1,0 +1,70 @@
+{
+    "name": "input_new_fatalities_gz",
+    "properties": {
+        "linkedServiceName": {
+            "referenceName": "input_data_lake",
+            "type": "LinkedServiceReference"
+        },
+        "annotations": [],
+        "type": "DelimitedText",
+        "typeProperties": {
+            "location": {
+                "type": "AzureBlobFSLocation",
+                "folderPath": "fatalities",
+                "fileSystem": "newfiles"
+            },
+            "columnDelimiter": ",",
+            "compressionCodec": "gzip",
+            "escapeChar": "\\",
+            "firstRowAsHeader": true,
+            "quoteChar": "\""
+        },
+        "schema": [
+            {
+                "name": "FAT_YEARMONTH",
+                "type": "String"
+            },
+            {
+                "name": "FAT_DAY",
+                "type": "String"
+            },
+            {
+                "name": "FAT_TIME",
+                "type": "String"
+            },
+            {
+                "name": "FATALITY_ID",
+                "type": "String"
+            },
+            {
+                "name": "EVENT_ID",
+                "type": "String"
+            },
+            {
+                "name": "FATALITY_TYPE",
+                "type": "String"
+            },
+            {
+                "name": "FATALITY_DATE",
+                "type": "String"
+            },
+            {
+                "name": "FATALITY_AGE",
+                "type": "String"
+            },
+            {
+                "name": "FATALITY_SEX",
+                "type": "String"
+            },
+            {
+                "name": "FATALITY_LOCATION",
+                "type": "String"
+            },
+            {
+                "name": "EVENT_YEARMONTH",
+                "type": "String"
+            }
+        ]
+    },
+    "type": "Microsoft.DataFactory/factories/datasets"
+}

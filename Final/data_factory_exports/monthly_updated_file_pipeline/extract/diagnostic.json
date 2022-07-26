@@ -1,0 +1,22 @@
+{
+    "now": "2022-07-26T18:30:28.733Z",
+    "perfNow": 9331651.899999999,
+    "diagnosticCorrelation": "61c9a1cd-be16-452a-9b4c-32bd05b28115",
+    "source": "DownloadSupportFiles",
+    "environment": {
+        "productName": "adf",
+        "buildVersion": "1.0.072022.6",
+        "environmentType": 3,
+        "resourceName": "datafactoryausins",
+        "resourceRegion": "australiaeast",
+        "resourceGroup": "datafactoryrg",
+        "subscriptionId": "b5f807fa-c5eb-4a4d-8357-76a176efc946",
+        "sessionId": "1RycN",
+        "operationId": "FJWfv",
+        "gitType": "live"
+    },
+    "additionalInfo": {
+        "selectedResource": "extract_updated_file",
+        "selectedResourceType": "pipeline"
+    }
+}

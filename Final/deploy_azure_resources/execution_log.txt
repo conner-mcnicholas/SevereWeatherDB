@@ -1,0 +1,718 @@
+conner@Linuxclevo:~/SevereWeatherDB/Step9/create_azure_resources/azcli-docker-template-master$ ./start.sh
+bash-5.1# ./scripts/create_blob_and_db.sh
+/workspace /workspace
+++ az login
+To sign in, use a web browser to open the page https://microsoft.com/devicelogin and enter the code FRSHC2PFE to authenticate.
+[
+  {
+    "cloudName": "AzureCloud",
+    "homeTenantId": "2f9a9629-3599-4272-ac5e-cd4c5a76d072",
+    "id": "b5f807fa-c5eb-4a4d-8357-76a176efc946",
+    "isDefault": true,
+    "managedByTenants": [
+      {
+        "tenantId": "2f4a9838-26b7-47ee-be60-ccc1fdec5953"
+      }
+    ],
+    "name": "SparkPipelineSub",
+    "state": "Enabled",
+    "tenantId": "2f9a9629-3599-4272-ac5e-cd4c5a76d072",
+    "user": {
+      "name": "connermcnicholas@gmail.com",
+      "type": "user"
+    }
+  }
+]
+++ az config set extension.use_dynamic_install=yes_prompt
+Command group 'config' is experimental and under development. Reference and support levels: https://aka.ms/CLI_refstatus
+++ az account set --subscription b5f807fa-c5eb-4a4d-8357-76a176efc946
+++ az group create --name swdbstorageresrcgrp --location australiaeast
+{
+  "id": "/subscriptions/b5f807fa-c5eb-4a4d-8357-76a176efc946/resourceGroups/swdbstorageresrcgrp",
+  "location": "australiaeast",
+  "managedBy": null,
+  "name": "swdbstorageresrcgrp",
+  "properties": {
+    "provisioningState": "Succeeded"
+  },
+  "tags": null,
+  "type": "Microsoft.Resources/resourceGroups"
+}
+++ az storage account create --name swdbstorageaccount --resource-group swdbstorageresrcgrp --location australiaeast --sku Standard_RAGRS --kind StorageV2
+{
+  "accessTier": "Hot",
+  "allowBlobPublicAccess": true,
+  "allowCrossTenantReplication": null,
+  "allowSharedKeyAccess": null,
+  "allowedCopyScope": null,
+  "azureFilesIdentityBasedAuthentication": null,
+  "blobRestoreStatus": null,
+  "creationTime": "2022-07-13T14:27:52.480022+00:00",
+  "customDomain": null,
+  "defaultToOAuthAuthentication": null,
+  "dnsEndpointType": null,
+  "enableHttpsTrafficOnly": true,
+  "enableNfsV3": null,
+  "encryption": {
+    "encryptionIdentity": null,
+    "keySource": "Microsoft.Storage",
+    "keyVaultProperties": null,
+    "requireInfrastructureEncryption": null,
+    "services": {
+      "blob": {
+        "enabled": true,
+        "keyType": "Account",
+        "lastEnabledTime": "2022-07-13T14:27:52.558142+00:00"
+      },
+      "file": {
+        "enabled": true,
+        "keyType": "Account",
+        "lastEnabledTime": "2022-07-13T14:27:52.558142+00:00"
+      },
+      "queue": null,
+      "table": null
+    }
+  },
+  "extendedLocation": null,
+  "failoverInProgress": null,
+  "geoReplicationStats": null,
+  "id": "/subscriptions/b5f807fa-c5eb-4a4d-8357-76a176efc946/resourceGroups/swdbstorageresrcgrp/providers/Microsoft.Storage/storageAccounts/swdbstorageaccount",
+  "identity": null,
+  "immutableStorageWithVersioning": null,
+  "isHnsEnabled": null,
+  "isLocalUserEnabled": null,
+  "isSftpEnabled": null,
+  "keyCreationTime": {
+    "key1": "2022-07-13T14:27:52.558142+00:00",
+    "key2": "2022-07-13T14:27:52.558142+00:00"
+  },
+  "keyPolicy": null,
+  "kind": "StorageV2",
+  "largeFileSharesState": null,
+  "lastGeoFailoverTime": null,
+  "location": "australiaeast",
+  "minimumTlsVersion": "TLS1_0",
+  "name": "swdbstorageaccount",
+  "networkRuleSet": {
+    "bypass": "AzureServices",
+    "defaultAction": "Allow",
+    "ipRules": [],
+    "resourceAccessRules": null,
+    "virtualNetworkRules": []
+  },
+  "primaryEndpoints": {
+    "blob": "https://swdbstorageaccount.blob.core.windows.net/",
+    "dfs": "https://swdbstorageaccount.dfs.core.windows.net/",
+    "file": "https://swdbstorageaccount.file.core.windows.net/",
+    "internetEndpoints": null,
+    "microsoftEndpoints": null,
+    "queue": "https://swdbstorageaccount.queue.core.windows.net/",
+    "table": "https://swdbstorageaccount.table.core.windows.net/",
+    "web": "https://swdbstorageaccount.z8.web.core.windows.net/"
+  },
+  "primaryLocation": "australiaeast",
+  "privateEndpointConnections": [],
+  "provisioningState": "Succeeded",
+  "publicNetworkAccess": null,
+  "resourceGroup": "swdbstorageresrcgrp",
+  "routingPreference": null,
+  "sasPolicy": null,
+  "secondaryEndpoints": {
+    "blob": "https://swdbstorageaccount-secondary.blob.core.windows.net/",
+    "dfs": "https://swdbstorageaccount-secondary.dfs.core.windows.net/",
+    "file": null,
+    "internetEndpoints": null,
+    "microsoftEndpoints": null,
+    "queue": "https://swdbstorageaccount-secondary.queue.core.windows.net/",
+    "table": "https://swdbstorageaccount-secondary.table.core.windows.net/",
+    "web": "https://swdbstorageaccount-secondary.z8.web.core.windows.net/"
+  },
+  "secondaryLocation": "australiasoutheast",
+  "sku": {
+    "name": "Standard_RAGRS",
+    "tier": "Standard"
+  },
+  "statusOfPrimary": "available",
+  "statusOfSecondary": "available",
+  "storageAccountSkuConversionStatus": null,
+  "tags": {},
+  "type": "Microsoft.Storage/storageAccounts"
+}
+++ az storage account hns-migration start --type validation -n swdbstorageaccount -g swdbstorageresrcgrp
+++ az storage account hns-migration start --type upgrade -n swdbstorageaccount -g swdbstorageresrcgrp
+++ az storage fs create -n swdbbatchcontainer --account-name swdbstorageaccount --auth-mode login
+{
+  "client_request_id": "5f296c70-02b8-11ed-b92f-0242ac110002",
+  "date": "2022-07-13T14:30:42+00:00",
+  "etag": "\"0x8DA64DC440D5A82\"",
+  "last_modified": "2022-07-13T14:30:42+00:00",
+  "request_id": "6fa7e993-001e-000e-3dc5-96ec6c000000",
+  "version": "2021-06-08"
+}
+++ az storage fs directory create -f swdbbatchcontainer -n details --account-name swdbstorageaccount --auth-mode key
+
+There are no credentials provided in your command and environment, we will query for account key for your storage account.
+It is recommended to provide --connection-string, --account-key or --sas-token in your command as credentials.
+
+You also can add `--auth-mode login` in your command to use Azure Active Directory (Azure AD) for authorization if your login account is assigned required RBAC roles.
+For more information about RBAC roles in storage, visit https://docs.microsoft.com/azure/storage/common/storage-auth-aad-rbac-cli.
+
+In addition, setting the corresponding environment variables can avoid inputting credentials in your command. Please use --help to get more information about environment variable usage.
+{
+  "content_length": 0,
+  "continuation": null,
+  "date": "2022-07-13T14:30:44+00:00",
+  "encryption_key_sha256": null,
+  "etag": "\"0x8DA64DC454BCDD1\"",
+  "last_modified": "2022-07-13T14:30:44+00:00",
+  "request_id": "329dad6b-401f-00a3-5fc5-96cc06000000",
+  "request_server_encrypted": true,
+  "version": "2021-06-08"
+}
+++ az storage fs directory create -f swdbbatchcontainer -n fatalities --account-name swdbstorageaccount --auth-mode key
+
+There are no credentials provided in your command and environment, we will query for account key for your storage account.
+It is recommended to provide --connection-string, --account-key or --sas-token in your command as credentials.
+
+You also can add `--auth-mode login` in your command to use Azure Active Directory (Azure AD) for authorization if your login account is assigned required RBAC roles.
+For more information about RBAC roles in storage, visit https://docs.microsoft.com/azure/storage/common/storage-auth-aad-rbac-cli.
+
+In addition, setting the corresponding environment variables can avoid inputting credentials in your command. Please use --help to get more information about environment variable usage.
+{
+  "content_length": 0,
+  "continuation": null,
+  "date": "2022-07-13T14:30:45+00:00",
+  "encryption_key_sha256": null,
+  "etag": "\"0x8DA64DC4685A475\"",
+  "last_modified": "2022-07-13T14:30:46+00:00",
+  "request_id": "891f57d2-f01f-0054-5ec5-96eaed000000",
+  "request_server_encrypted": true,
+  "version": "2021-06-08"
+}
+++ az storage fs create -n swdbnewfilecontainer --account-name swdbstorageaccount --auth-mode login
+{
+  "client_request_id": "62bec1f0-02b8-11ed-8106-0242ac110002",
+  "date": "2022-07-13T14:30:50+00:00",
+  "etag": "\"0x8DA64DC47575453\"",
+  "last_modified": "2022-07-13T14:30:47+00:00",
+  "request_id": "8faeec81-601e-003c-68c5-96b4bc000000",
+  "version": "2021-06-08"
+}
+++ az storage fs directory create -f swdbnewfilecontainer -n details --account-name swdbstorageaccount --auth-mode key
+
+There are no credentials provided in your command and environment, we will query for account key for your storage account.
+It is recommended to provide --connection-string, --account-key or --sas-token in your command as credentials.
+
+You also can add `--auth-mode login` in your command to use Azure Active Directory (Azure AD) for authorization if your login account is assigned required RBAC roles.
+For more information about RBAC roles in storage, visit https://docs.microsoft.com/azure/storage/common/storage-auth-aad-rbac-cli.
+
+In addition, setting the corresponding environment variables can avoid inputting credentials in your command. Please use --help to get more information about environment variable usage.
+{
+  "content_length": 0,
+  "continuation": null,
+  "date": "2022-07-13T14:30:52+00:00",
+  "encryption_key_sha256": null,
+  "etag": "\"0x8DA64DC4A97FAFD\"",
+  "last_modified": "2022-07-13T14:30:53+00:00",
+  "request_id": "b7868514-201f-0030-13c5-965a4d000000",
+  "request_server_encrypted": true,
+  "version": "2021-06-08"
+}
+++ az storage fs directory create -f swdbnewfilecontainer -n fatalities --account-name swdbstorageaccount --auth-mode key
+
+There are no credentials provided in your command and environment, we will query for account key for your storage account.
+It is recommended to provide --connection-string, --account-key or --sas-token in your command as credentials.
+
+You also can add `--auth-mode login` in your command to use Azure Active Directory (Azure AD) for authorization if your login account is assigned required RBAC roles.
+For more information about RBAC roles in storage, visit https://docs.microsoft.com/azure/storage/common/storage-auth-aad-rbac-cli.
+
+In addition, setting the corresponding environment variables can avoid inputting credentials in your command. Please use --help to get more information about environment variable usage.
+{
+  "content_length": 0,
+  "continuation": null,
+  "date": "2022-07-13T14:30:55+00:00",
+  "encryption_key_sha256": null,
+  "etag": "\"0x8DA64DC4C0E12E2\"",
+  "last_modified": "2022-07-13T14:30:55+00:00",
+  "request_id": "ed5579be-d01f-0007-4ac5-96f6e2000000",
+  "request_server_encrypted": true,
+  "version": "2021-06-08"
+}
+++ az group create --name swdbmysqlresrcgrp --location australiaeast
+{
+  "id": "/subscriptions/b5f807fa-c5eb-4a4d-8357-76a176efc946/resourceGroups/swdbmysqlresrcgrp",
+  "location": "australiaeast",
+  "managedBy": null,
+  "name": "swdbmysqlresrcgrp",
+  "properties": {
+    "provisioningState": "Succeeded"
+  },
+  "tags": null,
+  "type": "Microsoft.Resources/resourceGroups"
+}
+++ az config set extension.use_dynamic_install=yes_prompt
+Command group 'config' is experimental and under development. Reference and support levels: https://aka.ms/CLI_refstatus
+++ az account set --subscription b5f807fa-c5eb-4a4d-8357-76a176efc946
+++ az group create --name swdbmysqlresrcgrp --location australiaeast
+{
+  "id": "/subscriptions/b5f807fa-c5eb-4a4d-8357-76a176efc946/resourceGroups/swdbmysqlresrcgrp",
+  "location": "australiaeast",
+  "managedBy": null,
+  "name": "swdbmysqlresrcgrp",
+  "properties": {
+    "provisioningState": "Succeeded"
+  },
+  "tags": null,
+  "type": "Microsoft.Resources/resourceGroups"
+}
+++ az mysql server create --resource-group swdbmysqlresrcgrp --name swdbmysqlserver --location australiaeast --admin-user swdbmysqladmin --admin-password '<password>' --sku-name GP_Gen5_2
+Checking the existence of the resource group 'swdbmysqlresrcgrp'...
+Resource group 'swdbmysqlresrcgrp' exists ? : True
+Creating mysql Server 'swdbmysqlserver' in group 'swdbmysqlresrcgrp'...
+Your server 'swdbmysqlserver' is using sku 'GP_Gen5_2' (Paid Tier). Please refer to https://aka.ms/mysql-pricing  for pricing details
+Make a note of your password. If you forget, you would have to reset your password with 'az mysql server update -n swdbmysqlserver -g swdbmysqlresrcgrp -p <new-password>'.
+Creating mysql database 'defaultdb'...
+{
+  "additionalProperties": {},
+  "administratorLogin": "swdbmysqladmin",
+  "byokEnforcement": "Disabled",
+  "connectionString": "mysql defaultdb --host swdbmysqlserver.mysql.database.azure.com --user swdbmysqladmin@swdbmysqlserver --password=<password>",
+  "databaseName": "defaultdb",
+  "earliestRestoreDate": "2022-07-13T14:45:28.570000+00:00",
+  "fullyQualifiedDomainName": "swdbmysqlserver.mysql.database.azure.com",
+  "id": "/subscriptions/b5f807fa-c5eb-4a4d-8357-76a176efc946/resourceGroups/swdbmysqlresrcgrp/providers/Microsoft.DBforMySQL/servers/swdbmysqlserver",
+  "identity": null,
+  "infrastructureEncryption": "Disabled",
+  "location": "australiaeast",
+  "masterServerId": "",
+  "minimalTlsVersion": "TLSEnforcementDisabled",
+  "name": "swdbmysqlserver",
+  "password": "<password>",
+  "privateEndpointConnections": [],
+  "publicNetworkAccess": "Enabled",
+  "replicaCapacity": 5,
+  "replicationRole": "None",
+  "resourceGroup": "swdbmysqlresrcgrp",
+  "sku": {
+    "additionalProperties": {},
+    "capacity": 2,
+    "family": "Gen5",
+    "name": "GP_Gen5_2",
+    "size": null,
+    "tier": "GeneralPurpose"
+  },
+  "sslEnforcement": "Enabled",
+  "storageProfile": {
+    "additionalProperties": {},
+    "backupRetentionDays": 7,
+    "geoRedundantBackup": "Disabled",
+    "storageAutogrow": "Enabled",
+    "storageMb": 5120
+  },
+  "tags": null,
+  "type": "Microsoft.DBforMySQL/servers",
+  "userVisibleState": "Ready",
+  "version": "5.7"
+}
+++ az mysql server firewall-rule create --resource-group swdbmysqlresrcgrp --server swdbmysqlserver --name AllowMyIP --start-ip-address <ip-address> --end-ip-address <ip-address>
+{
+  "endIpAddress": "<ip-address>",
+  "id": "/subscriptions/b5f807fa-c5eb-4a4d-8357-76a176efc946/resourceGroups/swdbmysqlresrcgrp/providers/Microsoft.DBforMySQL/servers/swdbmysqlserver/firewallRules/AllowMyIP",
+  "name": "AllowMyIP",
+  "resourceGroup": "swdbmysqlresrcgrp",
+  "startIpAddress": "<ip-address>",
+  "type": "Microsoft.DBforMySQL/servers/firewallRules"
+}
+++ az mysql server firewall-rule create --resource-group swdbmysqlresrcgrp --server swdbmysqlserver --name AllowAzureIP --start-ip-address 0.0.0.0 --end-ip-address 0.0.0.0
+{
+  "endIpAddress": "0.0.0.0",
+  "id": "/subscriptions/b5f807fa-c5eb-4a4d-8357-76a176efc946/resourceGroups/swdbmysqlresrcgrp/providers/Microsoft.DBforMySQL/servers/swdbmysqlserver/firewallRules/AllowAzureIP",
+  "name": "AllowAzureIP",
+  "resourceGroup": "swdbmysqlresrcgrp",
+  "startIpAddress": "0.0.0.0",
+  "type": "Microsoft.DBforMySQL/servers/firewallRules"
+}
+++ az group create --name swbatchresrcgrp --location australiaeast
+{
+  "id": "/subscriptions/b5f807fa-c5eb-4a4d-8357-76a176efc946/resourceGroups/swbatchresrcgrp",
+  "location": "australiaeast",
+  "managedBy": null,
+  "name": "swbatchresrcgrp",
+  "properties": {
+    "provisioningState": "Succeeded"
+  },
+  "tags": null,
+  "type": "Microsoft.Resources/resourceGroups"
+}
+++ az storage account create --name swbatchstoreaccount --resource-group swbatchresrcgrp --location australiaeast --sku Standard_LRS
+{
+  "accessTier": "Hot",
+  "allowBlobPublicAccess": true,
+  "allowCrossTenantReplication": null,
+  "allowSharedKeyAccess": null,
+  "allowedCopyScope": null,
+  "azureFilesIdentityBasedAuthentication": null,
+  "blobRestoreStatus": null,
+  "creationTime": "2022-07-15T11:11:00.706746+00:00",
+  "customDomain": null,
+  "defaultToOAuthAuthentication": null,
+  "dnsEndpointType": null,
+  "enableHttpsTrafficOnly": true,
+  "enableNfsV3": null,
+  "encryption": {
+    "encryptionIdentity": null,
+    "keySource": "Microsoft.Storage",
+    "keyVaultProperties": null,
+    "requireInfrastructureEncryption": null,
+    "services": {
+      "blob": {
+        "enabled": true,
+        "keyType": "Account",
+        "lastEnabledTime": "2022-07-15T11:11:00.784911+00:00"
+      },
+      "file": {
+        "enabled": true,
+        "keyType": "Account",
+        "lastEnabledTime": "2022-07-15T11:11:00.784911+00:00"
+      },
+      "queue": null,
+      "table": null
+    }
+  },
+  "extendedLocation": null,
+  "failoverInProgress": null,
+  "geoReplicationStats": null,
+  "id": "/subscriptions/b5f807fa-c5eb-4a4d-8357-76a176efc946/resourceGroups/swbatchresrcgrp/providers/Microsoft.Storage/storageAccounts/swbatchstoreaccount",
+  "identity": null,
+  "immutableStorageWithVersioning": null,
+  "isHnsEnabled": null,
+  "isLocalUserEnabled": null,
+  "isSftpEnabled": null,
+  "keyCreationTime": {
+    "key1": "2022-07-15T11:11:00.784911+00:00",
+    "key2": "2022-07-15T11:11:00.784911+00:00"
+  },
+  "keyPolicy": null,
+  "kind": "StorageV2",
+  "largeFileSharesState": null,
+  "lastGeoFailoverTime": null,
+  "location": "australiaeast",
+  "minimumTlsVersion": "TLS1_0",
+  "name": "swbatchstoreaccount",
+  "networkRuleSet": {
+    "bypass": "AzureServices",
+    "defaultAction": "Allow",
+    "ipRules": [],
+    "resourceAccessRules": null,
+    "virtualNetworkRules": []
+  },
+  "primaryEndpoints": {
+    "blob": "https://swbatchstoreaccount.blob.core.windows.net/",
+    "dfs": "https://swbatchstoreaccount.dfs.core.windows.net/",
+    "file": "https://swbatchstoreaccount.file.core.windows.net/",
+    "internetEndpoints": null,
+    "microsoftEndpoints": null,
+    "queue": "https://swbatchstoreaccount.queue.core.windows.net/",
+    "table": "https://swbatchstoreaccount.table.core.windows.net/",
+    "web": "https://swbatchstoreaccount.z8.web.core.windows.net/"
+  },
+  "primaryLocation": "australiaeast",
+  "privateEndpointConnections": [],
+  "provisioningState": "Succeeded",
+  "publicNetworkAccess": null,
+  "resourceGroup": "swbatchresrcgrp",
+  "routingPreference": null,
+  "sasPolicy": null,
+  "secondaryEndpoints": null,
+  "secondaryLocation": null,
+  "sku": {
+    "name": "Standard_LRS",
+    "tier": "Standard"
+  },
+  "statusOfPrimary": "available",
+  "statusOfSecondary": null,
+  "storageAccountSkuConversionStatus": null,
+  "tags": {},
+  "type": "Microsoft.Storage/storageAccounts"
+}
+++ az batch account create --name swbatchaccount --storage-account swbatchstoreaccount --resource-group swbatchresrcgrp --location australiaeast
+{
+  "accountEndpoint": "swbatchaccount.australiaeast.batch.azure.com",
+  "activeJobAndJobScheduleQuota": 100,
+  "allowedAuthenticationModes": [
+    "SharedKey",
+    "AAD",
+    "TaskAuthenticationToken"
+  ],
+  "autoStorage": {
+    "authenticationMode": "StorageKeys",
+    "lastKeySync": "2022-07-15T11:11:36.310309+00:00",
+    "nodeIdentityReference": null,
+    "storageAccountId": "/subscriptions/b5f807fa-c5eb-4a4d-8357-76a176efc946/resourceGroups/swbatchresrcgrp/providers/Microsoft.Storage/storageAccounts/swbatchstoreaccount"
+  },
+  "dedicatedCoreQuota": 10,
+  "dedicatedCoreQuotaPerVmFamily": [
+    {
+      "coreQuota": 10,
+      "name": "standardAv2Family"
+    },
+    {
+      "coreQuota": 10,
+      "name": "standardDv3Family"
+    },
+    {
+      "coreQuota": 10,
+      "name": "standardDSv3Family"
+    },
+    {
+      "coreQuota": 10,
+      "name": "standardEv3Family"
+    },
+    {
+      "coreQuota": 10,
+      "name": "standardESv3Family"
+    },
+    {
+      "coreQuota": 0,
+      "name": "standardA0_A7Family"
+    },
+    {
+      "coreQuota": 0,
+      "name": "standardA8_A11Family"
+    },
+    {
+      "coreQuota": 0,
+      "name": "standardDFamily"
+    },
+    {
+      "coreQuota": 0,
+      "name": "standardDv2Family"
+    },
+    {
+      "coreQuota": 0,
+      "name": "standardGFamily"
+    },
+    {
+      "coreQuota": 0,
+      "name": "basicAFamily"
+    },
+    {
+      "coreQuota": 0,
+      "name": "standardFFamily"
+    },
+    {
+      "coreQuota": 0,
+      "name": "standardNVFamily"
+    },
+    {
+      "coreQuota": 0,
+      "name": "standardNVPromoFamily"
+    },
+    {
+      "coreQuota": 0,
+      "name": "standardNCFamily"
+    },
+    {
+      "coreQuota": 0,
+      "name": "standardNCPromoFamily"
+    },
+    {
+      "coreQuota": 0,
+      "name": "standardHFamily"
+    },
+    {
+      "coreQuota": 0,
+      "name": "standardHPromoFamily"
+    },
+    {
+      "coreQuota": 0,
+      "name": "standardMSFamily"
+    },
+    {
+      "coreQuota": 0,
+      "name": "standardDSFamily"
+    },
+    {
+      "coreQuota": 0,
+      "name": "standardDSv2Family"
+    },
+    {
+      "coreQuota": 0,
+      "name": "standardFSFamily"
+    },
+    {
+      "coreQuota": 0,
+      "name": "standardGSFamily"
+    },
+    {
+      "coreQuota": 0,
+      "name": "standardLSFamily"
+    },
+    {
+      "coreQuota": 0,
+      "name": "standardLSv2Family"
+    },
+    {
+      "coreQuota": 0,
+      "name": "standardNCSv2Family"
+    },
+    {
+      "coreQuota": 0,
+      "name": "standardNDSFamily"
+    },
+    {
+      "coreQuota": 0,
+      "name": "standardNCSv3Family"
+    },
+    {
+      "coreQuota": 0,
+      "name": "standardFSv2Family"
+    },
+    {
+      "coreQuota": 0,
+      "name": "standardHBSFamily"
+    },
+    {
+      "coreQuota": 0,
+      "name": "standardHCSFamily"
+    },
+    {
+      "coreQuota": 0,
+      "name": "standardNVSv3Family"
+    },
+    {
+      "coreQuota": 0,
+      "name": "standardHBrsv2Family"
+    },
+    {
+      "coreQuota": 0,
+      "name": "standardDAv4Family"
+    },
+    {
+      "coreQuota": 0,
+      "name": "standardDASv4Family"
+    },
+    {
+      "coreQuota": 0,
+      "name": "standardEAv4Family"
+    },
+    {
+      "coreQuota": 0,
+      "name": "standardEASv4Family"
+    },
+    {
+      "coreQuota": 0,
+      "name": "standardDDv4Family"
+    },
+    {
+      "coreQuota": 0,
+      "name": "standardDDSv4Family"
+    },
+    {
+      "coreQuota": 0,
+      "name": "standardEDv4Family"
+    },
+    {
+      "coreQuota": 0,
+      "name": "standardEDSv4Family"
+    },
+    {
+      "coreQuota": 0,
+      "name": "standardMSv2Family"
+    },
+    {
+      "coreQuota": 0,
+      "name": "standardEIv3Family"
+    },
+    {
+      "coreQuota": 0,
+      "name": "standardNVSv4Family"
+    },
+    {
+      "coreQuota": 0,
+      "name": "Standard NCASv3_T4 Family"
+    },
+    {
+      "coreQuota": 0,
+      "name": "standardXEIDSv4Family"
+    },
+    {
+      "coreQuota": 0,
+      "name": "Standard NDASv4_A100 Family"
+    },
+    {
+      "coreQuota": 0,
+      "name": "standardDCSv2Family"
+    },
+    {
+      "coreQuota": 0,
+      "name": "standardHBv3Family"
+    },
+    {
+      "coreQuota": 0,
+      "name": "standardNPSFamily"
+    },
+    {
+      "coreQuota": 0,
+      "name": "standardFXMDVSFamily"
+    },
+    {
+      "coreQuota": 0,
+      "name": "standardDDv5Family"
+    },
+    {
+      "coreQuota": 0,
+      "name": "standardDDSv5Family"
+    },
+    {
+      "coreQuota": 0,
+      "name": "standardEDv5Family"
+    },
+    {
+      "coreQuota": 0,
+      "name": "standardEDSv5Family"
+    },
+    {
+      "coreQuota": 0,
+      "name": "standardNCADSA100v4Family"
+    },
+    {
+      "coreQuota": 0,
+      "name": "standardDADSv5Family"
+    },
+    {
+      "coreQuota": 0,
+      "name": "standardEADSv5Family"
+    }
+  ],
+  "dedicatedCoreQuotaPerVmFamilyEnforced": true,
+  "encryption": {
+    "keySource": "Microsoft.Batch",
+    "keyVaultProperties": null
+  },
+  "id": "/subscriptions/b5f807fa-c5eb-4a4d-8357-76a176efc946/resourceGroups/swbatchresrcgrp/providers/Microsoft.Batch/batchAccounts/swbatchaccount",
+  "identity": {
+    "principalId": null,
+    "tenantId": null,
+    "type": "None",
+    "userAssignedIdentities": null
+  },
+  "keyVaultReference": null,
+  "location": "australiaeast",
+  "lowPriorityCoreQuota": 0,
+  "name": "swbatchaccount",
+  "poolAllocationMode": "BatchService",
+  "poolQuota": 20,
+  "privateEndpointConnections": [],
+  "provisioningState": "Succeeded",
+  "publicNetworkAccess": "Enabled",
+  "resourceGroup": "swbatchresrcgrp",
+  "tags": null,
+  "type": "Microsoft.Batch/batchAccounts"
+}
+++ az batch account login --name swbatchaccount --resource-group swbatchresrcgrp --shared-key-auth
+++ az batch pool create --id swbatchpoolid --vm-size Standard_A1_v2 --target-dedicated-nodes 2 --image canonical:ubuntuserver:18.04-LTS --node-agent-sku-id 'batch.node.ubuntu 18.04'
+++ az batch pool show --pool-id swbatchpoolid --query allocationState
+"resizing"
+bash-5.1# az batch pool show --pool-id swbatchpoolid --query "allocationState"
+"steady"

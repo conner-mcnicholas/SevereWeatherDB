@@ -1,0 +1,139 @@
+{
+    "name": "extract_new_file",
+    "properties": {
+        "activities": [
+            {
+                "name": "search_source4new",
+                "type": "DatabricksSparkPython",
+                "dependsOn": [],
+                "policy": {
+                    "timeout": "7.00:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "pythonFile": "dbfs:/FileStore/new_file_to_blob_only.py",
+                    "parameters": [],
+                    "libraries": [
+                        {
+                            "pypi": {
+                                "package": "azure-storage-blob==12.12.0"
+                            }
+                        },
+                        {
+                            "pypi": {
+                                "package": "beautifulsoup4==4.10.0"
+                            }
+                        },
+                        {
+                            "pypi": {
+                                "package": "requests==2.26.0"
+                            }
+                        },
+                        {
+                            "pypi": {
+                                "package": "mysql-connector-python==8.0.29"
+                            }
+                        }
+                    ]
+                },
+                "linkedServiceName": {
+                    "referenceName": "fully_authd",
+                    "type": "LinkedServiceReference"
+                }
+            },
+            {
+                "name": "exec_new_pipe_iftrue",
+                "type": "IfCondition",
+                "dependsOn": [
+                    {
+                        "activity": "lookup_new_file",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "userProperties": [],
+                "typeProperties": {
+                    "expression": {
+                        "value": "@greater(\n    length(array(activity('lookup_new_file').output)),\n    0\n) \n",
+                        "type": "Expression"
+                    },
+                    "ifFalseActivities": [
+                        {
+                            "name": "FailNoNewFound",
+                            "type": "Fail",
+                            "dependsOn": [],
+                            "userProperties": [],
+                            "typeProperties": {
+                                "message": "No New File Found",
+                                "errorCode": "500"
+                            }
+                        }
+                    ],
+                    "ifTrueActivities": [
+                        {
+                            "name": "execute_new_pipe",
+                            "type": "ExecutePipeline",
+                            "dependsOn": [],
+                            "userProperties": [],
+                            "typeProperties": {
+                                "pipeline": {
+                                    "referenceName": "load_transfer_new_file",
+                                    "type": "PipelineReference"
+                                },
+                                "waitOnCompletion": false
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "lookup_new_file",
+                "type": "Lookup",
+                "dependsOn": [
+                    {
+                        "activity": "search_source4new",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "7.00:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "source": {
+                        "type": "DelimitedTextSource",
+                        "storeSettings": {
+                            "type": "AzureBlobFSReadSettings",
+                            "recursive": true,
+                            "wildcardFolderPath": "details",
+                            "wildcardFileName": "*.gz",
+                            "enablePartitionDiscovery": false
+                        },
+                        "formatSettings": {
+                            "type": "DelimitedTextReadSettings"
+                        }
+                    },
+                    "dataset": {
+                        "referenceName": "input_new_details_gz",
+                        "type": "DatasetReference"
+                    },
+                    "firstRowOnly": true
+                }
+            }
+        ],
+        "annotations": [],
+        "lastPublishTime": "2022-07-23T13:12:15Z"
+    },
+    "type": "Microsoft.DataFactory/factories/pipelines"
+}

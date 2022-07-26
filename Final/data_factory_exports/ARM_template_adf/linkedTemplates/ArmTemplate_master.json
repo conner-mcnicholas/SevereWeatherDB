@@ -1,0 +1,153 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "factoryName": {
+            "type": "string",
+            "metadata": "Data Factory name",
+            "defaultValue": "datafactoryausins"
+        },
+        "input_blob_accountKey": {
+            "type": "secureString",
+            "metadata": "Secure string for 'accountKey' of 'input_blob'"
+        },
+        "output_mysql_connectionString": {
+            "type": "secureString",
+            "metadata": "Secure string for 'connectionString' of 'output_mysql'"
+        },
+        "direct_blob_accountKey": {
+            "type": "secureString",
+            "metadata": "Secure string for 'accountKey' of 'direct_blob'"
+        },
+        "TEST_input_blob_accountKey": {
+            "type": "secureString",
+            "metadata": "Secure string for 'accountKey' of 'TEST_input_blob'"
+        },
+        "input_data_lake_accountKey": {
+            "type": "secureString",
+            "metadata": "Secure string for 'accountKey' of 'input_data_lake'"
+        },
+        "housekeeping_accessToken": {
+            "type": "secureString",
+            "metadata": "Secure string for 'accessToken' of 'housekeeping'"
+        },
+        "fully_authd_accessToken": {
+            "type": "secureString",
+            "metadata": "Secure string for 'accessToken' of 'fully_authd'"
+        },
+        "input_blob_properties_typeProperties_url": {
+            "type": "string",
+            "defaultValue": "https://pipelinestorageacctaus.dfs.core.windows.net/"
+        },
+        "direct_blob_properties_typeProperties_url": {
+            "type": "string",
+            "defaultValue": "https://pipelinestorageacctaus.dfs.core.windows.net/"
+        },
+        "TEST_input_blob_properties_typeProperties_url": {
+            "type": "string",
+            "defaultValue": "https://pipelinestorageacctaus.dfs.core.windows.net/"
+        },
+        "input_data_lake_properties_typeProperties_url": {
+            "type": "string",
+            "defaultValue": "https://pipelinestorageacctaus.dfs.core.windows.net/"
+        },
+        "fully_authd_properties_typeProperties_existingClusterId": {
+            "type": "string",
+            "defaultValue": "0722-143425-2gmvk2rw"
+        },
+        "trigger_on_new_blob_properties_typeProperties_scope": {
+            "type": "string",
+            "defaultValue": "/subscriptions/b5f807fa-c5eb-4a4d-8357-76a176efc946/resourceGroups/storageaus_rg/providers/Microsoft.Storage/storageAccounts/pipelinestorageacctaus"
+        },
+        "containerUri": {
+            "type": "string",
+            "metadata": "URI to storage account containing linked ARM templates"
+        },
+        "containerSasToken": {
+            "type": "string",
+            "metadata": "Sas token to storage account containing linked ARM templates"
+        }
+    },
+    "variables": {
+        "factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+    },
+    "resources": [
+        {
+            "name": "datafactoryausins_ArmTemplate_0",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2018-02-01",
+            "properties": {
+                "mode": "incremental",
+                "templateLink": {
+                    "uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "factoryName": {
+                        "value": "[parameters('factoryName')]"
+                    },
+                    "input_blob_accountKey": {
+                        "value": "[parameters('input_blob_accountKey')]"
+                    },
+                    "output_mysql_connectionString": {
+                        "value": "[parameters('output_mysql_connectionString')]"
+                    },
+                    "direct_blob_accountKey": {
+                        "value": "[parameters('direct_blob_accountKey')]"
+                    },
+                    "TEST_input_blob_accountKey": {
+                        "value": "[parameters('TEST_input_blob_accountKey')]"
+                    },
+                    "input_data_lake_accountKey": {
+                        "value": "[parameters('input_data_lake_accountKey')]"
+                    },
+                    "housekeeping_accessToken": {
+                        "value": "[parameters('housekeeping_accessToken')]"
+                    },
+                    "fully_authd_accessToken": {
+                        "value": "[parameters('fully_authd_accessToken')]"
+                    },
+                    "input_blob_properties_typeProperties_url": {
+                        "value": "[parameters('input_blob_properties_typeProperties_url')]"
+                    },
+                    "direct_blob_properties_typeProperties_url": {
+                        "value": "[parameters('direct_blob_properties_typeProperties_url')]"
+                    },
+                    "TEST_input_blob_properties_typeProperties_url": {
+                        "value": "[parameters('TEST_input_blob_properties_typeProperties_url')]"
+                    },
+                    "input_data_lake_properties_typeProperties_url": {
+                        "value": "[parameters('input_data_lake_properties_typeProperties_url')]"
+                    },
+                    "fully_authd_properties_typeProperties_existingClusterId": {
+                        "value": "[parameters('fully_authd_properties_typeProperties_existingClusterId')]"
+                    }
+                }
+            },
+            "dependsOn": []
+        },
+        {
+            "name": "datafactoryausins_ArmTemplate_1",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2018-02-01",
+            "properties": {
+                "mode": "incremental",
+                "templateLink": {
+                    "uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "factoryName": {
+                        "value": "[parameters('factoryName')]"
+                    },
+                    "trigger_on_new_blob_properties_typeProperties_scope": {
+                        "value": "[parameters('trigger_on_new_blob_properties_typeProperties_scope')]"
+                    }
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Resources/deployments', 'datafactoryausins_ArmTemplate_0')]"
+            ]
+        }
+    ]
+}

@@ -1,0 +1,24 @@
+{
+    "name": "trigger_on_new_blob",
+    "properties": {
+        "annotations": [],
+        "runtimeState": "Stopped",
+        "pipelines": [
+            {
+                "pipelineReference": {
+                    "referenceName": "load_transfer_updated_file",
+                    "type": "PipelineReference"
+                }
+            }
+        ],
+        "type": "BlobEventsTrigger",
+        "typeProperties": {
+            "blobPathEndsWith": "csv.gz",
+            "ignoreEmptyBlobs": true,
+            "scope": "/subscriptions/b5f807fa-c5eb-4a4d-8357-76a176efc946/resourceGroups/storageaus_rg/providers/Microsoft.Storage/storageAccounts/pipelinestorageacctaus",
+            "events": [
+                "Microsoft.Storage.BlobCreated"
+            ]
+        }
+    }
+}
