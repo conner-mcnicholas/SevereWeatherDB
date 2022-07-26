@@ -13,7 +13,7 @@ from mysql.connector import errorcode
 config = {
   'host':'sevwethmysqlserv.mysql.database.azure.com',
   'user':'conner@sevwethmysqlserv',
-  'password':'<password>',
+  'password':os.environ["AZ_MYSQL_ADMIN_PASSWORD"],
   'database':'defaultdb',
   'client_flags': [mysql.connector.ClientFlag.SSL],
   'ssl_ca': f'{os.environ["HOME"]}/.ssh/DigiCertGlobalRootG2.crt.pem'
@@ -182,7 +182,6 @@ Removed from main method as I want to execute this file as a script from databri
 """
 start_time = datetime.now().replace(microsecond=0)
 startyear = int(sys.argv[1]) #passed as paramter from data factory databricks python file setting in init pipeline
-#startyear = 2020 #hardcode for short test
 url = "https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles"
 print(f"Getting all files after {startyear}...\n")
 allfiles = listall(url)

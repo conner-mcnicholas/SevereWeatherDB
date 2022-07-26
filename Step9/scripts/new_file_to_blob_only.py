@@ -45,7 +45,7 @@ def findblobnew(dictlist, tyear):
         #print(f"\nBLOB: {filename} does {fyear} = {tyear} ?")
         if fyear == tyear:
             print(f"We already ingested latest year({tyear}) file: {filename}, exiting")
-            sys.exit()
+            dbutils.notebook.exit("Clean exiting databricks python activity")
         #else:
             #print(f"no, file year is out of scope\n")
     print('processing complete, no file from target year exists in blob file list')
@@ -82,7 +82,7 @@ def findnewfile(sourcefiles, targetyr):
             return filename
 
     print(f'\nFailed to identify a new source file for {targetyr}, exiting')
-    sys.exit()
+    dbutils.notebook.exit("Clean exiting databricks python activity")
 
 def filetoblob(sourceurl, thefile, tabletype):
     """

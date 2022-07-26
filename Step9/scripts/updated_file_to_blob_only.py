@@ -88,7 +88,7 @@ def findupdatedfile(sourcefiles, targetyr, bloblatestupdate):
         #else:
         #    print(f"no, file year out of scope\n")
     print(f'\nFailed to identify a new source file for {targetyr}, exiting')
-    sys.exit()
+    dbutils.notebook.exit("Clean exiting databricks python activity")
 
 def filetoblob(sourceurl, thefile, tabletype):
     """
