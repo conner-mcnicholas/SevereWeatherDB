@@ -29,7 +29,7 @@ To keep the database in sync with the latest data available, we must ingest new 
 
 ![alt text](https://github.com/conner-mcnicholas/SevereWeatherDB/blob/main/Final/imgs/annotated_pull_new_w_id.png?raw=true)<br>
 
-![alt text](https://github.com/conner-mcnicholas/SevereWeatherDB/blob/main/Step9/imgs/yearly_deepdive.png?raw=true)<br>
+![alt text](https://github.com/conner-mcnicholas/SevereWeatherDB/blob/main/Final/imgs/yearly_deepdive.png?raw=true)<br>
 
 &emsp;&emsp;-Pipelines include handling for Azure Data Lake blob container maintenaince:<br>
 &emsp;&emsp;(maintenance logic captured in scripts/datalake_housekeeping.py)<br>
