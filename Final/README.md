@@ -12,9 +12,9 @@ Final Build:<br>
 
 ![alt text](https://github.com/conner-mcnicholas/SevereWeatherDB/blob/main/Final/imgs/annotated_pull_new_w_id.png?raw=true)<br>
 
-![alt text](https://github.com/conner-mcnicholas/SevereWeatherDB/blob/main/Final/imgs/pull_new_and_trigger_pipeline_success.png?raw=true)<br>
+![alt text](https://github.com/conner-mcnicholas/SevereWeatherDB/blob/main/Final/imgs/pull_new_and_trigger_pipe_success.png?raw=true)<br>
 
-![alt text](https://github.com/conner-mcnicholas/SevereWeatherDB/blob/main/Final/imgs/triggered_new_pipeline_in_progress.png?raw=true)<br>
+![alt text](https://github.com/conner-mcnicholas/SevereWeatherDB/blob/main/Final/imgs/triggered_new_pipe_in_progress.png?raw=true)<br>
 
 &emsp;&emsp;-Packaged scripts as docker container to auto-deploy all required Azure Resources based on config:<br>
 &emsp;&emsp;(copy readme language and get pic of run)<br>
