@@ -15,7 +15,7 @@ Note that each folder contains:<br>
 &emsp;&emsp;Step_<#>_Instructions.pdf: instructionions document describing premise and requirements <br>
 &emsp;&emsp;+one OR both: <br>
 &emsp;&emsp;&emsp;&emsp;README.md: summarizing the completed deliverables <br>
-&emsp;&emsp;&emsp;&emsp;-<named goal>.pdf: a slide deck detailing the work done <br>
+&emsp;&emsp;&emsp;&emsp;<b\<namedgoal\>.pdf\>: a slide deck detailing the work done <br>
 
 Step  1: Project Ideas<br>
 Step  2: Project Proposal [Data Warehousing]<br>
