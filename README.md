@@ -15,7 +15,7 @@
   then develop and deploy a solution enabling the extraction, ingestion, and transformation of that  
   data towards some practical application.
 
-### *Repository Organization*:
+### \**Repository Organization*:
 
   This repository is divided into two directories:
 
