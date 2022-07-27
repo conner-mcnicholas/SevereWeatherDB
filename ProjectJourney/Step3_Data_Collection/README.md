@@ -1,14 +1,35 @@
-# Data Collection
+# Data Collection  
 
-The National Oceanic and Atmospheric Administration (NOAA)
-The National Centers for Environmental Information (NCEI)
 
-Storm Events Database data is pulled from csv.gz files at
+  To pull Storm Events data...  
 
-source url: https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles/
+  *from*: https://www.ncei.noaa.gov/pub/data/swdi/StormEventsevents/csvfiles/  
+  *to*: local project root data dir
+  *run cmd*: `python getdata.py`  
+  *yields:* 3 gzipped csvs for each year until present years  
 
-to: local drive
+  For example, after hardcoding start_date = 2017,
 
-by running: `python getdata.py`
+  - `StormEvents_details_d2017_c20220719.csv.gz`  
+  - `StormEvents_fatalities_d2017_c20220719.csv.gz`
+  - `StormEvents_locations_d2017_c20220719.csv.gz`
 
-hardcoded with start date = 2017, yielding 3 schema csv,gz files pulled for each year until present years
+  - `StormEvents_details_d2018_c20220719.csv.gz`
+  - `StormEvents_fatalities_d2018_c20220719.csv.gz`
+  - `StormEvents_locations_d2018_c20220719.csv.gz`
+
+  - `StormEvents_details_d2019_c20220719.csv.gz`
+  - `StormEvents_fatalities_d2019_c20220719.csv.gz`
+  - `StormEvents_locations_d2019_c20220719.csv.gz`
+
+  - `StormEvents_details_d2020_c20220719.csv.gz`
+  - `StormEvents_fatalities_d2020_c20220719.csv.gz`
+  - `StormEvents_locations_d2020_c20220719.csv.gz`
+
+  - `StormEvents_details_d2021_c20220719.csv.gz`
+  - `StormEvents_fatalities_d2021_c20220719.csv.gz`
+  - `StormEvents_locations_d2021_c20220719.csv.gz`
+
+  - `StormEvents_details_d2022_c20220719.csv.gz`
+  - `StormEvents_fatalities_d2022_c20220719.csv.gz`
+  - `StormEvents_locations_d2022_c20220719.csv.gz`
