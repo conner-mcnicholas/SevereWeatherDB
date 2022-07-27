@@ -4,7 +4,7 @@
   To pull Storm Events data...  
 
   *from*: https://www.ncei.noaa.gov/pub/data/swdi/StormEventsevents/csvfiles/  
-  *to*: local project root data dir
+  *to*: local project root data dir  
   *run cmd*: `python getdata.py`  
   *yields:* 3 gzipped csvs for each year until present years  
 
