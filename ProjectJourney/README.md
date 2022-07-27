@@ -10,7 +10,7 @@ In this way, this section should serve as an excellent reference if & when the m
 issues that were encountered resurface during future efforts developing cloud ELT applications.  
 
 Each stage is found below under the format...  
-  Step #: **named goal** *[relevant data engineering concept]*  
+  Step #: **Title** *[Concept]*  
 
 > - Step  1: **Project Ideas**  
 > - Step  2: **Project Proposal** *[Data Warehousing]*  
@@ -23,10 +23,8 @@ Each stage is found below under the format...
 > - Step  9: **Deploy To Production** *[Docker]*  
 > - Step 10: **Build Monitoring Dash** *[APIs]*  
 
-_____________________
-
   *Note*: each folder contains:  
-  - `> - Step_<#>_Instructions.pdf`: instructionions document describing premise and requirements  
-  - +one** *OR* both of the following files:  
+  - `Step_<#>_Instructions.pdf`: instructionions document describing premise and requirements  
+  - one/both:  
     - `README.md`: summarizing the completed deliverables  
-    - `<namedgoal>.pdf`: a slide deck detailing the work done  
+    - `<Title>.pdf`: a slide deck detailing the work done  
