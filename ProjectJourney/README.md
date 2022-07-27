@@ -11,7 +11,7 @@ issues that were encountered resurface during future efforts developing cloud EL
 
 Each Step is tagged with the named goal and relevant data engineering subject in [brackets]
 
-Note that each folder contains:
+Note that each folder contains:<br>
 &emsp;&emsp;Step_<#>_Instructions.pdf: instructionions document describing premise and requirements <br>
 &emsp;&emsp;+one OR both: <br>
 &emsp;&emsp;&emsp;&emsp;README.md: summarizing the completed deliverables <br>
