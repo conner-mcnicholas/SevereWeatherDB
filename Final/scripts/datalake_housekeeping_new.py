@@ -68,7 +68,7 @@ def create_table_postcounts():
     config = {
       'host':'sevwethmysqlserv.mysql.database.azure.com',
       'user':'conner@sevwethmysqlserv',
-      'password':mysqlpass,
+      'password':os.environ["AZ_MYSQL_ADMIN_PASSWORD"],
       'database':'defaultdb',
       'client_flags': [mysql.connector.ClientFlag.SSL],
       'ssl_ca': f'{os.environ["HOME"]}/.ssh/DigiCertGlobalRootG2.crt.pem',
@@ -76,7 +76,7 @@ def create_table_postcounts():
     }
 
     query = (f"DROP TABLE IF EXISTS N_PostUpdate;"
-        f"CREATE TABLE N_PostUpdate AS" # U for Updated File Pipeline
+        f"CREATE TABLE N_PostUpdate AS" # N for New File Pipeline
         "  SELECT * FROM"
         "	(SELECT COUNT(*) AS D_PostUpdate FROM details) AS d,"
         "	(SELECT COUNT(*) AS F_PostUpdate FROM fatalities) AS f;")

@@ -12,7 +12,7 @@
 
 ### ELT Pipelines Overview:
 
-There are three general processes that have been tailored to the NOAA's release cadence for severe weather data record files.
+There are three general processes that have been tailored to the NOAA's release cadence for severe weather data.
 
 The first is the most straightforward - just ingest all of the available details and fatalities csv.gz files available so at present.
 
