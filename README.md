@@ -2,7 +2,7 @@
 
   Data Engineering Track, Springboard School of Data
 
-  _____
+-----
 
 ## Background
 
@@ -15,30 +15,22 @@
   then develop and deploy a solution enabling the extraction, ingestion, and transformation of that  
   data towards some practical application.
 
-### \**Repository Organization*:
+### *Repository Organization*:
 
-  This repository is divided into two directories:
-
-##### `ProjectJourney`
-
-This project was completed as a series of 10 mini-projects (i.e. `Steps`), with each Step reinforcing  
-a progressively more advanced data engineering concept while culminating in the deployment of a  
-production-ready cloud app.  
-
-
-The majority of the deliverables generated prior to the penultimate step were not ultimately  
-required for (or even relevant to) the final application build.  That "mini-project work"  
-is retained here, where a more detailed overview of the process is also provided in its `README`
+This repository is divided into two directories:
 
 ##### `FinalBuild`
 
-I have created a separate repository "StormEventsDB" for the final build, containing the files that are strictly required for deployment of the app:
+Inside the FinalBuild folder is a git submodule, `StormEventsDB`, containing the files that are strictly required for production deployment of the app.  
 
-https://github.com/conner-mcnicholas/StormEventsDB
+The title change (i.e. 'SevereWeather' --> 'StormEvents') more accurately reflects the terminology used in NOAA/NCEI literature.  
 
-The new naming convention more accurately reflects the language used NOAA/NCEI.
+There are no dependencies between the two repositories.
 
-After applying some finishing touches, I will import that repo to the FinalBuild directory as a git submodule, but until then I want to avoid the added git complexity, so the hyperlink serves as a placeholder.
+##### `ProjectJourney`
 
-Although there are limited instances in which the same filename exists in that repository and ProjectJourney, there is no expectation that the file contents or purpose are equivalent across alternate versions of any  
-duplicated filename.
+This project was completed as a series of 10 mini-projects (i.e. `Steps`), with each Step reinforcing a progressively more advanced data engineering concept while culminating in the deployment of a production-ready cloud app.  
+
+The majority of the deliverables generated prior to the penultimate step were not ultimately required for (or even relevant to) the final application build.  
+
+That "mini-project work" is retained here, where a more detailed overview of the process is also provided in its `README`.
