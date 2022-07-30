@@ -32,9 +32,13 @@ is retained here, where a more detailed overview of the process is also provided
 
 ##### `FinalBuild`
 
-Packaged separately are the files that are strictly required for deployment of the end user app.  
-Although there are limited instances in which the same filename exists in both directories, there is  
-no expectation that the file contents or purpose are equivalent across alternate versions of any  
-duplicated filename.  To summarize - this should be considered a separate, standalone unit. (In fact  
-I plan on recreating it as a truly separate git root repository after the Capstone has been  
-reviewed and approved by faculty).
+I have created a separate repository "StormEventsDB" for the final build, containing the files that are strictly required for deployment of the app:
+
+https://github.com/conner-mcnicholas/StormEventsDB
+
+The new naming convention more accurately reflects the language used NOAA/NCEI.
+
+After applying some finishing touches, I will import that repo to the FinalBuild directory as a git submodule, but until then I want to avoid the added git complexity, so the hyperlink serves as a placeholder.
+
+Although there are limited instances in which the same filename exists in that repository and ProjectJourney, there is no expectation that the file contents or purpose are equivalent across alternate versions of any  
+duplicated filename.
