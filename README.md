@@ -21,7 +21,7 @@ This repository is divided into two directories:
 
 ##### `FinalBuild`
 
-Inside the FinalBuild folder is a git submodule, `StormEventsDB`, containing the files that are strictly required for production deployment of the app.  
+Inside the FinalBuild folder is a link to a seperate repository, `StormEventsDB`, containing the files that are strictly required for production deployment of the app.  
 
 The title change (i.e. 'SevereWeather' --> 'StormEvents') more accurately reflects the terminology used in NOAA/NCEI literature.  
 
