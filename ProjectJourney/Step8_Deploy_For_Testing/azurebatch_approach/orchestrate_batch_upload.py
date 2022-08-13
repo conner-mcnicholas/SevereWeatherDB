@@ -84,17 +84,17 @@ def upload_file_to_container(blob_storage_service_client: BlobServiceClient,
     blob_client.start_copy_from_url(sourcefile)
 
     sas_token = generate_blob_sas(
-        config.STORAGE_ACCOUNT_NAME,
+        os.environ["AZ_STORAGE_ACCOUNT_NAME"],
         container,
         blob_name,
-        account_key=config.STORAGE_ACCOUNT_KEY,
+        account_key=os.environ["AZ_STORAGE_ACCOUNT_KEY"],
         permission=BlobSasPermissions(read=True),
         expiry=datetime.utcnow() + timedelta(hours=2)
     )
 
     sas_url = generate_sas_url(
-        config.STORAGE_ACCOUNT_NAME,
-        config.STORAGE_ACCOUNT_DOMAIN,
+        os.environ["AZ_STORAGE_ACCOUNT_NAME"],
+        os.environ["AZ_STORAGE_ACCOUNT_DOMAIN"],
         container,
         blob_name,
         sas_token
@@ -149,8 +149,8 @@ def create_pool(batch_service_client: BatchServiceClient, pool_id: str):
                 version="latest"
             ),
             node_agent_sku_id="batch.node.ubuntu 20.04"),
-        vm_size=config.POOL_VM_SIZE,
-        target_dedicated_nodes=config.POOL_NODE_COUNT,
+        vm_size=os.environ["AZ_BATCH_VM_SIZE"],
+        target_dedicated_nodes=os.environ["AZ_BATCH_NODE_COUNT"],
         start_task=batchmodels.StartTask(
             command_line='/bin/bash -c "sudo apt-get -y update && sudo dpkg --configure -a && sudo apt-get install -y python3-pip && pip3 install --upgrade pip && sudo pip3 install azure-batch==11.0.0"',
             user_identity=batchmodels.UserIdentity(auto_user=user),
@@ -190,8 +190,8 @@ def add_tasks(batch_service_client: BatchServiceClient, job_id: str, resource_in
     tasks = []
 
     for idx, input_file in enumerate(resource_input_files):
-
-        command = f"/bin/bash -c \"du -h {input_file.file_path}\""
+        print(f'\ninput_file = {input_file.file_path}')
+        command = f"/bin/bash -c \"gzip -d {input_file.file_path} && sed -i s/'�'/''/g {input_file.file_path}[:len({input_file.file_path})-3] && gzip {input_file.file_path}[:len({input_file.file_path})-3] > chg_{input_file.file_path}\""
         tasks.append(batchmodels.TaskAddParameter(
             id=f'Task{idx}',
             command_line=command,
@@ -276,8 +276,10 @@ if __name__ == '__main__':
     url = "https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles"
     print(f"Orchestrating batch load task for each year after {start_year}...\n")
 
-    CONNECTION_STRING = os.environ["AZURE_STORAGE_CONNECTION_STRING"]
-    blob_service_client = BlobServiceClient.from_connection_string(CONNECTION_STRING)
+    job_id = os.environ["AZ_BATCH_JOB_ID"]
+    pool_id = os.environ["AZ_BATCH_POOL_ID"]
+
+    blob_service_client = BlobServiceClient.from_connection_string(os.environ["AZURE_STORAGE_CONNECTION_STRING"])
     input_container_name = "testbatch"
 
     allfiles = listall()
@@ -291,33 +293,33 @@ if __name__ == '__main__':
 
     # Create a Batch service client. We'll now be interacting with the Batch
     # service in addition to Storage
-    credentials = SharedKeyCredentials(config.BATCH_ACCOUNT_NAME,
-        config.BATCH_ACCOUNT_KEY)
+    credentials = SharedKeyCredentials(os.environ["AZ_BATCH_ACCOUNT_NAME"],
+        os.environ["AZ_BATCH_ACCOUNT_KEY"])
 
     batch_client = BatchServiceClient(
         credentials,
-        batch_url=config.BATCH_ACCOUNT_URL)
+        batch_url=os.environ["AZ_BATCH_ACCOUNT_URL"])
 
     try:
         # Create the pool that will contain the compute nodes that will execute the
         # tasks.
-        create_pool(batch_client, config.POOL_ID)
+        create_pool(batch_client, pool_id)
 
         # Create the job that will run the tasks.
-        create_job(batch_client, config.JOB_ID, config.POOL_ID)
+        create_job(batch_client, job_id, pool_id)
 
         # Add the tasks to the job.
-        add_tasks(batch_client, config.JOB_ID, input_files)
+        add_tasks(batch_client, job_id, input_files)
 
         # Pause execution until tasks reach Completed state.
         wait_for_tasks_to_complete(batch_client,
-                                   config.JOB_ID,
+                                   job_id,
                                    timedelta(minutes=10))
 
         print("  Success! All tasks reached the 'Completed' state within the "
               "specified timeout period.")
 
-        print_task_output(batch_client, config.JOB_ID)
+        print_task_output(batch_client, job_id)
 
         # Print out some timing info
         end_time = datetime.now().replace(microsecond=0)
@@ -336,6 +338,6 @@ if __name__ == '__main__':
     finally:
         # Clean up Batch resources
         print('Deleting job')
-        batch_client.job.delete(config.JOB_ID)
+        batch_client.job.delete(job_id)
         #print('Deleting pool')
-        #batch_client.pool.delete(config.POOL_ID)
+        #batch_client.pool.delete(pool_id)
